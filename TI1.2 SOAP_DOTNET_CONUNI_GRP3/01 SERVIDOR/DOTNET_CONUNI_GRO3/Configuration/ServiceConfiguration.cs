@@ -1,7 +1,7 @@
 using CoreWCF;
 using CoreWCF.Configuration;
 using CoreWCF.Description;
-using WCFService.Contracts;
+using WCFService.Services.Interfaces;
 using WCFService.Services;
 
 namespace WCFService.Configuration
@@ -13,7 +13,6 @@ namespace WCFService.Configuration
             services.AddServiceModelServices();
             services.AddServiceModelMetadata();
             services.AddSingleton<IServiceBehavior, UseRequestHeadersForMetadataAddressBehavior>();
-            services.AddScoped<Service>();
         }
 
         public static void ConfigureWCFEndpoints(this WebApplication app, IConfiguration configuration)
@@ -30,6 +29,16 @@ namespace WCFService.Configuration
                 serviceBuilder.AddServiceEndpoint<Service, IService>(
                     new BasicHttpBinding(),
                     "/Service.svc"
+                );
+
+                serviceBuilder.AddService<WCFService.Controller.ConversionController>(serviceOptions =>
+                {
+                    serviceOptions.BaseAddresses.Add(new Uri(serviceUrl));
+                });
+
+                serviceBuilder.AddServiceEndpoint<WCFService.Controller.ConversionController, IService>(
+                    new BasicHttpBinding(),
+                    "/Conversion.svc"
                 );
 
                 var serviceMetadataBehavior = app.Services.GetRequiredService<ServiceMetadataBehavior>();

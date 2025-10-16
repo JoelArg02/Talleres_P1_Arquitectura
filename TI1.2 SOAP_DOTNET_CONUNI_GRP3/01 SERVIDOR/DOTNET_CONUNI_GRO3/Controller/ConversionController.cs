@@ -1,9 +1,11 @@
+using System;
+using Microsoft.Extensions.Logging;
 using WCFService.Services.Interfaces;
 using WCFService.Models;
 
-namespace WCFService.Services
+namespace WCFService.Controller
 {
-    public class Service : IService
+    public class ConversionController : IService
     {
         public ConversionResponse Convert(ConversionRequest request)
         {
