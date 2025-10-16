@@ -1,0 +1,41 @@
+**/*.iml
+**/.gradle
+**/local.properties
+**/.idea/caches
+**/.idea/libraries
+**/.idea/modules.xml
+**/.idea/workspace.xml
+**/.idea/navEditor.xml
+**/.idea/assetWizardSettings.xml
+**/.DS_Store
+**/build
+**/Debug
+**/captures
+**/.externalNativeBuild
+**/.cxx
+
+# Android specific
+**/app/build/
+**/app/*.apk
+**/app/*.aab
+**/gradle-app.setting
+**/android/**/*.keystore
+
+# .NET specific
+**/bin/
+**/obj/
+**/*.dll
+**/*.pdb
+**/*.exe
+**/*.nuget.props
+**/*.user
+**/.vs/
+
+# Java / Maven
+**/target/
+**/*.class
+**/*.jar
+**/*.war
+**/*.ear
+
+# Keep local.properties only once (removed duplicate)
