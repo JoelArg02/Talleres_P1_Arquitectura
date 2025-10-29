@@ -1,4 +1,4 @@
-package ec.edu.espe.soap_conuni_clmov_gro3;
+package ec.edu.espe.soap_conuni_clmov_gro3.arguello;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.HashMap;
 import java.util.Map;
 
-import ec.edu.arguello.viewmodel.ConversionViewModel;
+import ec.edu.espe.soap_conuni_clmov_gro3.arguello.viewmodel.ConversionViewModel;
 import ec.edu.espe.soap_conuni_clmov_gro3.databinding.FragmentFirstBinding;
 
 /**

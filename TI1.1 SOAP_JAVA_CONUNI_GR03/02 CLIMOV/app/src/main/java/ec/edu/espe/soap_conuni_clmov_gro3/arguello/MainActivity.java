@@ -1,4 +1,4 @@
-package ec.edu.espe.soap_conuni_clmov_gro3;
+package ec.edu.espe.soap_conuni_clmov_gro3.arguello;
 
 import android.os.Bundle;
 
@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import ec.edu.espe.soap_conuni_clmov_gro3.R;
 import ec.edu.espe.soap_conuni_clmov_gro3.databinding.ActivityMainBinding;
 
 import android.view.Menu;

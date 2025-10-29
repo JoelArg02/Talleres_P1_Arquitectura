@@ -1,11 +1,7 @@
-package ec.edu.arguello.ws;
+package ec.edu.espe.soap_conuni_clmov_gro3.arguello.ws;
 
-import ec.edu.arguello.servicios.ConUniServicio;
+import ec.edu.espe.soap_conuni_clmov_gro3.arguello.servicios.ConUniServicio;
 
-/**
- * Clase adaptadora que expone métodos para la UI y delega en ConUniServicio.
- * No utiliza anotaciones @WebService en Android; simplemente actúa como fachada.
- */
 public class WSConUni {
 
     public String hello(String txt) {

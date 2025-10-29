@@ -1,11 +1,11 @@
-package ec.edu.arguello.viewmodel;
+package ec.edu.espe.soap_conuni_clmov_gro3.arguello.viewmodel;
 
 import android.os.Handler;
 import android.os.Looper;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import ec.edu.arguello.ws.WSConUni;
+import ec.edu.espe.soap_conuni_clmov_gro3.arguello.ws.WSConUni;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

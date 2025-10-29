@@ -1,4 +1,4 @@
-package ec.edu.arguello.ws_conuni_soapjava_gr05;
+package ec.edu.arguello.ws_conuni_soapjava_gr03;
 
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;

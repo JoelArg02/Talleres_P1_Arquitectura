@@ -1,4 +1,4 @@
-package ec.edu.arguello.ws_conuni_soapjava_gr05.resources;
+package ec.edu.arguello.ws_conuni_soapjava_gr03.resources;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

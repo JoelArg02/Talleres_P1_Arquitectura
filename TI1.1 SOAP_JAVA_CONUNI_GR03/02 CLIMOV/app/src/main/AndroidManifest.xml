@@ -14,7 +14,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Soapconuniclmovgro3">
     <activity
-            android:name=".MainActivity"
+            android:name=".arguello.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Soapconuniclmovgro3">
             <intent-filter>

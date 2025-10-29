@@ -9,13 +9,11 @@ public class Prueba01 {
 
         double n = 10; 
         
-        // 2. Usar String (mayúscula), comillas dobles y punto y coma (;)
         String inU = "meters";
         String outU = "kilometers";
 
         ConUniServicio service = new ConUniServicio();
 
-        // 3. Usar double para el resultado y el operador de asignación (=)
         double conversion = service.conversion(n, inU, outU);
 
         // --- FIN DE CORRECCIONES ---

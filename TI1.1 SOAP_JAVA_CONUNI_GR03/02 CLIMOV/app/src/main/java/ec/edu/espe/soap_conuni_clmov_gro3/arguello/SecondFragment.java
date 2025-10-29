@@ -1,4 +1,4 @@
-package ec.edu.espe.soap_conuni_clmov_gro3;
+package ec.edu.espe.soap_conuni_clmov_gro3.arguello;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import ec.edu.espe.soap_conuni_clmov_gro3.R;
 import ec.edu.espe.soap_conuni_clmov_gro3.databinding.FragmentSecondBinding;
 
 public class SecondFragment extends Fragment {

@@ -1,4 +1,4 @@
-package ec.edu.arguello.servicios;
+package ec.edu.espe.soap_conuni_clmov_gro3.arguello.servicios;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
