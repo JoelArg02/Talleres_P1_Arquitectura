@@ -1,41 +1,41 @@
 package ec.edu.espe.soap_conuni_clmov_gro3.arguello.servicios;
-
-import ec.edu.espe.soap_conuni_clmov_gro3.arguello.Config.SoapClientConfig;
 import org.w3c.dom.Document;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
-public class ConUniServicio {
+import ec.edu.espe.soap_conuni_clmov_gro3.arguello.Config.SoapClientConfig;
+
+public class LoginService {
 
     private final SoapClientConfig soapClient;
 
-    public ConUniServicio() {
-        this.soapClient = new SoapClientConfig("/WSConUni");
+    public LoginService() {
+        this.soapClient = new SoapClientConfig("/WSLogin");
     }
 
-    public double conversion(double value, String inUnit, String outUnit) {
-        String soapRequest = buildSoapRequest(value, inUnit, outUnit);
+    public boolean login(String username, String password) {
+        String soapRequest = buildSoapRequest(username, password);
         String response = soapClient.call(soapRequest);
         return parseSoapResponse(response);
     }
 
-    private String buildSoapRequest(double value, String inUnit, String outUnit) {
+    private String buildSoapRequest(String username, String password) {
         return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.arguello.edu.ec/\">" +
                 "<soapenv:Header/>" +
                 "<soapenv:Body>" +
-                "<ws:convertUnit>" +
-                "<value>" + value + "</value>" +
-                "<inUnit>" + escapeXml(inUnit) + "</inUnit>" +
-                "<outUnit>" + escapeXml(outUnit) + "</outUnit>" +
-                "</ws:convertUnit>" +
+                "<ws:login>" +
+                "<username>" + escapeXml(username) + "</username>" +
+                "<password>" + escapeXml(password) + "</password>" +
+                "</ws:login>" +
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
     }
 
-    private double parseSoapResponse(String xml) {
+    private boolean parseSoapResponse(String xml) {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             dbFactory.setNamespaceAware(true);
@@ -45,28 +45,19 @@ public class ConUniServicio {
 
             if (doc.getElementsByTagNameNS("http://ws.arguello.edu.ec/", "return").getLength() > 0) {
                 String text = doc.getElementsByTagNameNS("http://ws.arguello.edu.ec/", "return").item(0).getTextContent();
-                return Double.parseDouble(text.trim());
+                return Boolean.parseBoolean(text.trim());
             }
 
             if (doc.getElementsByTagName("return").getLength() > 0) {
                 String text = doc.getElementsByTagName("return").item(0).getTextContent();
-                return Double.parseDouble(text.trim());
+                return Boolean.parseBoolean(text.trim());
             }
 
-            String[] candidateTags = new String[]{"convertUnitResponse", "result"};
+            String[] candidateTags = new String[]{"loginResponse", "result"};
             for (String tag : candidateTags) {
                 if (doc.getElementsByTagName(tag).getLength() > 0) {
                     String text = doc.getElementsByTagName(tag).item(0).getTextContent();
-                    return Double.parseDouble(text.trim());
-                }
-            }
-
-            if (doc.getElementsByTagNameNS("http://schemas.xmlsoap.org/soap/envelope/", "Body").getLength() > 0) {
-                org.w3c.dom.Node body = doc.getElementsByTagNameNS("http://schemas.xmlsoap.org/soap/envelope/", "Body").item(0);
-                String text = body.getTextContent();
-                java.util.Scanner s = new java.util.Scanner(text).useDelimiter("[^0-9.+-eE]");
-                if (s.hasNextDouble()) {
-                    return s.nextDouble();
+                    return Boolean.parseBoolean(text.trim());
                 }
             }
 

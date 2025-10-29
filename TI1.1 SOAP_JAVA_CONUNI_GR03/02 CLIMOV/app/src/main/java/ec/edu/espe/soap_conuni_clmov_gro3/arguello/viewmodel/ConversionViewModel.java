@@ -19,10 +19,8 @@ public class ConversionViewModel extends ViewModel {
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
-    // LiveData para el resultado de la conversión
     private final MutableLiveData<Double> conversionResult = new MutableLiveData<>();
     
-    // LiveData para mensajes de error
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     
     // LiveData para estado de carga
@@ -40,26 +38,20 @@ public class ConversionViewModel extends ViewModel {
         return isLoading;
     }
 
-    /**
-     * Realiza la conversión de unidades llamando al servicio SOAP en un thread secundario.
-     */
     public void convertUnit(double value, String fromUnit, String toUnit) {
         isLoading.setValue(true);
         errorMessage.setValue(null);
         
         executorService.execute(() -> {
             try {
-                // Llamada al servicio SOAP (puede tardar)
                 double result = wsConUni.convertUnit(value, fromUnit, toUnit);
                 
-                // Actualizar UI en el thread principal
                 mainHandler.post(() -> {
                     conversionResult.setValue(result);
                     isLoading.setValue(false);
                 });
                 
             } catch (Exception e) {
-                // Manejar error y actualizar UI
                 mainHandler.post(() -> {
                     errorMessage.setValue("Error: " + e.getMessage());
                     isLoading.setValue(false);
