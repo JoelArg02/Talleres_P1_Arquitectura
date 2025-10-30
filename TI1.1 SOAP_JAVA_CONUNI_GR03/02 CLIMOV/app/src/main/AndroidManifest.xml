@@ -13,16 +13,24 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Soapconuniclmovgro3">
-    <activity
-            android:name=".arguello.MainActivity"
+        
+        <!-- LoginActivity como actividad de inicio -->
+        <activity
+            android:name=".arguello.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.Soapconuniclmovgro3">
+            android:theme="@style/Theme.Soapconuniclmovgro3.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <!-- MainActivity (pantalla principal después de login) -->
+        <activity
+            android:name=".arguello.MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Soapconuniclmovgro3" />
+            
     </application>
 
 </manifest>

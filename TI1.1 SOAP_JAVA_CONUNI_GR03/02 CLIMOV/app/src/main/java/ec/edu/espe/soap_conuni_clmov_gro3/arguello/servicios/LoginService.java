@@ -27,10 +27,10 @@ public class LoginService {
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.arguello.edu.ec/\">" +
                 "<soapenv:Header/>" +
                 "<soapenv:Body>" +
-                "<ws:login>" +
+                "<ws:autentificar>" +
                 "<username>" + escapeXml(username) + "</username>" +
                 "<password>" + escapeXml(password) + "</password>" +
-                "</ws:login>" +
+                "</ws:autentificar>" +
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
     }
