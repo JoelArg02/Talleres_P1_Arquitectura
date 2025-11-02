@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ec.edu.pinza</groupId>
+    <artifactId>CLICON_ConUni_SOAPJAVA_GR03</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+        <exec.mainClass>ec.edu.pinza.clicon_conuni_soapjava_gr03.CLICON_ConUni_SOAPJAVA_GR03</exec.mainClass>
+    </properties>
+
+    <dependencies>
+        <!-- JAX-WS moderno (compatible con JDK 11+ y Jakarta EE 10) -->
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+
+        <!-- API de Jakarta WS -->
+        <dependency>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Plugin moderno para generar código a partir del WSDL -->
+            <plugin>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>4.0.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlUrls>
+                                <wsdlUrl>http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSConUni?wsdl</wsdlUrl>
+                                <wsdlUrl>http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin?wsdl</wsdlUrl>
+                            </wsdlUrls>
+                            <packageName>ec.edu.pinza.client</packageName>
+                            <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
+                            <verbose>true</verbose>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
