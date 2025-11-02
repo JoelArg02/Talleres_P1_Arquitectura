@@ -4,4 +4,8 @@
     <system systemId="http://localhost:8080/WS_ConUni_SOAPJAVA_GR05-1.0-SNAPSHOT/WSConUni?xsd=1" uri="wsdl/localhost_8080/WS_ConUni_SOAPJAVA_GR05-1.0-SNAPSHOT/WSConUni.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/WS_ConUni_SOAPJAVA_GR05-1.0-SNAPSHOT/WSLogin?wsdl" uri="wsdl/localhost_8080/WS_ConUni_SOAPJAVA_GR05-1.0-SNAPSHOT/WSLogin.wsdl"/>
     <system systemId="http://localhost:8080/WS_ConUni_SOAPJAVA_GR05-1.0-SNAPSHOT/WSLogin?xsd=1" uri="wsdl/localhost_8080/WS_ConUni_SOAPJAVA_GR05-1.0-SNAPSHOT/WSLogin.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin?wsdl" uri="wsdl/localhost_8080/WS_ConUni_SOAPJAVA_GR03/WSLogin.wsdl"/>
+    <system systemId="http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin?xsd=1" uri="wsdl/localhost_8080/WS_ConUni_SOAPJAVA_GR03/WSLogin.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSConUni?wsdl" uri="wsdl/localhost_8080/WS_ConUni_SOAPJAVA_GR03/WSConUni.wsdl"/>
+    <system systemId="http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSConUni?xsd=1" uri="wsdl/localhost_8080/WS_ConUni_SOAPJAVA_GR03/WSConUni.xsd_1.xsd"/>
 </catalog>
