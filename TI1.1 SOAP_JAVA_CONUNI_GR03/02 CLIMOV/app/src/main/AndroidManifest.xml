@@ -18,7 +18,7 @@
         <activity
             android:name=".arguello.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.Soapconuniclmovgro3.NoActionBar">
+            android:theme="@style/Theme.Soapconuniclmovgro3">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
