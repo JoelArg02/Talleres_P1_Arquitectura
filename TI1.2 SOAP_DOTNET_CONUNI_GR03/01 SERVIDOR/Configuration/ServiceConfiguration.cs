@@ -41,6 +41,16 @@ namespace WCFService.Configuration
                     "/Conversion.svc"
                 );
 
+                serviceBuilder.AddService<LoginService>(serviceOptions =>
+                {
+                    serviceOptions.BaseAddresses.Add(new Uri(serviceUrl));
+                });
+
+                serviceBuilder.AddServiceEndpoint<LoginService, ILoginService>(
+                    new BasicHttpBinding(),
+                    "/Login.svc"
+                );
+
                 var serviceMetadataBehavior = app.Services.GetRequiredService<ServiceMetadataBehavior>();
                 serviceMetadataBehavior.HttpGetEnabled = true;
                 serviceMetadataBehavior.HttpGetUrl = new Uri($"{serviceUrl}/Service.svc");
@@ -49,6 +59,8 @@ namespace WCFService.Configuration
             var logger = app.Services.GetRequiredService<ILogger<Program>>();
             logger.LogInformation($"WCF Service is running on {serviceUrl}/Service.svc");
             logger.LogInformation($"WSDL is available at {serviceUrl}/Service.svc?wsdl");
+            logger.LogInformation($"Login Service is running on {serviceUrl}/Login.svc");
+            logger.LogInformation($"Login WSDL is available at {serviceUrl}/Login.svc?wsdl");
         }
     }
 }
