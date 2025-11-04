@@ -16,5 +16,8 @@ namespace WCFService.Models
 
         [DataMember]
         public double TemperatureCelsius { get; set; }
+
+        [DataMember]
+        public double Longitude2 { get; set; }
     }
 }

@@ -56,5 +56,14 @@ namespace WCFService.Models
 
         [DataMember]
         public double TemperatureKelvin { get; set; }
+
+        [DataMember]
+        public double Longitude2Decimal { get; set; }
+
+        [DataMember]
+        public double Longitude2Radians { get; set; }
+
+        [DataMember]
+        public CoordinateDMS? Longitude2DMS { get; set; }
     }
 }

@@ -34,7 +34,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Conversión de Masa"
+                    android:text="Conversión de Unidades"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="#212121"
@@ -71,6 +71,25 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/temp_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:textColor="#212121"
+                        android:textSize="16sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/longitude2_input_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Longitud 2"
+                    android:layout_marginTop="16dp"
+                    app:boxStrokeColor="#616161"
+                    app:hintTextColor="#616161">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/longitude2_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal|numberSigned"
@@ -273,6 +292,59 @@
 
                     <TextView
                         android:id="@+id/result_kelvin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="---"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#212121"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#BDBDBD"
+                    android:layout_marginVertical="12dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Long2 Decimal:"
+                        android:textSize="16sp"
+                        android:textColor="#616161"/>
+
+                    <TextView
+                        android:id="@+id/result_long2_decimal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="---"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#212121"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Long2 Radianes:"
+                        android:textSize="16sp"
+                        android:textColor="#616161"/>
+
+                    <TextView
+                        android:id="@+id/result_long2_radians"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="---"

@@ -22,7 +22,10 @@ namespace WCFService.Services
                 MassLb = request.MassKg * 2.20462262185,
                 TemperatureCelsius = request.TemperatureCelsius,
                 TemperatureFahrenheit = (request.TemperatureCelsius * 9.0 / 5.0) + 32.0,
-                TemperatureKelvin = request.TemperatureCelsius + 273.15
+                TemperatureKelvin = request.TemperatureCelsius + 273.15,
+                Longitude2Decimal = request.Longitude2,
+                Longitude2Radians = DegreesToRadians(request.Longitude2),
+                Longitude2DMS = ToDMS(request.Longitude2, false)
             };
 
             return resp;
