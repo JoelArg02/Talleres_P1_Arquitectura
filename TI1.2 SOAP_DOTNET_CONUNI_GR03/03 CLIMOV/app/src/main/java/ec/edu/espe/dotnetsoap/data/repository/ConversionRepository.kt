@@ -36,9 +36,11 @@ class ConversionRepository {
   <soapenv:Body>
     <tem:Convert>
       <tem:request>
+        <mod:Latitude>0</mod:Latitude>
+        <mod:Longitude>0</mod:Longitude>
+        <mod:Longitude2>$longitude2</mod:Longitude2>
         <mod:MassKg>$massKg</mod:MassKg>
         <mod:TemperatureCelsius>$temperatureCelsius</mod:TemperatureCelsius>
-        <mod:Longitude2>$longitude2</mod:Longitude2>
       </tem:request>
     </tem:Convert>
   </soapenv:Body>
@@ -47,13 +49,16 @@ class ConversionRepository {
     
     private fun parseConversionResponse(xml: String): ConversionResponse {
         try {
-            Log.d(TAG, "Parsing conversion response...")
+            Log.d(TAG, "=== INICIO PARSING RESPONSE ===")
+            Log.d(TAG, "XML Response completo:\n$xml")
             
             val factory = DocumentBuilderFactory.newInstance()
             factory.isNamespaceAware = true
             val builder = factory.newDocumentBuilder()
             val doc: Document = builder.parse(ByteArrayInputStream(xml.toByteArray()))
             doc.documentElement.normalize()
+            
+            Log.d(TAG, "Buscando nodos XML...")
             
             val massKgNode = doc.getElementsByTagName("a:MassKg").item(0)
             val massLbNode = doc.getElementsByTagName("a:MassLb").item(0)
@@ -64,6 +69,11 @@ class ConversionRepository {
             val long2DecimalNode = doc.getElementsByTagName("a:Longitude2Decimal").item(0)
             val long2RadiansNode = doc.getElementsByTagName("a:Longitude2Radians").item(0)
             
+            Log.d(TAG, "Nodos encontrados:")
+            Log.d(TAG, "massKgNode: ${massKgNode != null}, value: ${massKgNode?.textContent}")
+            Log.d(TAG, "tempCNode: ${tempCNode != null}, value: ${tempCNode?.textContent}")
+            Log.d(TAG, "long2DecimalNode: ${long2DecimalNode != null}, value: ${long2DecimalNode?.textContent}")
+            
             val massKg = massKgNode?.textContent?.toDouble() ?: 0.0
             val massLb = massLbNode?.textContent?.toDouble() ?: 0.0
             val massG = massGNode?.textContent?.toDouble() ?: 0.0
@@ -73,12 +83,17 @@ class ConversionRepository {
             val long2Dec = long2DecimalNode?.textContent?.toDouble() ?: 0.0
             val long2Rad = long2RadiansNode?.textContent?.toDouble() ?: 0.0
             
-            Log.d(TAG, "Conversion result: mass kg=$massKg, temp c=$tempC, long2=$long2Dec")
+            Log.d(TAG, "Valores parseados:")
+            Log.d(TAG, "Mass: kg=$massKg, lb=$massLb, g=$massG")
+            Log.d(TAG, "Temp: c=$tempC, f=$tempF, k=$tempK")
+            Log.d(TAG, "Long2: decimal=$long2Dec, radians=$long2Rad")
+            Log.d(TAG, "=== FIN PARSING RESPONSE ===")
             
             return ConversionResponse(massKg, massLb, massG, tempC, tempF, tempK, long2Dec, long2Rad)
         } catch (e: Exception) {
-            Log.e(TAG, "Error parsing conversion response", e)
-            throw RuntimeException("Error parsing SOAP response", e)
+            Log.e(TAG, "ERROR EN PARSING: ${e.message}", e)
+            Log.e(TAG, "Stack trace completo:", e)
+            throw RuntimeException("Error parsing SOAP response: ${e.message}", e)
         }
     }
 }

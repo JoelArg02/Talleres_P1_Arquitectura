@@ -7,7 +7,17 @@ namespace WCFService.Services
     {
         public ConversionResponse Convert(ConversionRequest request)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            Console.WriteLine("=== INICIO CONVERSION ===");
+            
+            if (request == null)
+            {
+                Console.WriteLine("ERROR: Request es null");
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            Console.WriteLine($"MassKg recibido: {request.MassKg}");
+            Console.WriteLine($"TemperatureCelsius recibido: {request.TemperatureCelsius}");
+            Console.WriteLine($"Longitude2 recibido: {request.Longitude2}");
 
             var resp = new ConversionResponse
             {
@@ -27,6 +37,11 @@ namespace WCFService.Services
                 Longitude2Radians = DegreesToRadians(request.Longitude2),
                 Longitude2DMS = ToDMS(request.Longitude2, false)
             };
+
+            Console.WriteLine($"Mass calculada - Kg: {resp.MassKg}, Lb: {resp.MassLb}, G: {resp.MassG}");
+            Console.WriteLine($"Temp calculada - C: {resp.TemperatureCelsius}, F: {resp.TemperatureFahrenheit}, K: {resp.TemperatureKelvin}");
+            Console.WriteLine($"Long2 calculada - Decimal: {resp.Longitude2Decimal}, Radians: {resp.Longitude2Radians}");
+            Console.WriteLine("=== FIN CONVERSION ===");
 
             return resp;
         }
