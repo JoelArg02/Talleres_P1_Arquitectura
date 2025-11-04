@@ -21,28 +21,24 @@ namespace WCFService.Models
     [DataContract]
     public class ConversionResponse
     {
-        // Latitude/Longitude in decimal degrees (echo)
         [DataMember]
         public double LatitudeDecimal { get; set; }
 
         [DataMember]
         public double LongitudeDecimal { get; set; }
 
-        // Latitude/Longitude in radians
         [DataMember]
         public double LatitudeRadians { get; set; }
 
         [DataMember]
         public double LongitudeRadians { get; set; }
 
-        // Latitude/Longitude in DMS
         [DataMember]
     public CoordinateDMS? LatitudeDMS { get; set; }
 
     [DataMember]
     public CoordinateDMS? LongitudeDMS { get; set; }
 
-        // Mass conversions
         [DataMember]
         public double MassKg { get; set; }
 
@@ -51,5 +47,14 @@ namespace WCFService.Models
 
         [DataMember]
         public double MassG { get; set; }
+
+        [DataMember]
+        public double TemperatureCelsius { get; set; }
+
+        [DataMember]
+        public double TemperatureFahrenheit { get; set; }
+
+        [DataMember]
+        public double TemperatureKelvin { get; set; }
     }
 }

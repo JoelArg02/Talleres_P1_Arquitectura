@@ -19,7 +19,10 @@ namespace WCFService.Services
                 LongitudeDMS = ToDMS(request.Longitude, false),
                 MassKg = request.MassKg,
                 MassG = request.MassKg * 1000.0,
-                MassLb = request.MassKg * 2.20462262185
+                MassLb = request.MassKg * 2.20462262185,
+                TemperatureCelsius = request.TemperatureCelsius,
+                TemperatureFahrenheit = (request.TemperatureCelsius * 9.0 / 5.0) + 32.0,
+                TemperatureKelvin = request.TemperatureCelsius + 273.15
             };
 
             return resp;
