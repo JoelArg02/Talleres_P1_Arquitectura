@@ -3,6 +3,7 @@ package ec.edu.espe.soap_conuni_clmov_gro3.arguello;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import ec.edu.espe.soap_conuni_clmov_gro3.arguello.servicios.LoginService;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = "LoginActivity";
     private EditText usernameInput;
     private EditText passwordInput;
     private Button loginButton;
@@ -68,30 +70,34 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
 
-        // Validar campos
+        Log.d(TAG, "Intento de login iniciado");
+        Log.d(TAG, "Usuario: " + username);
+
         if (username.isEmpty()) {
             usernameInput.setError("El usuario es requerido");
             usernameInput.requestFocus();
+            Log.w(TAG, "Campo usuario vacío");
             return;
         }
 
         if (password.isEmpty()) {
             passwordInput.setError("La contraseña es requerida");
             passwordInput.requestFocus();
+            Log.w(TAG, "Campo contraseña vacío");
             return;
         }
 
-        // Mostrar progress bar y deshabilitar botón
         showLoading(true);
+        Log.d(TAG, "Iniciando hilo de autenticación...");
 
-        // Realizar login en un hilo separado
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    Log.d(TAG, "Llamando al servicio de login...");
                     final boolean loginSuccess = loginService.login(username, password);
+                    Log.d(TAG, "Servicio respondió: " + loginSuccess);
                     
-                    // Volver al hilo principal para actualizar UI
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -100,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
                 } catch (Exception e) {
+                    Log.e(TAG, "Error en el proceso de login", e);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -115,18 +122,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleLoginResult(boolean success, String username) {
+        Log.d(TAG, "Manejando resultado de login: " + success);
         if (success) {
-            // Guardar estado de login
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(KEY_IS_LOGGED_IN, true);
             editor.putString(KEY_USERNAME, username);
             editor.apply();
 
+            Log.d(TAG, "Login exitoso, navegando a MainActivity");
             Toast.makeText(this, "Bienvenido, " + username + "!", Toast.LENGTH_SHORT).show();
             
-            // Navegar a MainActivity
             navigateToMainActivity();
         } else {
+            Log.w(TAG, "Login fallido - credenciales incorrectas");
             Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
             passwordInput.setText("");
             passwordInput.requestFocus();
