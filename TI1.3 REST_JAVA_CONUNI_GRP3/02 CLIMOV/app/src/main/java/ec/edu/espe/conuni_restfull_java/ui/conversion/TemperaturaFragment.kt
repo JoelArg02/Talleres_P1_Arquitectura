@@ -6,22 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import ec.edu.espe.conuni_restfull_java.R
+import androidx.fragment.app.viewModels
 import ec.edu.espe.conuni_restfull_java.databinding.FragmentConversionBinding
 
-class ConversionFragment : Fragment() {
+class TemperaturaFragment : Fragment() {
     
     private var _binding: FragmentConversionBinding? = null
     private val binding get() = _binding!!
     
-    private val viewModel: ConversionViewModel by activityViewModels()
-    private lateinit var conversionType: String
-    
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        conversionType = arguments?.getString(ARG_TYPE) ?: "longitud"
-    }
+    private val viewModel: ConversionViewModel by viewModels()
+    private val conversionType = "temperatura"
     
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,8 +71,6 @@ class ConversionFragment : Fragment() {
     }
     
     private fun loadUnits() {
-        binding.cardResult.visibility = View.GONE
-        binding.tvError.visibility = View.GONE
         viewModel.loadSupportedUnits(conversionType)
     }
     
@@ -94,7 +86,6 @@ class ConversionFragment : Fragment() {
         binding.spinnerFromUnit.adapter = adapter
         binding.spinnerToUnit.adapter = adapter
         
-        // Seleccionar diferentes unidades por defecto
         if (units.size > 1) {
             binding.spinnerToUnit.setSelection(1)
         }
@@ -132,17 +123,5 @@ class ConversionFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-    
-    companion object {
-        private const val ARG_TYPE = "conversion_type"
-        
-        fun newInstance(type: String): ConversionFragment {
-            return ConversionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_TYPE, type)
-                }
-            }
-        }
     }
 }

@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: ConversionViewModel by viewModels()
     private lateinit var sessionManager: SessionManager
     
-    private val conversionTypes = listOf("longitud", "masa", "temperatura")
     private val tabTitles = listOf("Longitud", "Peso", "Temperatura")
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun setupViewPager() {
-        val adapter = ConversionPagerAdapter(this, conversionTypes)
+        val adapter = ConversionPagerAdapter(this)
         binding.viewPager.adapter = adapter
         
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
