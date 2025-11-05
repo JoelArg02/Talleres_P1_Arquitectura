@@ -14,7 +14,7 @@ import java.time.Duration;
  */
 public class RestClient {
 
-    private static final String BASE_URL = "http://localhost:8080/WS_ConUni_RESTJAVA_GR03/api";
+    private static final String BASE_URL = "http://192.168.137.1:8080/WS_ConUni_RESTJAVA_GR03/api";
     private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
 
     private final HttpClient httpClient;

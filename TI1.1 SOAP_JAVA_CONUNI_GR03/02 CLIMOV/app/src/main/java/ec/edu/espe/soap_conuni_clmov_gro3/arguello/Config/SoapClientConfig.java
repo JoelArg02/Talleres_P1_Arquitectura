@@ -11,7 +11,7 @@ public class SoapClientConfig {
 
 //    private static final String BASE_URI = "http://10.0.2.2:8080/WS_ConUni_SOAPJAVA_GR03/";
 
-    private static final String BASE_URI = "http://10.1.200.12:8080/WS_ConUni_SOAPJAVA_GR03/";
+    private static final String BASE_URI = "http://192.168.137.1:8080/WS_ConUni_SOAPJAVA_GR03/";
     private final String endpoint;
 
     public SoapClientConfig(String servicePath) {
