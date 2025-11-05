@@ -6,15 +6,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-/**
- * Cliente de Retrofit para la API de conversión
- */
 object RetrofitClient {
-    
-    // Cambiar esta URL a la IP de tu máquina si estás usando un dispositivo físico
-    // Para emulador usa: http://10.0.2.2:5000/
-    // Para dispositivo físico usa: http://TU_IP_LOCAL:5000/
-    private const val BASE_URL = "http://10.0.2.2:5000/"
+    private const val BASE_URL = "http://10.0.2.2:5003/"
     
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
