@@ -21,8 +21,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp"
-            app:boxStrokeColor="@color/black"
-            app:hintTextColor="@color/black">
+            app:boxStrokeColor="@color/text_dark"
+            app:hintTextColor="@color/text_dark">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etValue"
@@ -41,7 +41,7 @@
             android:text="De:"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/text_dark"
             app:layout_constraintTop_toBottomOf="@id/tilValue"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="24dp"/>
@@ -65,7 +65,7 @@
             android:text="A:"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@color/text_dark"
             app:layout_constraintTop_toBottomOf="@id/spinnerFromUnit"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="24dp"/>
@@ -93,7 +93,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp"
             app:cornerRadius="8dp"
-            android:backgroundTint="@color/black"/>
+            android:backgroundTint="@color/text_dark"/>
 
         <!-- Card de resultado -->
         <com.google.android.material.card.MaterialCardView
@@ -121,7 +121,7 @@
                     android:text="Resultado:"
                     android:textStyle="bold"
                     android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"/>
+                    android:textColor="@color/text_medium"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tvResult"
@@ -130,7 +130,7 @@
                     android:text="0.0"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_dark"
                     android:layout_marginTop="8dp"/>
 
             </LinearLayout>
@@ -148,14 +148,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp"
-            app:indicatorColor="@color/black"/>
+            app:indicatorColor="@color/text_dark"/>
 
         <!-- Mensaje de error -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_red_dark"
+            android:textColor="@color/error_red"
             android:textSize="14sp"
             android:visibility="gone"
             android:gravity="center"
