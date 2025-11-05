@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/bg_secondary"
     tools:context=".ui.main.MainActivity">
 
     <!-- Toolbar -->
@@ -12,7 +12,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/black"
+        android:background="@color/text_dark"
         app:title="ConUni REST"
         app:titleTextColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,9 +31,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:tabMode="fixed"
         app:tabGravity="fill"
-        app:tabTextColor="@android:color/darker_gray"
-        app:tabSelectedTextColor="@color/black"
-        app:tabIndicatorColor="@color/black"/>
+        app:tabTextColor="@color/text_medium"
+        app:tabSelectedTextColor="@color/text_dark"
+        app:tabIndicatorColor="@color/text_dark"/>
 
     <!-- ViewPager2 para los fragmentos de conversión -->
     <androidx.viewpager2.widget.ViewPager2
