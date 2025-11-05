@@ -11,6 +11,32 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
         public LoginWindow()
         {
             InitializeComponent();
+            
+            // Configurar eventos para el placeholder
+            txtUsuario.GotFocus += RemovePlaceholder;
+            txtUsuario.LostFocus += AddPlaceholder;
+            
+            // Inicializar con el placeholder
+            txtUsuario.Text = "Usuario";
+            txtUsuario.Foreground = System.Windows.Media.Brushes.Gray;
+        }
+
+        private void RemovePlaceholder(object sender, RoutedEventArgs e)
+        {
+            if (txtUsuario.Text == "Usuario")
+            {
+                txtUsuario.Text = "";
+                txtUsuario.Foreground = System.Windows.Media.Brushes.Black;
+            }
+        }
+
+        private void AddPlaceholder(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtUsuario.Text))
+            {
+                txtUsuario.Text = "Usuario";
+                txtUsuario.Foreground = System.Windows.Media.Brushes.Gray;
+            }
         }
 
         private async void btnLogin_Click(object sender, RoutedEventArgs e)
@@ -19,8 +45,15 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
             lblLoginResult.Text = "Validando...";
 
             // 1. Leemos los valores de la UI en el Hilo de UI.
-            string username = txtUsuario.Text;
+            string username = txtUsuario.Text == "Usuario" ? "" : txtUsuario.Text;
             string password = txtPassword.Password;
+
+            // Validar que no estén vacíos
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                lblLoginResult.Text = "Por favor ingresa usuario y contraseña";
+                return;
+            }
 
             try
             {
@@ -53,7 +86,6 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
             catch (Exception ex)
             {
                 lblLoginResult.Text = $"Error de conexión: {ex.Message}";
-                MessageBox.Show($"No se pudo conectar al servicio de login. ¿Servicio ejecutándose en http://localhost:5001?", "Error de Conexión");
             }
         }
     }

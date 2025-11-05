@@ -5,138 +5,413 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLIESC_ConUni_SOAPDOTNET_GR03"
         mc:Ignorable="d"
-        Title="Conversor de Unidades" Height="750" Width="500"
-        WindowStartupLocation="CenterScreen">
+        Title="Conversion" Height="800" Width="680"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
 
     <Window.Resources>
+        <!-- Estilo para el botón principal -->
         <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Background" Value="#4A90E2"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Padding" Value="14"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="12"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#357ABD"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
-        <Style x:Key="SectionGroupBox" TargetType="GroupBox">
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Margin" Value="0,10,0,0"/>
-            <Setter Property="Background" Value="#F5F5F5"/>
-            <Setter Property="BorderBrush" Value="#E0E0E0"/>
-            <Setter Property="Foreground" Value="#2A3A8D"/>
+
+        <!-- Estilo para labels de campos -->
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#666666"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+            <Setter Property="FontSize" Value="14"/>
         </Style>
-        <Style x:Key="ResultCard" TargetType="Border">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="CornerRadius" Value="3"/>
-            <Setter Property="Padding" Value="8"/>
-            <Setter Property="Margin" Value="0,5,0,5"/>
-            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+
+        <!-- Estilo para inputs -->
+        <Style x:Key="InputField" TargetType="Control">
+            <Setter Property="BorderBrush" Value="#D3D8DE"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="0,0,0,18"/>
+            <Setter Property="Foreground" Value="#333333"/>
         </Style>
-        <Style x:Key="ResultHeader" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#2A3A8D"/>
+
+        <Style x:Key="RoundedTextBox" TargetType="TextBox" BasedOn="{StaticResource InputField}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12"
+                                Padding="{TemplateBinding Padding}">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="RoundedComboBox" TargetType="ComboBox" BasedOn="{StaticResource InputField}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border Background="White"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12">
+                            <Grid>
+                                <ToggleButton x:Name="ToggleButton"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Focusable="False"
+                                            IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                            ClickMode="Press"/>
+                                <ContentPresenter x:Name="ContentSite"
+                                                IsHitTestVisible="False"
+                                                Content="{TemplateBinding SelectionBoxItem}"
+                                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                Margin="12,0,30,0"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Left"/>
+                                <Popup x:Name="Popup"
+                                     Placement="Bottom"
+                                     IsOpen="{TemplateBinding IsDropDownOpen}"
+                                     AllowsTransparency="True"
+                                     Focusable="False"
+                                     PopupAnimation="Slide">
+                                    <Border x:Name="DropDownBorder"
+                                          Background="White"
+                                          BorderThickness="1"
+                                          BorderBrush="#D3D8DE"
+                                          CornerRadius="12"
+                                          MaxHeight="200">
+                                        <ScrollViewer Margin="4" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="15" Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid Background="#F0F2F5">
+        <!-- Contenedor principal -->
+        <Border Background="White" 
+                CornerRadius="17" 
+                Margin="40"
+                Padding="30,30,50,40">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="12" ShadowDepth="3"/>
+            </Border.Effect>
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel Orientation="Vertical">
+                <!-- Header con usuario y cerrar sesión -->
+                <Grid Grid.Row="0" Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <ComboBox x:Name="cmbUserMenu" 
-                          HorizontalAlignment="Right" 
-                          FontWeight="Bold" 
-                          Foreground="#2A3A8D"
-                          BorderThickness="0" 
-                          Background="Transparent"
-                          SelectionChanged="cmbUserMenu_SelectionChanged">
-                </ComboBox>
+                    <!-- Información de usuario -->
+                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                        <Image Source="/Resources/Images/user.png" 
+                               Width="22" 
+                               Height="22"
+                               Margin="0,0,8,0"/>
+                        <TextBlock x:Name="txtUsuarioNombre" 
+                                   Text="Usuario"
+                                   FontSize="14"
+                                   Foreground="#666666"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
 
-                <TextBlock Text="Conversor del Servicio" FontSize="22" FontWeight="Bold" Margin="0,10,0,10" HorizontalAlignment="Center"
-                           Foreground="#2A3A8D"/>
+                    <!-- Botón cerrar sesión -->
+                    <Button Grid.Column="1" 
+                            x:Name="btnCerrarSesion"
+                            Click="cmbUserMenu_SelectionChanged"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Padding="0"
+                            VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/Images/return.png" 
+                                   Width="18" 
+                                   Height="18"
+                                   Margin="0,0,8,0"/>
+                            <TextBlock Text="Cerrar sesión" 
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="#4A90E2"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
 
-                <GroupBox Header="1. Valores de Entrada" Style="{StaticResource SectionGroupBox}">
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Masa:" VerticalAlignment="Center" Margin="5" Foreground="Black" FontWeight="Normal"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtMassValue" Text="100" Margin="5"/>
-                        <ComboBox Grid.Row="0" Grid.Column="2" x:Name="cmbMassUnit" Margin="5" SelectedIndex="0">
-                            <ComboBoxItem Content="Kilogramos (kg)"/>
-                            <ComboBoxItem Content="Gramos (g)"/>
-                            <ComboBoxItem Content="Libras (lb)"/>
-                        </ComboBox>
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Temperatura:" VerticalAlignment="Center" Margin="5" Foreground="Black" FontWeight="Normal"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtTempValue" Text="20" Margin="5"/>
-                        <ComboBox Grid.Row="1" Grid.Column="2" x:Name="cmbTempUnit" Margin="5" SelectedIndex="0">
-                            <ComboBoxItem Content="Celsius (C)"/>
-                            <ComboBoxItem Content="Fahrenheit (F)"/>
-                            <ComboBoxItem Content="Kelvin (K)"/>
-                        </ComboBox>
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Latitud:" VerticalAlignment="Center" Margin="5" Grid.ColumnSpan="1" Foreground="Black" FontWeight="Normal"/>
-                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtLatitude" Text="40.7128" Margin="5" Grid.ColumnSpan="2"/>
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Longitud 1:" VerticalAlignment="Center" Margin="5" Foreground="Black" FontWeight="Normal"/>
-                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtLongitude" Text="-74.0060" Margin="5" Grid.ColumnSpan="2"/>
-                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Longitud 2:" VerticalAlignment="Center" Margin="5" Foreground="Black" FontWeight="Normal"/>
-                        <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtLongitude2" Text="-118.2437" Margin="5" Grid.ColumnSpan="2"/>
-                    </Grid>
-                </GroupBox>
+                <!-- Contenido principal con scroll -->
+                <ScrollViewer Grid.Row="1" 
+                              VerticalScrollBarVisibility="Auto" 
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <!-- Avatar y título -->
+                        <Border Width="80" Height="80" 
+                                Background="#4A90E2" 
+                                CornerRadius="40" 
+                                HorizontalAlignment="Center"
+                                Margin="0,0,0,16">
+                            <Image Source="/Resources/Images/exchange.png" 
+                                   Width="42" 
+                                   Height="42"/>
+                        </Border>
 
-                <Button x:Name="btnConvertir" Content="CONVERTIR" Click="btnConvertir_Click" Margin="0,15,0,0" 
-                        Style="{StaticResource PrimaryButton}"/>
+                        <TextBlock Text="Conversion de Masa" 
+                                   FontSize="28" 
+                                   FontWeight="Bold" 
+                                   Foreground="#333333"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,8"/>
 
-                <GroupBox Header="2. Resultados de la Conversión" Style="{StaticResource SectionGroupBox}">
-                    <StackPanel Margin="10">
-                        <Border Style="{StaticResource ResultCard}">
+                        <TextBlock Text="Selecciona el tipo de conversion que necesites" 
+                                   FontSize="18" 
+                                   Foreground="#666666"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,30"/>
+
+                        <!-- Formulario de conversión -->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Campo Valor -->
+                            <TextBlock Text="Valor" 
+                                       Grid.Row="0"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBox Grid.Row="1"
+                                     x:Name="txtMassValue" 
+                                     Text="100"
+                                     Style="{StaticResource RoundedTextBox}"/>
+
+                            <!-- Campo Unidad origen -->
+                            <TextBlock Text="Unidad origen" 
+                                       Grid.Row="2"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <ComboBox Grid.Row="3"
+                                      x:Name="cmbMassUnit" 
+                                      SelectedIndex="0"
+                                      Style="{StaticResource RoundedComboBox}">
+                                <ComboBoxItem Content="Kilogramos"/>
+                                <ComboBoxItem Content="Gramos"/>
+                                <ComboBoxItem Content="Libras"/>
+                            </ComboBox>
+
+                            <!-- Campo Unidad destino (para temperatura) -->
+                            <TextBlock Text="Unidad destino (Temperatura)" 
+                                       Grid.Row="4"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <ComboBox Grid.Row="5"
+                                      x:Name="cmbTempUnit" 
+                                      SelectedIndex="0"
+                                      Style="{StaticResource RoundedComboBox}">
+                                <ComboBoxItem Content="Celsius"/>
+                                <ComboBoxItem Content="Fahrenheit"/>
+                                <ComboBoxItem Content="Kelvin"/>
+                            </ComboBox>
+
+                            <!-- Campo Temperatura -->
+                            <TextBlock Text="Temperatura" 
+                                       Grid.Row="6"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBox Grid.Row="7"
+                                     x:Name="txtTempValue" 
+                                     Text="20"
+                                     Style="{StaticResource RoundedTextBox}"/>
+
+                            <!-- Campos de coordenadas -->
+                            <TextBlock Text="Latitud" 
+                                       Grid.Row="8"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <TextBox Grid.Row="9"
+                                     x:Name="txtLatitude" 
+                                     Text="40.7128"
+                                     Style="{StaticResource RoundedTextBox}"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Longitud 1" 
+                                           Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="txtLongitude" 
+                                         Text="-74.0060"
+                                         Style="{StaticResource RoundedTextBox}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Longitud 2" 
+                                           Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="txtLongitude2" 
+                                         Text="-118.2437"
+                                         Style="{StaticResource RoundedTextBox}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Botón Convertir -->
+                        <Button x:Name="btnConvertir" 
+                                Content="Convertir" 
+                                Click="btnConvertir_Click" 
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="0,0,0,15"/>
+
+                        <!-- Mensaje de error -->
+                        <TextBlock x:Name="lblError" 
+                                   Foreground="#E74C3C" 
+                                   FontSize="14"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   MinHeight="18"
+                                   Margin="0,0,0,10"/>
+
+                        <!-- Resultado grande -->
+                        <TextBlock x:Name="lblResultado" 
+                                   FontSize="36"
+                                   FontWeight="Bold"
+                                   Foreground="#333333"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   Margin="0,10,0,20"/>
+
+                        <!-- Tarjetas de resultados detallados -->
+                        <Border Background="#F7F9FB"
+                                CornerRadius="12"
+                                Padding="20"
+                                Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="Masa:" Style="{StaticResource ResultHeader}"/>
-                                <TextBlock x:Name="lblResultMassLb" Text="Libras (Lb): ..."/>
-                                <TextBlock x:Name="lblResultMassG" Text="Gramos (G): ..."/>
-                                <TextBlock x:Name="lblResultMassKg" Text="Kilogramos (Kg): ..."/>
+                                <TextBlock Text="Masa:" 
+                                           FontWeight="Bold" 
+                                           Foreground="#4A90E2"
+                                           Margin="0,0,0,8"/>
+                                <TextBlock x:Name="lblResultMassLb" 
+                                           Text="Libras (Lb): ..."
+                                           Foreground="#666666"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock x:Name="lblResultMassG" 
+                                           Text="Gramos (G): ..."
+                                           Foreground="#666666"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock x:Name="lblResultMassKg" 
+                                           Text="Kilogramos (Kg): ..."
+                                           Foreground="#666666"/>
                             </StackPanel>
                         </Border>
-                        <Border Style="{StaticResource ResultCard}">
+
+                        <Border Background="#F7F9FB"
+                                CornerRadius="12"
+                                Padding="20"
+                                Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="Temperatura:" Style="{StaticResource ResultHeader}"/>
-                                <TextBlock x:Name="lblResultTempF" Text="Fahrenheit (F): ..."/>
-                                <TextBlock x:Name="lblResultTempK" Text="Kelvin (K): ..."/>
-                                <TextBlock x:Name="lblResultTempC" Text="Celsius (C): ..."/>
+                                <TextBlock Text="Temperatura:" 
+                                           FontWeight="Bold" 
+                                           Foreground="#4A90E2"
+                                           Margin="0,0,0,8"/>
+                                <TextBlock x:Name="lblResultTempF" 
+                                           Text="Fahrenheit (F): ..."
+                                           Foreground="#666666"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock x:Name="lblResultTempK" 
+                                           Text="Kelvin (K): ..."
+                                           Foreground="#666666"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock x:Name="lblResultTempC" 
+                                           Text="Celsius (C): ..."
+                                           Foreground="#666666"/>
                             </StackPanel>
                         </Border>
-                        <Border Style="{StaticResource ResultCard}">
+
+                        <Border Background="#F7F9FB"
+                                CornerRadius="12"
+                                Padding="20"
+                                Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="Coordenadas (DMS):" Style="{StaticResource ResultHeader}"/>
-                                <TextBlock x:Name="lblResultLatDMS" Text="Latitud 1: ..."/>
-                                <TextBlock x:Name="lblResultLonDMS" Text="Longitud 1: ..."/>
-                                <TextBlock x:Name="lblResultLon2DMS" Text="Longitud 2: ..."/>
+                                <TextBlock Text="Coordenadas (DMS):" 
+                                           FontWeight="Bold" 
+                                           Foreground="#4A90E2"
+                                           Margin="0,0,0,8"/>
+                                <TextBlock x:Name="lblResultLatDMS" 
+                                           Text="Latitud 1: ..."
+                                           Foreground="#666666"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock x:Name="lblResultLonDMS" 
+                                           Text="Longitud 1: ..."
+                                           Foreground="#666666"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock x:Name="lblResultLon2DMS" 
+                                           Text="Longitud 2: ..."
+                                           Foreground="#666666"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>
-                </GroupBox>
+                </ScrollViewer>
 
-            </StackPanel>
-        </ScrollViewer>
-
-        <TextBlock Grid.Row="1" 
-                   Text="© 2025 Conversor de Unidades | GR03" 
-                   HorizontalAlignment="Center" 
-                   Foreground="Gray" 
-                   FontSize="11" 
-                   Margin="0,10,0,0"/>
-
+                <!-- Footer -->
+                <TextBlock Grid.Row="2" 
+                           Text="Resultado calculado mediante el servicio SOAP .NET" 
+                           HorizontalAlignment="Center" 
+                           Foreground="#AAAAAA" 
+                           FontSize="12" 
+                           Margin="0,10,0,0"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

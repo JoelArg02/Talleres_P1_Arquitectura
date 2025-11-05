@@ -5,50 +5,167 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CLIESC_ConUni_SOAPDOTNET_GR03"
         mc:Ignorable="d"
-        Title="Login de Usuario" Height="450" Width="350"
-        WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
+        Title="Login SOAP" Height="550" Width="500"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
 
-    <!-- Definición de Estilos -->
+    <!-- Definición de Estilos basados en el cliente web -->
     <Window.Resources>
         <!-- Estilo para el botón principal de login -->
         <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Background" Value="#4A90E2"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Padding" Value="14,14,14,14"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="12"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#357ABD"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Estilo para contenedor de input con icono -->
+        <Style x:Key="InputContainer" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#D3D8DE"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="10,10,14,10"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
         </Style>
 
         <!-- Estilo para las cajas de texto -->
-        <Style x:Key="InputBox" TargetType="Control">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="BorderBrush" Value="LightGray"/>
-            <Setter Property="BorderThickness" Value="1"/>
+        <Style x:Key="InputBox" TargetType="TextBox">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#333333"/>
+        </Style>
+
+        <!-- Estilo para password box -->
+        <Style x:Key="PasswordInput" TargetType="PasswordBox">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#333333"/>
         </Style>
     </Window.Resources>
 
-    <Grid Background="White">
-        <StackPanel VerticalAlignment="Center" Margin="30">
+    <Grid Background="#F0F2F5">
+        <!-- Contenedor principal centrado -->
+        <Border Background="White" 
+                CornerRadius="17" 
+                Width="420" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Padding="40,40,60,40">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="12" ShadowDepth="3"/>
+            </Border.Effect>
+            
+            <StackPanel>
+                <!-- Avatar circular con imagen -->
+                <Border Width="80" Height="80" 
+                        Background="#4A90E2" 
+                        CornerRadius="40" 
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,16">
+                    <Image Source="/Resources/Images/userlogin.png" 
+                           Width="42" 
+                           Height="42"/>
+                </Border>
 
-            <!-- Título con el color azul corporativo -->
-            <TextBlock Text="User Login" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Margin="0,0,0,30"
-                       Foreground="#2A3A8D"/>
+                <!-- Título -->
+                <TextBlock Text="Bienvenido" 
+                           HorizontalAlignment="Center" 
+                           FontSize="28" 
+                           FontWeight="Bold" 
+                           Foreground="#333333"
+                           Margin="0,0,0,8"/>
 
-            <TextBlock Text="Usuario:" Margin="0,0,0,5"/>
-            <!-- Aplicamos el estilo de caja de texto -->
-            <TextBox x:Name="txtUsuario" Style="{StaticResource InputBox}"/>
+                <!-- Subtítulo -->
+                <TextBlock Text="Ingresa tus credenciales para continuar" 
+                           HorizontalAlignment="Center" 
+                           FontSize="18" 
+                           Foreground="#666666"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           Margin="0,0,0,30"/>
 
-            <TextBlock Text="Contraseña:" Margin="0,10,0,5"/>
-            <!-- Aplicamos el estilo de caja de texto -->
-            <PasswordBox x:Name="txtPassword" Style="{StaticResource InputBox}"/>
+                <!-- Campo Usuario -->
+                <Border Style="{StaticResource InputContainer}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Image Source="/Resources/Images/user.png" 
+                               Width="18" 
+                               Height="18"
+                               Margin="0,0,10,0"
+                               Opacity="0.8"
+                               Grid.Column="0"/>
+                        
+                        <TextBox x:Name="txtUsuario" 
+                                 Grid.Column="1"
+                                 Style="{StaticResource InputBox}"/>
+                    </Grid>
+                </Border>
 
-            <!-- Aplicamos el estilo de botón principal -->
-            <Button x:Name="btnLogin" Content="LOGIN" Click="btnLogin_Click" Margin="0,20,0,0" 
-                    Style="{StaticResource PrimaryButton}"/>
+                <!-- Campo Contraseña -->
+                <Border Style="{StaticResource InputContainer}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Image Source="/Resources/Images/password.png" 
+                               Width="18" 
+                               Height="18"
+                               Margin="0,0,10,0"
+                               Opacity="0.8"
+                               Grid.Column="0"/>
+                        
+                        <PasswordBox x:Name="txtPassword" 
+                                     Grid.Column="1"
+                                     Style="{StaticResource PasswordInput}"/>
+                    </Grid>
+                </Border>
 
-            <TextBlock x:Name="lblLoginResult" Foreground="Red" Margin="0,10,0,0" HorizontalAlignment="Center"/>
-        </StackPanel>
+                <!-- Botón Ingresar -->
+                <Button x:Name="btnLogin" 
+                        Content="Ingresar" 
+                        Click="btnLogin_Click" 
+                        Style="{StaticResource PrimaryButton}"
+                        Margin="0,0,0,10"/>
+
+                <!-- Mensaje de error -->
+                <TextBlock x:Name="lblLoginResult" 
+                           Foreground="#E74C3C" 
+                           FontSize="14"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           MinHeight="18"
+                           Margin="0,10,0,0"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

@@ -13,46 +13,21 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
         {
             InitializeComponent();
 
-            // --- CAMBIO: Llenamos el ComboBox en lugar del TextBlock ---
-
-            // 1. Añade el nombre de usuario como un ítem NO seleccionable
-            cmbUserMenu.Items.Add(new ComboBoxItem
-            {
-                Content = $"Usuario: {username}",
-                IsEnabled = false // El usuario no puede "seleccionar" su propio nombre
-            });
-
-            // 2. Añade la opción de Logout
-            cmbUserMenu.Items.Add(new ComboBoxItem
-            {
-                Content = "Cerrar Sesión"
-            });
-
-            // 3. Establece el ítem por defecto para que muestre el nombre de usuario
-            cmbUserMenu.SelectedIndex = 0;
+            // Establecer el nombre de usuario en el TextBlock
+            txtUsuarioNombre.Text = username;
         }
 
         /// <summary>
-        /// Este método se dispara cuando el usuario selecciona un ítem del ComboBox.
+        /// Este método se dispara cuando el usuario hace clic en "Cerrar sesión"
         /// </summary>
-        private void cmbUserMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cmbUserMenu_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            // Nos aseguramos de que el ComboBox y el ítem seleccionado no sean nulos
-            if (cmbUserMenu.SelectedItem == null) return;
+            // 1. Abrir una nueva ventana de Login
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
 
-            var selectedItem = cmbUserMenu.SelectedItem as ComboBoxItem;
-            if (selectedItem == null) return;
-
-            // Comprobamos si el ítem seleccionado es "Cerrar Sesión"
-            if (selectedItem.Content.ToString() == "Cerrar Sesión")
-            {
-                // 1. Abrir una nueva ventana de Login
-                LoginWindow loginWindow = new LoginWindow();
-                loginWindow.Show();
-
-                // 2. Cerrar esta ventana de Conversión
-                this.Close();
-            }
+            // 2. Cerrar esta ventana de Conversión
+            this.Close();
         }
 
         // --- El resto de tu código de conversión no cambia en absoluto ---
@@ -61,6 +36,7 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
         {
             var conversionClient = new Service();
             LimpiarResultados();
+            lblError.Text = "";
 
             try
             {
@@ -69,11 +45,11 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
                 string massUnit = (cmbMassUnit.SelectedItem as ComboBoxItem).Content.ToString();
                 double massInKg = 0;
 
-                if (massUnit == "Gramos (g)")
+                if (massUnit == "Gramos")
                 {
                     massInKg = massValue / 1000.0;
                 }
-                else if (massUnit == "Libras (lb)")
+                else if (massUnit == "Libras")
                 {
                     massInKg = massValue / 2.20462262185;
                 }
@@ -86,11 +62,11 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
                 string tempUnit = (cmbTempUnit.SelectedItem as ComboBoxItem).Content.ToString();
                 double tempInCelsius = 0;
 
-                if (tempUnit == "Fahrenheit (F)")
+                if (tempUnit == "Fahrenheit")
                 {
                     tempInCelsius = (tempValue - 32) * 5.0 / 9.0;
                 }
-                else if (tempUnit == "Kelvin (K)")
+                else if (tempUnit == "Kelvin")
                 {
                     tempInCelsius = tempValue - 273.15;
                 }
@@ -119,7 +95,26 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
                     conversionClient.Convert(request)
                 );
 
-                // 4. Mostrar resultados
+                // 4. Mostrar resultado principal (basado en la conversión de masa)
+                string unidadOrigen = (cmbMassUnit.SelectedItem as ComboBoxItem).Content.ToString();
+                string resultadoPrincipal = "";
+                
+                if (unidadOrigen == "Kilogramos")
+                {
+                    resultadoPrincipal = $"{massValue:F2} kg = {response.MassLb:F2} lb";
+                }
+                else if (unidadOrigen == "Gramos")
+                {
+                    resultadoPrincipal = $"{massValue:F2} g = {response.MassKg:F2} kg";
+                }
+                else if (unidadOrigen == "Libras")
+                {
+                    resultadoPrincipal = $"{massValue:F2} lb = {response.MassKg:F2} kg";
+                }
+
+                lblResultado.Text = resultadoPrincipal;
+
+                // 5. Mostrar resultados detallados
                 lblResultMassLb.Text = $"Libras (Lb): {response.MassLb:F2}";
                 lblResultMassG.Text = $"Gramos (G): {response.MassG:F2}";
                 lblResultMassKg.Text = $"Kilogramos (Kg): {response.MassKg:F2}";
@@ -134,15 +129,15 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
             }
             catch (SoapException exSoap)
             {
-                MessageBox.Show($"Error de SOAP: {exSoap.Message}", "Error de Servicio");
+                lblError.Text = $"Error de SOAP: {exSoap.Message}";
             }
             catch (FormatException)
             {
-                MessageBox.Show("Por favor, ingresa solo números válidos en los campos de entrada.", "Error de Formato");
+                lblError.Text = "Por favor, ingresa solo números válidos en los campos de entrada.";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al convertir o conectar: {ex.Message}. ¿Servicio WCFService ejecutándose?", "Error");
+                lblError.Text = $"Error al convertir o conectar: {ex.Message}. ¿Servicio WCFService ejecutándose?";
             }
         }
 
@@ -154,6 +149,7 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
 
         private void LimpiarResultados()
         {
+            lblResultado.Text = "";
             lblResultMassLb.Text = "Libras (Lb): ...";
             lblResultMassG.Text = "Gramos (G): ...";
             lblResultMassKg.Text = "Kilogramos (Kg): ...";
