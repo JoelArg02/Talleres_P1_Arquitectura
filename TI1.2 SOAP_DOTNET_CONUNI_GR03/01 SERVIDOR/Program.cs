@@ -4,19 +4,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureWCFServices();
 
+builder.Services.AddCors(o => o.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
+builder.WebHost.ConfigureKestrel(o =>
+{
+    o.ListenAnyIP(5001);
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 app.ConfigureWCFEndpoints(builder.Configuration);
 
 Console.WriteLine("===========================================");
-Console.WriteLine("WCF Service iniciado con arquitectura MVC");
-Console.WriteLine("===========================================");
-Console.WriteLine($"Servicio: http://localhost:5000/Service.svc");
-Console.WriteLine($"WSDL:     http://localhost:5000/Service.svc?wsdl");
+Console.WriteLine("Servicio escuchando en todos los orígenes e IPs");
 Console.WriteLine("===========================================");
 Console.WriteLine("Presiona Ctrl+C para detener el servicio");
 Console.WriteLine("===========================================");
