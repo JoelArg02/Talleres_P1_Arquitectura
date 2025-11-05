@@ -108,9 +108,6 @@
       </div>
     </section>
 
-    <footer>
-      Conversiones calculadas en el cliente
-    </footer>
   </main>
 
   <script>

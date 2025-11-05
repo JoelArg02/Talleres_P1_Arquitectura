@@ -50,6 +50,11 @@ public class ConsolaView {
         return scanner.nextLine().trim();
     }
 
+    public String pedirTexto(String mensaje) {
+        System.out.print(mensaje + ": ");
+        return scanner.nextLine().trim();
+    }
+
     public double pedirValor(String mensaje) {
         while (true) {
             System.out.print(mensaje + ": ");
@@ -137,7 +142,7 @@ public class ConsolaView {
         }
     }
 
-    private int leerOpcionNumerica(String mensaje) {
+    public int leerOpcionNumerica(String mensaje) {
         while (true) {
             String entrada = leerLinea(mensaje);
             try {
