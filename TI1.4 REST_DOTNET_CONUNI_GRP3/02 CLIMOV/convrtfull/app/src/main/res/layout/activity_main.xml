@@ -5,32 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#F5F5F5"
+    android:background="@color/bg_primary"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="#FFFFFF"
+        android:background="@color/bg_secondary"
         android:elevation="4dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#FFFFFF" />
+            android:background="@color/bg_secondary" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
+            android:background="@color/bg_secondary"
             app:tabMode="scrollable"
             app:tabGravity="fill"
-            app:tabTextColor="#616161"
-            app:tabSelectedTextColor="#212121"
-            app:tabIndicatorColor="#424242" />
+            app:tabTextColor="@color/text_medium"
+            app:tabSelectedTextColor="@color/text_dark"
+            app:tabIndicatorColor="@color/accent_blue" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/bg_primary"
     tools:context=".LoginActivity">
 
     <TextView
         android:id="@+id/app_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=".NET SOAP"
-        android:textSize="40sp"
+        android:text="Bienvenido"
+        android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="#424242"
+        android:textColor="@color/text_dark"
         android:layout_marginTop="80dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,9 +24,9 @@
         android:id="@+id/login_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Conversor de Unidades"
+        android:text="Ingresa tus credenciales para continuar"
         android:textSize="16sp"
-        android:textColor="#757575"
+        android:textColor="@color/text_medium"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/app_title"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,9 +39,8 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginTop="48dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
-        android:backgroundTint="#FFFFFF"
+        app:cardCornerRadius="17dp"
+        app:cardElevation="3dp"
         app:layout_constraintTop_toBottomOf="@id/login_subtitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -50,17 +49,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="40dp"
+            android:background="@color/bg_secondary">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/username_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Usuario"
-                app:startIconDrawable="@android:drawable/ic_menu_myplaces"
                 app:boxBackgroundMode="outline"
-                app:boxStrokeColor="#616161"
-                app:hintTextColor="#616161"
+                app:boxStrokeColor="@color/border_gray"
+                app:hintTextColor="@color/text_medium"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -69,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:textColor="#212121" />
+                    android:textColor="@color/text_dark" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,12 +81,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contraseña"
-                android:layout_marginTop="16dp"
-                app:startIconDrawable="@android:drawable/ic_lock_lock"
+                android:layout_marginTop="20dp"
                 app:endIconMode="password_toggle"
                 app:boxBackgroundMode="outline"
-                app:boxStrokeColor="#616161"
-                app:hintTextColor="#616161"
+                app:boxStrokeColor="@color/border_gray"
+                app:hintTextColor="@color/text_medium"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -92,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:textColor="#212121" />
+                    android:textColor="@color/text_dark" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,13 +106,12 @@
                 android:id="@+id/login_button"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:text="INICIAR SESIÓN"
+                android:layout_marginTop="30dp"
+                android:text="Ingresar"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:cornerRadius="28dp"
-                android:backgroundTint="#616161"
-                android:textColor="#FFFFFF" />
+                app:cornerRadius="12dp"
+                android:backgroundTint="@color/accent_blue" />
 
         </LinearLayout>
 
@@ -117,7 +122,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:indeterminateTint="#616161"
+        android:indeterminateTint="@color/accent_blue"
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/login_card"
         app:layout_constraintStart_toStartOf="parent"

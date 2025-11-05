@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F5F5F5"
+    android:background="@color/bg_primary"
     tools:context=".arguello.FirstFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,9 +17,9 @@
             android:id="@+id/conversion_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp"
-            android:backgroundTint="#FFFFFF"
+            app:cardCornerRadius="17dp"
+            app:cardElevation="3dp"
+            android:backgroundTint="@color/bg_secondary"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,20 +34,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CONVERSOR UNIVERSAL"
-                    android:textSize="24sp"
+                    android:text="Conversión de Unidades"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    android:textColor="#212121"
-                    android:letterSpacing="0.1"
+                    android:textColor="@color/text_dark"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Masa • Temperatura • Coordenadas"
-                    android:textSize="13sp"
-                    android:textColor="#757575"
+                    android:text="Selecciona los datos para transformar tu valor"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_medium"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="24dp"/>
 
@@ -57,15 +56,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Masa (kg)"
-                    app:boxStrokeColor="#616161"
-                    app:hintTextColor="#616161">
+                    app:boxStrokeColor="@color/border_gray"
+                    app:hintTextColor="@color/text_medium"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/mass_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_dark"
                         android:textSize="16sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,15 +79,19 @@
                     android:layout_height="wrap_content"
                     android:hint="Temperatura (°C)"
                     android:layout_marginTop="16dp"
-                    app:boxStrokeColor="#616161"
-                    app:hintTextColor="#616161">
+                    app:boxStrokeColor="@color/border_gray"
+                    app:hintTextColor="@color/text_medium"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/temp_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal|numberSigned"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_dark"
                         android:textSize="16sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,32 +102,32 @@
                     android:layout_height="wrap_content"
                     android:hint="Longitud 2"
                     android:layout_marginTop="16dp"
-                    app:boxStrokeColor="#616161"
-                    app:hintTextColor="#616161">
+                    app:boxStrokeColor="@color/border_gray"
+                    app:hintTextColor="@color/text_medium"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/longitude2_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal|numberSigned"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_dark"
                         android:textSize="16sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/convert_button"
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:text="CALCULAR CONVERSIONES"
+                    android:layout_height="56dp"
+                    android:text="Convertir"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginTop="24dp"
                     app:cornerRadius="12dp"
-                    app:icon="@android:drawable/ic_menu_compass"
-                    app:iconGravity="textStart"
-                    app:iconPadding="8dp"
-                    android:backgroundTint="#424242"
-                    android:textColor="#FFFFFF"/>
+                    android:backgroundTint="@color/accent_blue"/>
 
             </LinearLayout>
 
@@ -130,9 +137,9 @@
             android:id="@+id/result_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp"
-            android:backgroundTint="#ECEFF1"
+            app:cardCornerRadius="17dp"
+            app:cardElevation="3dp"
+            android:backgroundTint="@color/bg_secondary"
             app:layout_constraintTop_toBottomOf="@id/conversion_card"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -154,7 +161,7 @@
                     <View
                         android:layout_width="4dp"
                         android:layout_height="24dp"
-                        android:background="#424242"
+                        android:background="@color/accent_blue"
                         android:layout_marginEnd="12dp"/>
 
                     <TextView
@@ -163,8 +170,7 @@
                         android:text="RESULTADOS"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"
-                        android:letterSpacing="0.1"/>
+                        android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
                 <TextView
@@ -173,8 +179,7 @@
                     android:text="MASA"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:textColor="#616161"
-                    android:letterSpacing="0.15"
+                    android:textColor="@color/text_medium"
                     android:layout_marginBottom="12dp"/>
 
                 <LinearLayout
@@ -189,7 +194,7 @@
                         android:layout_weight="1"
                         android:text="Kilogramos:"
                         android:textSize="16sp"
-                        android:textColor="#616161"/>
+                        android:textColor="@color/text_medium"/>
 
                     <TextView
                         android:id="@+id/result_kg"
@@ -198,7 +203,7 @@
                         android:text="---"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"/>
+                        android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -213,7 +218,7 @@
                         android:layout_weight="1"
                         android:text="Libras:"
                         android:textSize="16sp"
-                        android:textColor="#616161"/>
+                        android:textColor="@color/text_medium"/>
 
                     <TextView
                         android:id="@+id/result_lb"
@@ -222,7 +227,7 @@
                         android:text="---"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"/>
+                        android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -236,7 +241,7 @@
                         android:layout_weight="1"
                         android:text="Gramos:"
                         android:textSize="16sp"
-                        android:textColor="#616161"/>
+                        android:textColor="@color/text_medium"/>
 
                     <TextView
                         android:id="@+id/result_g"
@@ -245,13 +250,13 @@
                         android:text="---"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"/>
+                        android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="#CFD8DC"
+                    android:background="@color/border_gray"
                     android:layout_marginVertical="16dp"/>
 
                 <TextView
@@ -260,7 +265,7 @@
                     android:text="TEMPERATURA"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:textColor="#616161"
+                    android:textColor="@color/text_medium"
                     android:letterSpacing="0.15"
                     android:layout_marginBottom="12dp"/>
 
@@ -276,7 +281,7 @@
                         android:layout_weight="1"
                         android:text="Celsius:"
                         android:textSize="16sp"
-                        android:textColor="#616161"/>
+                        android:textColor="@color/text_medium"/>
 
                     <TextView
                         android:id="@+id/result_celsius"
@@ -285,7 +290,7 @@
                         android:text="---"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"/>
+                        android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -300,7 +305,7 @@
                         android:layout_weight="1"
                         android:text="Fahrenheit:"
                         android:textSize="16sp"
-                        android:textColor="#616161"/>
+                        android:textColor="@color/text_medium"/>
 
                     <TextView
                         android:id="@+id/result_fahrenheit"
@@ -309,7 +314,7 @@
                         android:text="---"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"/>
+                        android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -323,7 +328,7 @@
                         android:layout_weight="1"
                         android:text="Kelvin:"
                         android:textSize="16sp"
-                        android:textColor="#616161"/>
+                        android:textColor="@color/text_medium"/>
 
                     <TextView
                         android:id="@+id/result_kelvin"
@@ -332,13 +337,13 @@
                         android:text="---"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"/>
+                        android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="#CFD8DC"
+                    android:background="@color/border_gray"
                     android:layout_marginVertical="16dp"/>
 
                 <TextView
@@ -347,7 +352,7 @@
                     android:text="COORDENADAS"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:textColor="#616161"
+                    android:textColor="@color/text_medium"
                     android:letterSpacing="0.15"
                     android:layout_marginBottom="12dp"/>
 
@@ -363,7 +368,7 @@
                         android:layout_weight="1"
                         android:text="Long2 Decimal:"
                         android:textSize="16sp"
-                        android:textColor="#616161"/>
+                        android:textColor="@color/text_medium"/>
 
                     <TextView
                         android:id="@+id/result_long2_decimal"
@@ -372,7 +377,7 @@
                         android:text="---"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"/>
+                        android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -386,7 +391,7 @@
                         android:layout_weight="1"
                         android:text="Long2 Radianes:"
                         android:textSize="16sp"
-                        android:textColor="#616161"/>
+                        android:textColor="@color/text_medium"/>
 
                     <TextView
                         android:id="@+id/result_long2_radians"
@@ -395,7 +400,7 @@
                         android:text="---"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"/>
+                        android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -408,7 +413,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="14sp"
-            android:textColor="#D32F2F"
+            android:textColor="@color/error_red"
             android:visibility="gone"
             android:layout_marginTop="16dp"
             android:gravity="center"

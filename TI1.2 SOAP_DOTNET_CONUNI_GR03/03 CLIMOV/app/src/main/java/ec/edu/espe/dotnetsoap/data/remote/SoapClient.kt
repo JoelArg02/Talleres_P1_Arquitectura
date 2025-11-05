@@ -19,7 +19,7 @@ class SoapClient {
     
     companion object {
         private const val TAG = "SoapClient"
-        private const val BASE_URL = "http://10.1.200.10:5001"
+        private const val BASE_URL = "http://192.168.137.1:5001"
         const val LOGIN_ENDPOINT = "$BASE_URL/Login.svc"
         const val CONVERSION_ENDPOINT = "$BASE_URL/Conversion.svc"
     }
