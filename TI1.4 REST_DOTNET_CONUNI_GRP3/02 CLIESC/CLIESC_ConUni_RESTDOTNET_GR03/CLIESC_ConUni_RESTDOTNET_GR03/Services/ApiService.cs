@@ -11,7 +11,7 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Services
         private readonly HttpClient _httpClient;
 
         // ¡¡IMPORTANTE!! Ajusta esta URL a la de tu servidor
-        private const string BaseUrl = "https://localhost:5001/api";
+        private const string BaseUrl = "http://localhost:5003/api";
 
         public ApiService()
         {

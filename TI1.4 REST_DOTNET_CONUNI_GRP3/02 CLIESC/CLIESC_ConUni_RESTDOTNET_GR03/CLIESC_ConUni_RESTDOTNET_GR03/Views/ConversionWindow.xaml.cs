@@ -15,51 +15,30 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Views
         // Lista de los tipos principales
         private readonly List<string> tiposDeConversion = new List<string> { "Longitud", "Peso", "Temperatura", "Volumen" };
 
-        // === CAMBIO: El constructor ahora recibe el nombre de usuario ===
         public ConversionWindow(string username)
         {
             InitializeComponent();
             _apiService = new ApiService();
 
+            // Establecer el nombre de usuario en el TextBlock
+            txtUsuarioNombre.Text = username;
+
             // Configurar el ComboBox de Tipos
             cmbTipo.ItemsSource = tiposDeConversion;
             cmbTipo.SelectedIndex = 0;
-
-            // --- NUEVO: Configurar el ComboBox de Usuario ---
-            // 1. Añade el nombre de usuario (deshabilitado)
-            cmbUserMenu.Items.Add(new ComboBoxItem
-            {
-                Content = $"Usuario: {username}",
-                IsEnabled = false
-            });
-            // 2. Añade la opción de Logout
-            cmbUserMenu.Items.Add(new ComboBoxItem
-            {
-                Content = "Cerrar Sesión"
-            });
-            // 3. Establece el ítem por defecto
-            cmbUserMenu.SelectedIndex = 0;
         }
 
         /// <summary>
-        /// NUEVO: Maneja el clic en el menú de usuario
+        /// Maneja el clic en el botón de cerrar sesión
         /// </summary>
-        private void cmbUserMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cmbUserMenu_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (cmbUserMenu.SelectedItem == null) return;
-            var selectedItem = cmbUserMenu.SelectedItem as ComboBoxItem;
-            if (selectedItem == null) return;
+            // 1. Abrir una nueva ventana de Login
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
 
-            // Comprobar si se seleccionó "Cerrar Sesión"
-            if (selectedItem.Content.ToString() == "Cerrar Sesión")
-            {
-                // 1. Abrir una nueva ventana de Login
-                LoginWindow loginWindow = new LoginWindow();
-                loginWindow.Show();
-
-                // 2. Cerrar esta ventana de Conversión
-                this.Close();
-            }
+            // 2. Cerrar esta ventana de Conversión
+            this.Close();
         }
 
         // --- El resto del código es el de la conversión (con la corrección de Enums) ---
@@ -96,6 +75,7 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Views
         private async void btnConvertir_Click(object sender, RoutedEventArgs e)
         {
             lblResultado.Text = "Convirtiendo...";
+            lblError.Text = "";
             btnConvertir.IsEnabled = false;
 
             try
@@ -131,16 +111,24 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Views
 
                 if (resultado != null)
                 {
-                    lblResultado.Text = $"Resultado: {resultado.ConvertedValue:F2} {resultado.ToUnit}";
+                    // Formatear el resultado para mostrarlo de forma más elegante
+                    lblResultado.Text = $"{value:F4} {fromUnit} = {resultado.ConvertedValue:F4} {resultado.ToUnit}";
                 }
                 else
                 {
-                    lblResultado.Text = "Error en la conversión.";
+                    lblError.Text = "Error en la conversión.";
+                    lblResultado.Text = "";
                 }
+            }
+            catch (FormatException)
+            {
+                lblError.Text = "Por favor, ingresa solo números válidos.";
+                lblResultado.Text = "";
             }
             catch (System.Exception ex)
             {
-                lblResultado.Text = "Error: " + ex.Message;
+                lblError.Text = "Error: " + ex.Message;
+                lblResultado.Text = "";
             }
             finally
             {
