@@ -6,6 +6,7 @@ package ec.edu.pinza.clicon_conuni_soapjava_gr03.modelo;
 
 import ec.edu.pinza.client.WSConUni_Service;
 import ec.edu.pinza.client.WSConUni;
+import jakarta.xml.ws.BindingProvider;
 
 /**
  *
@@ -16,6 +17,11 @@ public class ConversionModel {
     public double conversionUnidades(double valor, String entrada, String salida) {
         WSConUni_Service servicio = new WSConUni_Service();
         WSConUni op = servicio.getWSConUniPort();
+                 String newEndpoint = "http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin"; // <-- CAMBIA IP
+        ((BindingProvider) op).getRequestContext().put(
+                BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                newEndpoint
+        );
         try {
             return op.convertUnit(valor, entrada, salida);
         } catch (Exception e) {

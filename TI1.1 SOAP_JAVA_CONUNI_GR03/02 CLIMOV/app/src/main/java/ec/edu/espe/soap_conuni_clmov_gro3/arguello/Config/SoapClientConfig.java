@@ -9,8 +9,9 @@ public class SoapClientConfig {
     private static final MediaType XML = MediaType.get("text/xml; charset=utf-8");
     private static final OkHttpClient client = new OkHttpClient();
 
-    private static final String BASE_URI = "http://10.0.2.2:8080/WS_ConUni_SOAPJAVA_GR03/";
+//    private static final String BASE_URI = "http://10.0.2.2:8080/WS_ConUni_SOAPJAVA_GR03/";
 
+    private static final String BASE_URI = "http://10.1.200.12:8080/WS_ConUni_SOAPJAVA_GR03/";
     private final String endpoint;
 
     public SoapClientConfig(String servicePath) {
