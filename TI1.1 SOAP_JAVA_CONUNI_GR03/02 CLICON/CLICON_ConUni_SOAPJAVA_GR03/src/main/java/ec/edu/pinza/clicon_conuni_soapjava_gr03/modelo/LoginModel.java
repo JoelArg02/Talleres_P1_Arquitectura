@@ -6,6 +6,7 @@ package ec.edu.pinza.clicon_conuni_soapjava_gr03.modelo;
 
 import ec.edu.pinza.client.WSLogin;
 import ec.edu.pinza.client.WSLogin_Service;
+import jakarta.xml.ws.BindingProvider;
 
 /**
  *
@@ -19,6 +20,13 @@ public class LoginModel {
         WSLogin_Service servicio = new WSLogin_Service();
         //2. Instancio el puerto que implementa interfaz de operaciones.
         WSLogin op = servicio.getWSLoginPort();
+        
+         String newEndpoint = "http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin"; // <-- CAMBIA IP
+        ((BindingProvider) op).getRequestContext().put(
+                BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                newEndpoint
+        );
+
 
         try {
             if (op.autenticar(usuario, contrasena)) {

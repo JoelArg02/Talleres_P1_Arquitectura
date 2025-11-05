@@ -1,0 +1,54 @@
+﻿<Window x:Class="CLIESC_ConUni_SOAPDOTNET_GR03.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CLIESC_ConUni_SOAPDOTNET_GR03"
+        mc:Ignorable="d"
+        Title="Login de Usuario" Height="450" Width="350"
+        WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow">
+
+    <!-- Definición de Estilos -->
+    <Window.Resources>
+        <!-- Estilo para el botón principal de login -->
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <!-- Estilo para las cajas de texto -->
+        <Style x:Key="InputBox" TargetType="Control">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="White">
+        <StackPanel VerticalAlignment="Center" Margin="30">
+
+            <!-- Título con el color azul corporativo -->
+            <TextBlock Text="User Login" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Margin="0,0,0,30"
+                       Foreground="#2A3A8D"/>
+
+            <TextBlock Text="Usuario:" Margin="0,0,0,5"/>
+            <!-- Aplicamos el estilo de caja de texto -->
+            <TextBox x:Name="txtUsuario" Style="{StaticResource InputBox}"/>
+
+            <TextBlock Text="Contraseña:" Margin="0,10,0,5"/>
+            <!-- Aplicamos el estilo de caja de texto -->
+            <PasswordBox x:Name="txtPassword" Style="{StaticResource InputBox}"/>
+
+            <!-- Aplicamos el estilo de botón principal -->
+            <Button x:Name="btnLogin" Content="LOGIN" Click="btnLogin_Click" Margin="0,20,0,0" 
+                    Style="{StaticResource PrimaryButton}"/>
+
+            <TextBlock x:Name="lblLoginResult" Foreground="Red" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -93,13 +93,13 @@
                             <sourceRoot>${project.build.directory}/generated-sources/cxf</sourceRoot>
                             <wsdlOptions>
                                 <wsdlOption>
-                                    <wsdl>http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSConUni?wsdl</wsdl>
+                                    <wsdl>http://10.1.200.12:8080/WS_ConUni_SOAPJAVA_GR03/WSConUni?wsdl</wsdl>
                                     <packagenames>
                                         <packagename>ec.edu.carrera.ws</packagename>
                                     </packagenames>
                                 </wsdlOption>
                                 <wsdlOption>
-                                    <wsdl>http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin?wsdl</wsdl>
+                                    <wsdl>http://10.1.200.12:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin?wsdl</wsdl>
                                     <packagenames>
                                         <packagename>ec.edu.carrera.ws.login</packagename>
                                     </packagenames>
