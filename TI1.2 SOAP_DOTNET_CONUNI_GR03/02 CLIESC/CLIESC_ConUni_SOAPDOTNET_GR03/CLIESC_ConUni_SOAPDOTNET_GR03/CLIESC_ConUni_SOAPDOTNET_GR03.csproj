@@ -192,5 +192,13 @@
     <Folder Include="Models\" />
     <Folder Include="Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\exchange.png" />
+    <Resource Include="Resources\Images\password.png" />
+    <Resource Include="Resources\Images\return.png" />
+    <Resource Include="Resources\Images\user.png" />
+    <Resource Include="Resources\Images\userlogin.png" />
+    <Resource Include="Resources\Images\userlogin2.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
