@@ -100,7 +100,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Longitud 2"
+                    android:hint="Longitud (m)"
                     android:layout_marginTop="16dp"
                     app:boxStrokeColor="@color/border_gray"
                     app:hintTextColor="@color/text_medium"
@@ -349,7 +349,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="COORDENADAS"
+                    android:text="LONGITUD"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_medium"
@@ -366,7 +366,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Long2 Decimal:"
+                        android:text="Metros:"
                         android:textSize="16sp"
                         android:textColor="@color/text_medium"/>
 
@@ -389,7 +389,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Long2 Radianes:"
+                        android:text="Centimetros:"
                         android:textSize="16sp"
                         android:textColor="@color/text_medium"/>
 

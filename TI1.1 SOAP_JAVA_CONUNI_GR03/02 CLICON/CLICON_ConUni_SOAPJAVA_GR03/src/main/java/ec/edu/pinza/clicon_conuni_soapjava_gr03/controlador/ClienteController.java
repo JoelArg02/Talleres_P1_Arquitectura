@@ -1,6 +1,7 @@
 package ec.edu.pinza.clicon_conuni_soapjava_gr03.controlador;
 
 import ec.edu.pinza.clicon_conuni_soapjava_gr03.modelo.LoginModel;
+import ec.edu.pinza.clicon_conuni_soapjava_gr03.modelo.ConversionModel;
 import ec.edu.pinza.clicon_conuni_soapjava_gr03.vista.ConsolaView;
 import java.util.Locale;
 
@@ -8,6 +9,7 @@ public class ClienteController {
 
     private final ConsolaView view;
     private final LoginModel loginModel;
+    private final ConversionModel conversionModel;
 
     private boolean autenticado = false;
     private String usuarioAutenticado = "";
@@ -15,6 +17,7 @@ public class ClienteController {
     public ClienteController() {
         this.view = new ConsolaView();
         this.loginModel = new LoginModel();
+        this.conversionModel = new ConversionModel();
     }
 
     /**
@@ -84,23 +87,19 @@ public class ClienteController {
         view.mostrarMensaje("");
         view.mostrarMensaje("===== CONVERSION DE UNIDADES =====");
         
-        // Mostrar menú de selección de tipo de conversión
         view.mostrarMensaje("Seleccione el tipo de conversion:");
-        view.mostrarMensaje("1) Masa (kg → lb, g)");
-        view.mostrarMensaje("2) Temperatura (°C → °F, K)");
-        view.mostrarMensaje("3) Longitud 2 (decimal → radianes)");
-        view.mostrarMensaje("4) Convertir todos");
+        view.mostrarMensaje("1) Masa (Gramo <-> Kilogramo <-> Libra)");
+        view.mostrarMensaje("2) Temperatura (Celsius <-> Fahrenheit <-> Kelvin)");
+        view.mostrarMensaje("3) Longitud (Metro <-> Centimetro <-> Pulgada)");
         
-        int opcion = view.leerOpcionNumerica("Elija una opcion");
+        int tipoConversion = view.leerOpcionNumerica("Elija una opcion");
         
         view.mostrarMensaje("");
-        view.mostrarMensaje("===== RESULTADOS DE CONVERSION =====");
         
-        switch (opcion) {
+        switch (tipoConversion) {
             case 1 -> convertirMasa();
             case 2 -> convertirTemperatura();
-            case 3 -> convertirLongitud2();
-            case 4 -> convertirTodos();
+            case 3 -> convertirLongitud();
             default -> view.mostrarMensaje("ADVERTENCIA: Opcion invalida.");
         }
         
@@ -108,129 +107,73 @@ public class ClienteController {
     }
     
     private void convertirMasa() {
-        String masaStr = view.pedirTexto("Ingrese la masa en kilogramos (kg)");
+        view.mostrarMensaje("=== CONVERSION DE MASA ===");
+        double valor = view.pedirValor("Ingrese el valor");
+        String unidadOrigen = view.seleccionarUnidadMasa("Seleccione unidad de origen");
+        String unidadDestino = view.seleccionarUnidadMasa("Seleccione unidad de destino");
         
-        if (masaStr != null && !masaStr.trim().isEmpty()) {
-            try {
-                double kg = Double.parseDouble(masaStr);
-                double lb = kg * 2.20462;
-                double g = kg * 1000;
-                
-                view.mostrarMensaje("");
-                view.mostrarMensaje("MASA:");
-                view.mostrarMensaje(String.format(Locale.US, "  Kilogramos: %.4f kg", kg));
-                view.mostrarMensaje(String.format(Locale.US, "  Libras:     %.4f lb", lb));
-                view.mostrarMensaje(String.format(Locale.US, "  Gramos:     %.4f g", g));
-            } catch (NumberFormatException e) {
-                view.mostrarMensaje("ADVERTENCIA: Valor de masa invalido.");
-            }
-        } else {
-            view.mostrarMensaje("ADVERTENCIA: No se ingreso ningun valor.");
+        try {
+            double resultado = conversionModel.conversionUnidades(valor, unidadOrigen, unidadDestino);
+            view.mostrarMensaje("");
+            view.mostrarMensaje("===== RESULTADO =====");
+            view.mostrarMensaje(String.format(Locale.US, "%s %s = %s %s", 
+                formatearNumero(valor), view.formatearUnidadMasa(unidadOrigen), 
+                formatearNumero(resultado), view.formatearUnidadMasa(unidadDestino)));
+        } catch (Exception e) {
+            view.mostrarMensaje("Error en la conversion: " + e.getMessage());
         }
     }
     
     private void convertirTemperatura() {
-        String temperaturaStr = view.pedirTexto("Ingrese la temperatura en Celsius (°C)");
+        view.mostrarMensaje("=== CONVERSION DE TEMPERATURA ===");
+        double valor = view.pedirValor("Ingrese el valor");
+        String unidadOrigen = view.seleccionarUnidadTemperatura("Seleccione unidad de origen");
+        String unidadDestino = view.seleccionarUnidadTemperatura("Seleccione unidad de destino");
         
-        if (temperaturaStr != null && !temperaturaStr.trim().isEmpty()) {
-            try {
-                double celsius = Double.parseDouble(temperaturaStr);
-                double fahrenheit = (celsius * 9.0 / 5.0) + 32;
-                double kelvin = celsius + 273.15;
-                
-                view.mostrarMensaje("");
-                view.mostrarMensaje("TEMPERATURA:");
-                view.mostrarMensaje(String.format(Locale.US, "  Celsius:    %.4f °C", celsius));
-                view.mostrarMensaje(String.format(Locale.US, "  Fahrenheit: %.4f °F", fahrenheit));
-                view.mostrarMensaje(String.format(Locale.US, "  Kelvin:     %.4f K", kelvin));
-            } catch (NumberFormatException e) {
-                view.mostrarMensaje("ADVERTENCIA: Valor de temperatura invalido.");
-            }
-        } else {
-            view.mostrarMensaje("ADVERTENCIA: No se ingreso ningun valor.");
+        try {
+            double resultado = conversionModel.conversionUnidades(valor, unidadOrigen, unidadDestino);
+            view.mostrarMensaje("");
+            view.mostrarMensaje("===== RESULTADO =====");
+            view.mostrarMensaje(String.format(Locale.US, "%s %s = %s %s", 
+                formatearNumero(valor), view.formatearUnidadTemperatura(unidadOrigen), 
+                formatearNumero(resultado), view.formatearUnidadTemperatura(unidadDestino)));
+        } catch (Exception e) {
+            view.mostrarMensaje("Error en la conversion: " + e.getMessage());
         }
     }
     
-    private void convertirLongitud2() {
-        String longitud2Str = view.pedirTexto("Ingrese la longitud 2 en grados decimales");
+    private void convertirLongitud() {
+        view.mostrarMensaje("=== CONVERSION DE LONGITUD ===");
+        double valor = view.pedirValor("Ingrese el valor");
+        String unidadOrigen = view.seleccionarUnidadLongitud("Seleccione unidad de origen");
+        String unidadDestino = view.seleccionarUnidadLongitud("Seleccione unidad de destino");
         
-        if (longitud2Str != null && !longitud2Str.trim().isEmpty()) {
-            try {
-                double decimal = Double.parseDouble(longitud2Str);
-                double radianes = decimal * (Math.PI / 180.0);
-                
-                view.mostrarMensaje("");
-                view.mostrarMensaje("COORDENADAS:");
-                view.mostrarMensaje(String.format(Locale.US, "  Long2 Decimal:  %.4f°", decimal));
-                view.mostrarMensaje(String.format(Locale.US, "  Long2 Radianes: %.6f rad", radianes));
-            } catch (NumberFormatException e) {
-                view.mostrarMensaje("ADVERTENCIA: Valor de longitud invalido.");
-            }
-        } else {
-            view.mostrarMensaje("ADVERTENCIA: No se ingreso ningun valor.");
+        try {
+            double resultado = conversionModel.conversionUnidades(valor, unidadOrigen, unidadDestino);
+            view.mostrarMensaje("");
+            view.mostrarMensaje("===== RESULTADO =====");
+            view.mostrarMensaje(String.format(Locale.US, "%s %s = %s %s", 
+                formatearNumero(valor), view.formatearUnidadLongitud(unidadOrigen), 
+                formatearNumero(resultado), view.formatearUnidadLongitud(unidadDestino)));
+        } catch (Exception e) {
+            view.mostrarMensaje("Error en la conversion: " + e.getMessage());
         }
     }
     
-    private void convertirTodos() {
-        view.mostrarMensaje("Ingrese los valores (deje en blanco para omitir):");
-        view.mostrarMensaje("");
+    private String formatearNumero(double value) {
+        double absValue = Math.abs(value);
         
-        // Pedir masa
-        String masaStr = view.pedirTexto("Masa en kilogramos (kg)");
-        
-        // Pedir temperatura
-        String temperaturaStr = view.pedirTexto("Temperatura en Celsius (°C)");
-        
-        // Pedir longitud2
-        String longitud2Str = view.pedirTexto("Longitud 2 en grados decimales");
-        
-        // Convertir masa
-        if (masaStr != null && !masaStr.trim().isEmpty()) {
-            try {
-                double kg = Double.parseDouble(masaStr);
-                double lb = kg * 2.20462;
-                double g = kg * 1000;
-                
-                view.mostrarMensaje("");
-                view.mostrarMensaje("MASA:");
-                view.mostrarMensaje(String.format(Locale.US, "  Kilogramos: %.4f kg", kg));
-                view.mostrarMensaje(String.format(Locale.US, "  Libras:     %.4f lb", lb));
-                view.mostrarMensaje(String.format(Locale.US, "  Gramos:     %.4f g", g));
-            } catch (NumberFormatException e) {
-                view.mostrarMensaje("ADVERTENCIA: Valor de masa invalido.");
-            }
+        // Para números muy pequeños (menores a 0.001) o muy grandes (mayores a 1,000,000)
+        if ((absValue > 0 && absValue < 0.001) || absValue >= 1_000_000) {
+            return String.format(Locale.US, "%.6e", value);
         }
-        
-        // Convertir temperatura
-        if (temperaturaStr != null && !temperaturaStr.trim().isEmpty()) {
-            try {
-                double celsius = Double.parseDouble(temperaturaStr);
-                double fahrenheit = (celsius * 9.0 / 5.0) + 32;
-                double kelvin = celsius + 273.15;
-                
-                view.mostrarMensaje("");
-                view.mostrarMensaje("TEMPERATURA:");
-                view.mostrarMensaje(String.format(Locale.US, "  Celsius:    %.4f °C", celsius));
-                view.mostrarMensaje(String.format(Locale.US, "  Fahrenheit: %.4f °F", fahrenheit));
-                view.mostrarMensaje(String.format(Locale.US, "  Kelvin:     %.4f K", kelvin));
-            } catch (NumberFormatException e) {
-                view.mostrarMensaje("ADVERTENCIA: Valor de temperatura invalido.");
-            }
+        // Para números normales, usar formato con 3 decimales
+        else if (absValue >= 1000) {
+            return String.format(Locale.US, "%,.3f", value);
         }
-        
-        // Convertir longitud2
-        if (longitud2Str != null && !longitud2Str.trim().isEmpty()) {
-            try {
-                double decimal = Double.parseDouble(longitud2Str);
-                double radianes = decimal * (Math.PI / 180.0);
-                
-                view.mostrarMensaje("");
-                view.mostrarMensaje("COORDENADAS:");
-                view.mostrarMensaje(String.format(Locale.US, "  Long2 Decimal:  %.4f°", decimal));
-                view.mostrarMensaje(String.format(Locale.US, "  Long2 Radianes: %.6f rad", radianes));
-            } catch (NumberFormatException e) {
-                view.mostrarMensaje("ADVERTENCIA: Valor de longitud invalido.");
-            }
+        // Para números menores a 1000, usar 3 decimales
+        else {
+            return String.format(Locale.US, "%.3f", value);
         }
     }
 }

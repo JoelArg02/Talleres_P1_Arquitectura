@@ -37,19 +37,41 @@
         <img src="${pageContext.request.contextPath}/assets/img/exchange.png" alt="Icono conversion">
       </div>
       <h1>Conversion de Unidades</h1>
-      <h2>Ingresa los valores para convertir</h2>
+      <h2>Selecciona el tipo y realiza la conversion</h2>
       <form class="conversion-form" id="conversionForm" onsubmit="return convertir(event)">
         <div class="field-group">
-          <label for="masa">Masa (kg)</label>
-          <input id="masa" type="number" step="any" name="masa" placeholder="Ingrese kilogramos">
+          <label for="tipoConversion">Tipo de Conversion</label>
+          <select id="tipoConversion" name="tipoConversion" onchange="actualizarUnidades()">
+            <option value="masa">Masa</option>
+            <option value="temperatura">Temperatura</option>
+            <option value="longitud">Longitud</option>
+          </select>
         </div>
         <div class="field-group">
-          <label for="temperatura">Temperatura (°C)</label>
-          <input id="temperatura" type="number" step="any" name="temperatura" placeholder="Ingrese grados Celsius">
+          <label for="valor">Valor</label>
+          <input id="valor" type="number" step="any" name="valor" placeholder="Ingrese el valor" required>
         </div>
         <div class="field-group">
-          <label for="longitud2">Longitud 2 (decimal)</label>
-          <input id="longitud2" type="number" step="any" name="longitud2" placeholder="Ingrese grados decimales">
+          <label for="unidadOrigen">De</label>
+          <select id="unidadOrigen" name="unidadOrigen">
+            <option value="mg">Miligramo (mg)</option>
+            <option value="g">Gramo (g)</option>
+            <option value="kg">Kilogramo (kg)</option>
+            <option value="lb">Libra (lb)</option>
+            <option value="oz">Onza (oz)</option>
+            <option value="t">Tonelada (t)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="unidadDestino">A</label>
+          <select id="unidadDestino" name="unidadDestino">
+            <option value="mg">Miligramo (mg)</option>
+            <option value="g">Gramo (g)</option>
+            <option value="kg">Kilogramo (kg)</option>
+            <option value="lb">Libra (lb)</option>
+            <option value="oz">Onza (oz)</option>
+            <option value="t">Tonelada (t)</option>
+          </select>
         </div>
         <div class="actions">
           <button type="submit">Convertir</button>
@@ -58,51 +80,14 @@
 
       <div id="resultados" class="results-card" style="display: none;">
         <div class="results-header">
-          <span>Resultados de Conversión</span>
+          <span>Resultado de Conversion</span>
           <div class="results-bar"></div>
         </div>
         
-        <div id="masaResults" class="result-section" style="display: none;">
-          <h3>MASA</h3>
+        <div class="result-section">
           <div class="result-row">
-            <span class="result-label">Kilogramos:</span>
-            <span class="result-value" id="kg">-</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Libras:</span>
-            <span class="result-value" id="lb">-</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Gramos:</span>
-            <span class="result-value" id="g">-</span>
-          </div>
-        </div>
-
-        <div id="tempResults" class="result-section" style="display: none;">
-          <h3>TEMPERATURA</h3>
-          <div class="result-row">
-            <span class="result-label">Celsius:</span>
-            <span class="result-value" id="celsius">-</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Fahrenheit:</span>
-            <span class="result-value" id="fahrenheit">-</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Kelvin:</span>
-            <span class="result-value" id="kelvin">-</span>
-          </div>
-        </div>
-
-        <div id="long2Results" class="result-section" style="display: none;">
-          <h3>COORDENADAS</h3>
-          <div class="result-row">
-            <span class="result-label">Long2 Decimal:</span>
-            <span class="result-value" id="decimal">-</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Long2 Radianes:</span>
-            <span class="result-value" id="radianes">-</span>
+            <span class="result-label" id="resultLabel">Resultado:</span>
+            <span class="result-value" id="resultValue">-</span>
           </div>
         </div>
       </div>
@@ -111,63 +96,129 @@
   </main>
 
   <script>
-    function convertir(event) {
+    const unidadesMasa = [
+      {value: 'mg', text: 'Miligramo (mg)'},
+      {value: 'g', text: 'Gramo (g)'},
+      {value: 'kg', text: 'Kilogramo (kg)'},
+      {value: 'lb', text: 'Libra (lb)'},
+      {value: 'oz', text: 'Onza (oz)'},
+      {value: 't', text: 'Tonelada (t)'}
+    ];
+    
+    const unidadesTemperatura = [
+      {value: 'c', text: 'Celsius (C)'},
+      {value: 'f', text: 'Fahrenheit (F)'},
+      {value: 'k', text: 'Kelvin (K)'},
+      {value: 'r', text: 'Rankine (R)'}
+    ];
+    
+    const unidadesLongitud = [
+      {value: 'mm', text: 'Milimetro (mm)'},
+      {value: 'cm', text: 'Centimetro (cm)'},
+      {value: 'm', text: 'Metro (m)'},
+      {value: 'km', text: 'Kilometro (km)'},
+      {value: 'in', text: 'Pulgada (in)'},
+      {value: 'ft', text: 'Pie (ft)'}
+    ];
+    
+    function actualizarUnidades() {
+      const tipo = document.getElementById('tipoConversion').value;
+      const selectOrigen = document.getElementById('unidadOrigen');
+      const selectDestino = document.getElementById('unidadDestino');
+      
+      let unidades;
+      if (tipo === 'masa') {
+        unidades = unidadesMasa;
+      } else if (tipo === 'temperatura') {
+        unidades = unidadesTemperatura;
+      } else {
+        unidades = unidadesLongitud;
+      }
+      
+      selectOrigen.innerHTML = '';
+      selectDestino.innerHTML = '';
+      
+      unidades.forEach(u => {
+        selectOrigen.add(new Option(u.text, u.value));
+        selectDestino.add(new Option(u.text, u.value));
+      });
+      
+      if (unidades.length > 1) {
+        selectDestino.selectedIndex = 1;
+      }
+      
+      document.getElementById('resultados').style.display = 'none';
+    }
+    
+    function formatearNumero(value) {
+      const absValue = Math.abs(value);
+      
+      // Para números muy pequeños (menores a 0.001) o muy grandes (mayores a 1,000,000)
+      if ((absValue > 0 && absValue < 0.001) || absValue >= 1000000) {
+        return value.toExponential(6);
+      }
+      // Para números normales, usar formato con 3 decimales
+      else if (absValue >= 1000) {
+        return value.toLocaleString('en-US', {minimumFractionDigits: 3, maximumFractionDigits: 3});
+      }
+      // Para números menores a 1000, usar 3 decimales
+      else {
+        return value.toFixed(3);
+      }
+    }
+    
+    async function convertir(event) {
       event.preventDefault();
       
-      const masa = document.getElementById('masa').value;
-      const temperatura = document.getElementById('temperatura').value;
-      const longitud2 = document.getElementById('longitud2').value;
+      const valor = parseFloat(document.getElementById('valor').value);
+      const unidadOrigen = document.getElementById('unidadOrigen').value;
+      const unidadDestino = document.getElementById('unidadDestino').value;
       
-      let hasResults = false;
-      
-      // Convertir masa
-      if (masa && masa.trim() !== '') {
-        const kg = parseFloat(masa);
-        const lb = kg * 2.20462;
-        const g = kg * 1000;
-        
-        document.getElementById('kg').textContent = kg.toFixed(4);
-        document.getElementById('lb').textContent = lb.toFixed(4);
-        document.getElementById('g').textContent = g.toFixed(4);
-        document.getElementById('masaResults').style.display = 'block';
-        hasResults = true;
-      } else {
-        document.getElementById('masaResults').style.display = 'none';
+      if (isNaN(valor)) {
+        alert('Por favor ingrese un valor valido');
+        return false;
       }
       
-      // Convertir temperatura
-      if (temperatura && temperatura.trim() !== '') {
-        const celsius = parseFloat(temperatura);
-        const fahrenheit = (celsius * 9/5) + 32;
-        const kelvin = celsius + 273.15;
+      try {
+        const response = await fetch('${pageContext.request.contextPath}/convertir', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: 'valor=' + valor + '&inUnit=' + unidadOrigen + '&outUnit=' + unidadDestino
+        });
         
-        document.getElementById('celsius').textContent = celsius.toFixed(4);
-        document.getElementById('fahrenheit').textContent = fahrenheit.toFixed(4);
-        document.getElementById('kelvin').textContent = kelvin.toFixed(4);
-        document.getElementById('tempResults').style.display = 'block';
-        hasResults = true;
-      } else {
-        document.getElementById('tempResults').style.display = 'none';
-      }
-      
-      // Convertir longitud2
-      if (longitud2 && longitud2.trim() !== '') {
-        const decimal = parseFloat(longitud2);
-        const radianes = decimal * (Math.PI / 180);
+        const text = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+        const resultadoElem = doc.querySelector('[data-resultado]');
         
-        document.getElementById('decimal').textContent = decimal.toFixed(4);
-        document.getElementById('radianes').textContent = radianes.toFixed(6);
-        document.getElementById('long2Results').style.display = 'block';
-        hasResults = true;
-      } else {
-        document.getElementById('long2Results').style.display = 'none';
+        if (resultadoElem) {
+          const resultado = parseFloat(resultadoElem.getAttribute('data-resultado'));
+          const unidadOrigenText = document.getElementById('unidadOrigen').options[document.getElementById('unidadOrigen').selectedIndex].text;
+          const unidadDestinoText = document.getElementById('unidadDestino').options[document.getElementById('unidadDestino').selectedIndex].text;
+          
+          document.getElementById('resultLabel').textContent = formatearNumero(valor) + ' ' + unidadOrigenText + ' =';
+          document.getElementById('resultValue').textContent = formatearNumero(resultado) + ' ' + unidadDestinoText;
+          document.getElementById('resultados').style.display = 'block';
+        } else {
+          document.getElementById('resultLabel').textContent = 'Resultado:';
+          document.getElementById('resultValue').textContent = 'Error en conversion';
+          document.getElementById('resultados').style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('resultLabel').textContent = 'Error:';
+        document.getElementById('resultValue').textContent = 'No se pudo conectar al servidor';
+        document.getElementById('resultados').style.display = 'block';
       }
-      
-      // Mostrar u ocultar el contenedor de resultados
-      document.getElementById('resultados').style.display = hasResults ? 'block' : 'none';
       
       return false;
     }
+    
+    window.onload = function() {
+      actualizarUnidades();
+    };
   </script>
 </body>
 </html>
