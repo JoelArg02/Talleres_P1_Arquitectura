@@ -1,5 +1,4 @@
 using CoreWCF;
-using WCFService.Models;
 
 namespace WCFService.Services.Interfaces
 {
@@ -7,6 +6,6 @@ namespace WCFService.Services.Interfaces
     public interface IService
     {
         [OperationContract]
-        ConversionResponse Convert(ConversionRequest request);
+        double ConvertUnit(double value, string inUnit, string outUnit);
     }
 }

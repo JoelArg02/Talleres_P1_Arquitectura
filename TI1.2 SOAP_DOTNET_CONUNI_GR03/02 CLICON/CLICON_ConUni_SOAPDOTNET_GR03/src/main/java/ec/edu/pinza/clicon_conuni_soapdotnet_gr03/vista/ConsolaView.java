@@ -6,10 +6,29 @@ import java.util.Scanner;
 
 public class ConsolaView {
 
-    private static final String[][] UNIDADES_DISPONIBLES = {
-        {"1", "kilograms", "Kilogramos (kg)"},
-        {"2", "grams", "Gramos (g)"},
-        {"3", "pounds", "Libras (lb)"}
+    private static final String[][] UNIDADES_MASA = {
+        {"1", "mg", "Miligramo (mg)"},
+        {"2", "g", "Gramo (g)"},
+        {"3", "kg", "Kilogramo (kg)"},
+        {"4", "lb", "Libra (lb)"},
+        {"5", "oz", "Onza (oz)"},
+        {"6", "t", "Tonelada (t)"}
+    };
+    
+    private static final String[][] UNIDADES_TEMPERATURA = {
+        {"1", "c", "Celsius (C)"},
+        {"2", "f", "Fahrenheit (F)"},
+        {"3", "k", "Kelvin (K)"},
+        {"4", "r", "Rankine (R)"}
+    };
+    
+    private static final String[][] UNIDADES_LONGITUD = {
+        {"1", "mm", "Milimetro (mm)"},
+        {"2", "cm", "Centimetro (cm)"},
+        {"3", "m", "Metro (m)"},
+        {"4", "km", "Kilometro (km)"},
+        {"5", "in", "Pulgada (in)"},
+        {"6", "ft", "Pie (ft)"}
     };
 
     private final Scanner scanner = new Scanner(System.in);
@@ -34,7 +53,7 @@ public class ConsolaView {
 
         System.out.println("------------------------------------");
         System.out.println("1) Iniciar sesion");
-        System.out.println("2) Convertir unidades de masa");
+        System.out.println("2) Convertir unidades");
         System.out.println("3) Salir");
         System.out.println("------------------------------------");
         return leerOpcionNumerica("Seleccione una opcion");
@@ -50,6 +69,11 @@ public class ConsolaView {
         return scanner.nextLine().trim();
     }
 
+    public String pedirTexto(String mensaje) {
+        System.out.print(mensaje + ": ");
+        return scanner.nextLine().trim();
+    }
+
     public double pedirValor(String mensaje) {
         while (true) {
             System.out.print(mensaje + ": ");
@@ -62,15 +86,49 @@ public class ConsolaView {
         }
     }
 
-    public String seleccionarUnidad(String mensaje) {
+    public String seleccionarUnidadMasa(String mensaje) {
         System.out.println();
         System.out.println(mensaje);
-        for (String[] unidad : UNIDADES_DISPONIBLES) {
+        for (String[] unidad : UNIDADES_MASA) {
             System.out.println("  " + unidad[0] + ") " + unidad[2]);
         }
         while (true) {
             String opcion = leerLinea("Elija una opcion");
-            for (String[] unidad : UNIDADES_DISPONIBLES) {
+            for (String[] unidad : UNIDADES_MASA) {
+                if (unidad[0].equals(opcion)) {
+                    return unidad[1];
+                }
+            }
+            System.out.println("ADVERTENCIA: Opcion invalida. Intente nuevamente.");
+        }
+    }
+    
+    public String seleccionarUnidadTemperatura(String mensaje) {
+        System.out.println();
+        System.out.println(mensaje);
+        for (String[] unidad : UNIDADES_TEMPERATURA) {
+            System.out.println("  " + unidad[0] + ") " + unidad[2]);
+        }
+        while (true) {
+            String opcion = leerLinea("Elija una opcion");
+            for (String[] unidad : UNIDADES_TEMPERATURA) {
+                if (unidad[0].equals(opcion)) {
+                    return unidad[1];
+                }
+            }
+            System.out.println("ADVERTENCIA: Opcion invalida. Intente nuevamente.");
+        }
+    }
+    
+    public String seleccionarUnidadLongitud(String mensaje) {
+        System.out.println();
+        System.out.println(mensaje);
+        for (String[] unidad : UNIDADES_LONGITUD) {
+            System.out.println("  " + unidad[0] + ") " + unidad[2]);
+        }
+        while (true) {
+            String opcion = leerLinea("Elija una opcion");
+            for (String[] unidad : UNIDADES_LONGITUD) {
                 if (unidad[0].equals(opcion)) {
                     return unidad[1];
                 }
@@ -89,8 +147,26 @@ public class ConsolaView {
         scanner.nextLine();
     }
 
-    public String formatearUnidad(String codigo) {
-        for (String[] unidad : UNIDADES_DISPONIBLES) {
+    public String formatearUnidadMasa(String codigo) {
+        for (String[] unidad : UNIDADES_MASA) {
+            if (unidad[1].equals(codigo)) {
+                return unidad[2];
+            }
+        }
+        return codigo;
+    }
+    
+    public String formatearUnidadTemperatura(String codigo) {
+        for (String[] unidad : UNIDADES_TEMPERATURA) {
+            if (unidad[1].equals(codigo)) {
+                return unidad[2];
+            }
+        }
+        return codigo;
+    }
+    
+    public String formatearUnidadLongitud(String codigo) {
+        for (String[] unidad : UNIDADES_LONGITUD) {
             if (unidad[1].equals(codigo)) {
                 return unidad[2];
             }
@@ -137,7 +213,7 @@ public class ConsolaView {
         }
     }
 
-    private int leerOpcionNumerica(String mensaje) {
+    public int leerOpcionNumerica(String mensaje) {
         while (true) {
             String entrada = leerLinea(mensaje);
             try {

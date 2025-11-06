@@ -16,11 +16,11 @@ import org.xml.sax.SAXException;
 public class ConversionModel {
 
     private static final String ENDPOINT = "http://localhost:5001/Conversion.svc";
-    private static final String SOAP_ACTION = "http://tempuri.org/IService/Convert";
+    private static final String SOAP_ACTION = "http://tempuri.org/IService/ConvertUnit";
 
-    public ConversionResponse convertir(double masaKg) {
+    public Double convertir(double value, String inUnit, String outUnit) {
         try {
-            String payload = buildRequestPayload(masaKg);
+            String payload = buildRequestPayload(value, inUnit, outUnit);
             String responseXml = invokeSoapEndpoint(payload);
             if (responseXml == null) {
                 return null;
@@ -32,22 +32,21 @@ public class ConversionModel {
         }
     }
 
-    private String buildRequestPayload(double masaKg) {
+    private String buildRequestPayload(double value, String inUnit, String outUnit) {
         return """
                 <?xml version="1.0" encoding="utf-8"?>
                 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                                  xmlns:tem="http://tempuri.org/"
-                                  xmlns:mod="http://schemas.datacontract.org/2004/07/WCFService.Models">
+                                  xmlns:tem="http://tempuri.org/">
                   <soapenv:Header/>
                   <soapenv:Body>
-                    <tem:Convert>
-                      <tem:request>
-                        <mod:MassKg>%s</mod:MassKg>
-                      </tem:request>
-                    </tem:Convert>
+                    <tem:ConvertUnit>
+                      <tem:value>%s</tem:value>
+                      <tem:inUnit>%s</tem:inUnit>
+                      <tem:outUnit>%s</tem:outUnit>
+                    </tem:ConvertUnit>
                   </soapenv:Body>
                 </soapenv:Envelope>
-                """.formatted(Double.toString(masaKg));
+                """.formatted(Double.toString(value), inUnit, outUnit);
     }
 
     private String invokeSoapEndpoint(String payload) throws IOException {
@@ -81,7 +80,7 @@ public class ConversionModel {
         }
     }
 
-    private ConversionResponse parseResponse(String xml)
+    private Double parseResponse(String xml)
             throws ParserConfigurationException, IOException, SAXException {
 
         Document document = SoapXmlUtils.parseXml(xml);
@@ -101,52 +100,28 @@ public class ConversionModel {
             return null;
         }
 
-        Element responseElement = SoapXmlUtils.findFirstChild(body, "ConvertResponse");
+        Element responseElement = SoapXmlUtils.findFirstChild(body, "ConvertUnitResponse");
         if (responseElement == null) {
-            System.err.println("Respuesta de conversion sin ConvertResponse.");
+            System.err.println("Respuesta de conversion sin ConvertUnitResponse.");
             return null;
         }
-        Element resultElement = SoapXmlUtils.findFirstChild(responseElement, "ConvertResult");
+        Element resultElement = SoapXmlUtils.findFirstChild(responseElement, "ConvertUnitResult");
         if (resultElement == null) {
-            System.err.println("Respuesta de conversion sin ConvertResult.");
+            System.err.println("Respuesta de conversion sin ConvertUnitResult.");
             return null;
         }
 
-        Double massKg = SoapXmlUtils.getChildDouble(resultElement, "MassKg");
-        Double massLb = SoapXmlUtils.getChildDouble(resultElement, "MassLb");
-        Double massG = SoapXmlUtils.getChildDouble(resultElement, "MassG");
-
-        Double latitudeDecimal = SoapXmlUtils.getChildDouble(resultElement, "LatitudeDecimal");
-        Double latitudeRadians = SoapXmlUtils.getChildDouble(resultElement, "LatitudeRadians");
-        CoordinateDMS latitudeDms = parseCoordinate(resultElement, "LatitudeDMS");
-
-        Double longitudeDecimal = SoapXmlUtils.getChildDouble(resultElement, "LongitudeDecimal");
-        Double longitudeRadians = SoapXmlUtils.getChildDouble(resultElement, "LongitudeRadians");
-        CoordinateDMS longitudeDms = parseCoordinate(resultElement, "LongitudeDMS");
-
-        return new ConversionResponse(
-                massKg,
-                massLb,
-                massG,
-                latitudeDecimal,
-                latitudeRadians,
-                latitudeDms,
-                longitudeDecimal,
-                longitudeRadians,
-                longitudeDms
-        );
-    }
-
-    private CoordinateDMS parseCoordinate(Element parent, String elementName) {
-        Element coordElement = SoapXmlUtils.findFirstChild(parent, elementName);
-        if (coordElement == null || SoapXmlUtils.isNil(coordElement)) {
+        String resultText = resultElement.getTextContent();
+        if (resultText == null || resultText.isBlank()) {
+            System.err.println("Resultado de conversion vacio.");
             return null;
         }
-        Integer degrees = SoapXmlUtils.getChildInteger(coordElement, "Degrees");
-        Integer minutes = SoapXmlUtils.getChildInteger(coordElement, "Minutes");
-        Double seconds = SoapXmlUtils.getChildDouble(coordElement, "Seconds");
-        String hemisphere = SoapXmlUtils.getChildText(coordElement, "Hemisphere");
-        CoordinateDMS coordinate = new CoordinateDMS(degrees, minutes, seconds, hemisphere);
-        return coordinate.isDefined() ? coordinate : null;
+
+        try {
+            return Double.parseDouble(resultText);
+        } catch (NumberFormatException e) {
+            System.err.println("Resultado de conversion no es un numero valido: " + resultText);
+            return null;
+        }
     }
 }

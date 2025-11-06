@@ -1,7 +1,6 @@
 package ec.edu.pinza.webcli_conuni_soapdotnet_gr03.controlador;
 
 import ec.edu.pinza.webcli_conuni_soapdotnet_gr03.modelo.ConversionModel;
-import ec.edu.pinza.webcli_conuni_soapdotnet_gr03.modelo.ConversionResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Locale;
 
 @WebServlet("/convertir")
@@ -34,82 +34,46 @@ public class ConversionServlet extends HttpServlet {
         try {
             valor = Double.parseDouble(valorParam);
         } catch (NumberFormatException ex) {
-            req.setAttribute("valor", valorParam);
-            req.setAttribute("inUnit", inUnit);
-            req.setAttribute("outUnit", outUnit);
-            req.setAttribute("errorConversion", "Ingresa un valor numerico valido.");
-            req.getRequestDispatcher("/vista/conversion.jsp").forward(req, resp);
+            resp.setContentType("text/html;charset=UTF-8");
+            PrintWriter out = resp.getWriter();
+            out.println("<html><body>");
+            out.println("<div data-resultado='0'>Error: Valor invalido</div>");
+            out.println("</body></html>");
             return;
         }
 
-        if (!isSupportedUnit(inUnit) || !isSupportedUnit(outUnit)) {
-            req.setAttribute("valor", valor);
-            req.setAttribute("inUnit", inUnit);
-            req.setAttribute("outUnit", outUnit);
-            req.setAttribute("errorConversion", "Selecciona unidades validas.");
-            req.getRequestDispatcher("/vista/conversion.jsp").forward(req, resp);
+        Double resultado = model.convertir(valor, inUnit, outUnit);
+
+        if (resultado == null) {
+            resp.setContentType("text/html;charset=UTF-8");
+            PrintWriter out = resp.getWriter();
+            out.println("<html><body>");
+            out.println("<div data-resultado='0'>Error en conversion</div>");
+            out.println("</body></html>");
             return;
         }
 
-        double masaKg = toKilograms(valor, inUnit);
-        ConversionResponse conversion = model.convertir(masaKg);
-
-        if (conversion == null) {
-            req.setAttribute("errorConversion", "No se pudo realizar la conversion. Intenta nuevamente mas tarde.");
-        } else {
-            Double resultado = extractUnit(conversion, outUnit);
-            if (resultado == null) {
-                req.setAttribute("errorConversion", "El servicio no devolvio la unidad solicitada.");
-            } else {
-                req.setAttribute("resultadoTexto", formatResultado(resultado));
-            }
-        }
-
-        req.setAttribute("valor", valor);
-        req.setAttribute("inUnit", inUnit);
-        req.setAttribute("outUnit", outUnit);
-
-        String loginMessage = (String) sesion.getAttribute("loginMessage");
-        if (loginMessage != null) {
-            req.setAttribute("loginMessage", loginMessage);
-            sesion.removeAttribute("loginMessage");
-        }
-
-        req.getRequestDispatcher("/vista/conversion.jsp").forward(req, resp);
+        resp.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        out.println("<html><body>");
+        out.println("<div data-resultado='" + resultado + "'>" + formatearNumero(resultado) + "</div>");
+        out.println("</body></html>");
     }
-
-    private boolean isSupportedUnit(String unit) {
-        return "kg".equals(unit) || "lb".equals(unit) || "g".equals(unit);
-    }
-
-    private double toKilograms(double value, String unit) {
-        switch (unit) {
-            case "lb":
-                return value * 0.45359237;
-            case "g":
-                return value / 1000.0;
-            case "kg":
-            default:
-                return value;
+    
+    private String formatearNumero(double value) {
+        double absValue = Math.abs(value);
+        
+        // Para numeros muy pequenos (menores a 0.001) o muy grandes (mayores a 1,000,000)
+        if ((absValue > 0 && absValue < 0.001) || absValue >= 1_000_000) {
+            return String.format(Locale.US, "%.6e", value);
         }
-    }
-
-    private Double extractUnit(ConversionResponse response, String unit) {
-        if (response == null) {
-            return null;
+        // Para numeros normales, usar formato con 3 decimales
+        else if (absValue >= 1000) {
+            return String.format(Locale.US, "%,.3f", value);
         }
-        return switch (unit) {
-            case "lb" -> response.getMassLb();
-            case "g" -> response.getMassG();
-            case "kg" -> response.getMassKg();
-            default -> null;
-        };
-    }
-
-    private String formatResultado(Double valor) {
-        if (valor == null) {
-            return null;
+        // Para numeros menores a 1000, usar 3 decimales
+        else {
+            return String.format(Locale.US, "%.3f", value);
         }
-        return String.format(Locale.US, "%.4f", valor);
     }
 }

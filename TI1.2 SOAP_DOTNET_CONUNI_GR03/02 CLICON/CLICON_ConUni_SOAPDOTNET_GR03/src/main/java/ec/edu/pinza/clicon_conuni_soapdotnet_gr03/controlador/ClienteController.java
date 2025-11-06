@@ -2,7 +2,6 @@ package ec.edu.pinza.clicon_conuni_soapdotnet_gr03.controlador;
 
 import ec.edu.pinza.clicon_conuni_soapdotnet_gr03.modelo.ConversionModel;
 import ec.edu.pinza.clicon_conuni_soapdotnet_gr03.modelo.LoginModel;
-import ec.edu.pinza.clicon_conuni_soapdotnet_gr03.modelo.dto.ConversionResult;
 import ec.edu.pinza.clicon_conuni_soapdotnet_gr03.modelo.dto.LoginResult;
 import ec.edu.pinza.clicon_conuni_soapdotnet_gr03.vista.ConsolaView;
 import java.util.Locale;
@@ -92,24 +91,95 @@ public class ClienteController {
 
         view.mostrarMensaje("");
         view.mostrarMensaje("===== CONVERSION DE UNIDADES =====");
-        double valor = view.pedirValor("Ingrese el numero que desea convertir");
-        String unidadOrigen = view.seleccionarUnidad("Seleccione la unidad de origen");
-        String unidadDestino = view.seleccionarUnidad("Seleccione la unidad de destino");
-
-        try {
-            ConversionResult resultado = conversionModel.conversionUnidades(valor, unidadOrigen);
-            double valorConvertido = conversionModel.obtenerValorConvertido(resultado, unidadDestino);
-            String etiquetaOrigen = view.formatearUnidad(unidadOrigen);
-            String etiquetaDestino = view.formatearUnidad(unidadDestino);
-            String mensaje = String.format(Locale.US,
-                "Resultado: %.4f %s = %.4f %s",
-                valor, etiquetaOrigen, valorConvertido, etiquetaDestino);
-            view.mostrarMensaje(mensaje);
-        } catch (Exception e) {
-            view.mostrarMensaje("ADVERTENCIA: Error al conectar con el servicio de conversion.");
-            e.printStackTrace();
+        
+        view.mostrarMensaje("Seleccione el tipo de conversion:");
+        view.mostrarMensaje("1) Masa (Gramo <-> Kilogramo <-> Libra)");
+        view.mostrarMensaje("2) Temperatura (Celsius <-> Fahrenheit <-> Kelvin)");
+        view.mostrarMensaje("3) Longitud (Metro <-> Centimetro <-> Pulgada)");
+        
+        int tipoConversion = view.leerOpcionNumerica("Elija una opcion");
+        
+        view.mostrarMensaje("");
+        
+        switch (tipoConversion) {
+            case 1 -> convertirMasa();
+            case 2 -> convertirTemperatura();
+            case 3 -> convertirLongitud();
+            default -> view.mostrarMensaje("ADVERTENCIA: Opcion invalida.");
         }
+        
         view.pausar();
+    }
+    
+    private void convertirMasa() {
+        view.mostrarMensaje("=== CONVERSION DE MASA ===");
+        double valor = view.pedirValor("Ingrese el valor");
+        String unidadOrigen = view.seleccionarUnidadMasa("Seleccione unidad de origen");
+        String unidadDestino = view.seleccionarUnidadMasa("Seleccione unidad de destino");
+        
+        try {
+            double resultado = conversionModel.conversionUnidades(valor, unidadOrigen, unidadDestino);
+            view.mostrarMensaje("");
+            view.mostrarMensaje("===== RESULTADO =====");
+            view.mostrarMensaje(String.format(Locale.US, "%s %s = %s %s", 
+                formatearNumero(valor), view.formatearUnidadMasa(unidadOrigen), 
+                formatearNumero(resultado), view.formatearUnidadMasa(unidadDestino)));
+        } catch (Exception e) {
+            view.mostrarMensaje("Error en la conversion: " + e.getMessage());
+        }
+    }
+    
+    private void convertirTemperatura() {
+        view.mostrarMensaje("=== CONVERSION DE TEMPERATURA ===");
+        double valor = view.pedirValor("Ingrese el valor");
+        String unidadOrigen = view.seleccionarUnidadTemperatura("Seleccione unidad de origen");
+        String unidadDestino = view.seleccionarUnidadTemperatura("Seleccione unidad de destino");
+        
+        try {
+            double resultado = conversionModel.conversionUnidades(valor, unidadOrigen, unidadDestino);
+            view.mostrarMensaje("");
+            view.mostrarMensaje("===== RESULTADO =====");
+            view.mostrarMensaje(String.format(Locale.US, "%s %s = %s %s", 
+                formatearNumero(valor), view.formatearUnidadTemperatura(unidadOrigen), 
+                formatearNumero(resultado), view.formatearUnidadTemperatura(unidadDestino)));
+        } catch (Exception e) {
+            view.mostrarMensaje("Error en la conversion: " + e.getMessage());
+        }
+    }
+    
+    private void convertirLongitud() {
+        view.mostrarMensaje("=== CONVERSION DE LONGITUD ===");
+        double valor = view.pedirValor("Ingrese el valor");
+        String unidadOrigen = view.seleccionarUnidadLongitud("Seleccione unidad de origen");
+        String unidadDestino = view.seleccionarUnidadLongitud("Seleccione unidad de destino");
+        
+        try {
+            double resultado = conversionModel.conversionUnidades(valor, unidadOrigen, unidadDestino);
+            view.mostrarMensaje("");
+            view.mostrarMensaje("===== RESULTADO =====");
+            view.mostrarMensaje(String.format(Locale.US, "%s %s = %s %s", 
+                formatearNumero(valor), view.formatearUnidadLongitud(unidadOrigen), 
+                formatearNumero(resultado), view.formatearUnidadLongitud(unidadDestino)));
+        } catch (Exception e) {
+            view.mostrarMensaje("Error en la conversion: " + e.getMessage());
+        }
+    }
+    
+    private String formatearNumero(double value) {
+        double absValue = Math.abs(value);
+        
+        // Para numeros muy pequenos (menores a 0.001) o muy grandes (mayores a 1,000,000)
+        if ((absValue > 0 && absValue < 0.001) || absValue >= 1_000_000) {
+            return String.format(Locale.US, "%.6e", value);
+        }
+        // Para numeros normales, usar formato con 3 decimales
+        else if (absValue >= 1000) {
+            return String.format(Locale.US, "%,.3f", value);
+        }
+        // Para numeros menores a 1000, usar 3 decimales
+        else {
+            return String.format(Locale.US, "%.3f", value);
+        }
     }
 
     private String prepararMensajeAutenticacionExitosa(LoginResult resultado, String usuario) {

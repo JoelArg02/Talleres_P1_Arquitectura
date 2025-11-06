@@ -1,71 +1,156 @@
 using System;
-using Microsoft.Extensions.Logging;
 using WCFService.Services.Interfaces;
-using WCFService.Models;
 
 namespace WCFService.Controller
 {
     public class ConversionController : IService
     {
-        public ConversionResponse Convert(ConversionRequest request)
+        public double ConvertUnit(double value, string inUnit, string outUnit)
         {
-            Console.WriteLine("=== INICIO CONVERSION ===");
-            
-            if (request == null)
+            if (string.IsNullOrWhiteSpace(inUnit) || string.IsNullOrWhiteSpace(outUnit))
             {
-                Console.WriteLine("ERROR: Request es null");
-                throw new ArgumentNullException(nameof(request));
+                Console.WriteLine("Error: inUnit o outUnit es null o vacio");
+                return 0.0;
             }
 
-            Console.WriteLine($"MassKg recibido: {request.MassKg}");
-            Console.WriteLine($"TemperatureCelsius recibido: {request.TemperatureCelsius}");
-            Console.WriteLine($"Longitude2 recibido: {request.Longitude2}");
+            string inUnitLower = inUnit.Trim().ToLower();
+            string outUnitLower = outUnit.Trim().ToLower();
 
-            var resp = new ConversionResponse
+            Console.WriteLine($"Conversion solicitada: {value} {inUnitLower} -> {outUnitLower}");
+
+            // Conversion de masa
+            if (IsMassUnit(inUnitLower) && IsMassUnit(outUnitLower))
             {
-                LatitudeDecimal = request.Latitude,
-                LongitudeDecimal = request.Longitude,
-                LatitudeRadians = DegreesToRadians(request.Latitude),
-                LongitudeRadians = DegreesToRadians(request.Longitude),
-                LatitudeDMS = ToDMS(request.Latitude, true),
-                LongitudeDMS = ToDMS(request.Longitude, false),
-                MassKg = request.MassKg,
-                MassG = request.MassKg * 1000.0,
-                MassLb = request.MassKg * 2.20462262185,
-                TemperatureCelsius = request.TemperatureCelsius,
-                TemperatureFahrenheit = (request.TemperatureCelsius * 9.0 / 5.0) + 32.0,
-                TemperatureKelvin = request.TemperatureCelsius + 273.15,
-                Longitude2Decimal = request.Longitude2,
-                Longitude2Radians = DegreesToRadians(request.Longitude2),
-                Longitude2DMS = ToDMS(request.Longitude2, false)
-            };
+                double baseValue = ConvertToBaseKg(value, inUnitLower);
+                double result = ConvertFromBaseKg(baseValue, outUnitLower);
+                Console.WriteLine($"Resultado masa: {result}");
+                return result;
+            }
 
-            Console.WriteLine($"Mass calculada - Kg: {resp.MassKg}, Lb: {resp.MassLb}, G: {resp.MassG}");
-            Console.WriteLine($"Temp calculada - C: {resp.TemperatureCelsius}, F: {resp.TemperatureFahrenheit}, K: {resp.TemperatureKelvin}");
-            Console.WriteLine($"Long2 calculada - Decimal: {resp.Longitude2Decimal}, Radians: {resp.Longitude2Radians}");
-            Console.WriteLine("=== FIN CONVERSION ===");
+            // Conversion de temperatura
+            if (IsTemperatureUnit(inUnitLower) && IsTemperatureUnit(outUnitLower))
+            {
+                double baseValue = ConvertToCelsius(value, inUnitLower);
+                double result = ConvertFromCelsius(baseValue, outUnitLower);
+                Console.WriteLine($"Resultado temperatura: {result}");
+                return result;
+            }
 
-            return resp;
+            // Conversion de longitud
+            if (IsLengthUnit(inUnitLower) && IsLengthUnit(outUnitLower))
+            {
+                double baseValue = ConvertToBaseMeters(value, inUnitLower);
+                double result = ConvertFromBaseMeters(baseValue, outUnitLower);
+                Console.WriteLine($"Resultado longitud: {result}");
+                return result;
+            }
+
+            Console.WriteLine("Error: Unidades incompatibles o no reconocidas");
+            return 0.0;
         }
 
-
-        private static double DegreesToRadians(double degrees) => degrees * Math.PI / 180.0;
-
-        private static CoordinateDMS ToDMS(double degreesDecimal, bool isLatitude)
+        private bool IsMassUnit(string unit)
         {
-            var hemisphere = isLatitude ? (degreesDecimal >= 0 ? 'N' : 'S') : (degreesDecimal >= 0 ? 'E' : 'W');
-            var deg = Math.Abs(degreesDecimal);
-            var degrees = (int)Math.Floor(deg);
-            var minutesFull = (deg - degrees) * 60.0;
-            var minutes = (int)Math.Floor(minutesFull);
-            var seconds = (minutesFull - minutes) * 60.0;
+            return unit == "mg" 
+                || unit == "g" 
+                || unit == "kg"
+                || unit == "lb" 
+                || unit == "oz" 
+                || unit == "t";
+        }
 
-            return new CoordinateDMS
+        private bool IsTemperatureUnit(string unit)
+        {
+            return unit == "c" || unit == "f" || unit == "k" || unit == "r";
+        }
+
+        private bool IsLengthUnit(string unit)
+        {
+            return unit == "mm" 
+                || unit == "cm" 
+                || unit == "m"
+                || unit == "km" 
+                || unit == "in" 
+                || unit == "ft";
+        }
+
+        private double ConvertToBaseKg(double value, string unit)
+        {
+            return unit switch
             {
-                Degrees = degrees,
-                Minutes = minutes,
-                Seconds = Math.Round(seconds, 6),
-                Hemisphere = hemisphere
+                "kg" => value,
+                "mg" => value / 1000000.0,
+                "g" => value / 1000.0,
+                "lb" => value / 2.20462262185,
+                "oz" => value / 35.27396195,
+                "t" => value * 1000.0,
+                _ => 0.0,
+            };
+        }
+
+        private double ConvertFromBaseKg(double value, string unit)
+        {
+            return unit switch
+            {
+                "kg" => value,
+                "mg" => value * 1000000.0,
+                "g" => value * 1000.0,
+                "lb" => value * 2.20462262185,
+                "oz" => value * 35.27396195,
+                "t" => value / 1000.0,
+                _ => 0.0,
+            };
+        }
+
+        private double ConvertToCelsius(double value, string unit)
+        {
+            return unit switch
+            {
+                "c" => value,
+                "f" => (value - 32.0) * 5.0 / 9.0,
+                "k" => value - 273.15,
+                "r" => (value - 491.67) * 5.0 / 9.0,
+                _ => 0.0,
+            };
+        }
+
+        private double ConvertFromCelsius(double value, string unit)
+        {
+            return unit switch
+            {
+                "c" => value,
+                "f" => (value * 9.0 / 5.0) + 32.0,
+                "k" => value + 273.15,
+                "r" => (value * 9.0 / 5.0) + 491.67,
+                _ => 0.0,
+            };
+        }
+
+        private double ConvertToBaseMeters(double value, string unit)
+        {
+            return unit switch
+            {
+                "m" => value,
+                "mm" => value / 1000.0,
+                "cm" => value / 100.0,
+                "km" => value * 1000.0,
+                "in" => value * 0.0254,
+                "ft" => value * 0.3048,
+                _ => 0.0,
+            };
+        }
+
+        private double ConvertFromBaseMeters(double value, string unit)
+        {
+            return unit switch
+            {
+                "m" => value,
+                "mm" => value * 1000.0,
+                "cm" => value * 100.0,
+                "km" => value / 1000.0,
+                "in" => value / 0.0254,
+                "ft" => value / 0.3048,
+                _ => 0.0,
             };
         }
     }
