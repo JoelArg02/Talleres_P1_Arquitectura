@@ -17,15 +17,19 @@ public class ConversionModel {
     public double conversionUnidades(double valor, String entrada, String salida) {
         WSConUni_Service servicio = new WSConUni_Service();
         WSConUni op = servicio.getWSConUniPort();
-                 String newEndpoint = "http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin"; // <-- CAMBIA IP
+        String newEndpoint = "http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSConUni";
         ((BindingProvider) op).getRequestContext().put(
                 BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
                 newEndpoint
         );
         try {
-            return op.convertUnit(valor, entrada, salida);
+            System.out.println("Enviando conversion: " + valor + " " + entrada + " -> " + salida);
+            double resultado = op.convertUnit(valor, entrada, salida);
+            System.out.println("Resultado recibido: " + resultado);
+            return resultado;
         } catch (Exception e) {
-            System.err.println("Error al convertir" + e.getMessage());
+            System.err.println("Error al convertir: " + e.getMessage());
+            e.printStackTrace();
             return 0;
         }
     };

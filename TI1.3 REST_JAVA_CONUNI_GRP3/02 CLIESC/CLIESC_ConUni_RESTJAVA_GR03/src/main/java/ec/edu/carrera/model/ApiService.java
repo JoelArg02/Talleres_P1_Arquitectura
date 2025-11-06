@@ -16,7 +16,7 @@ import java.util.List;
 public class ApiService {
     
     // URL Base corregida con la información de tu servidor
-    private static final String BASE_URL = "http://localhost:8080/WS_ConUni_RESTJAVA_GR03-1.0-SNAPSHOT/api";
+    private static final String BASE_URL = "http://localhost:8080/WS_ConUni_RESTJAVA_GR03/api";
 
     private final HttpClient httpClient;
     private final Gson gson;

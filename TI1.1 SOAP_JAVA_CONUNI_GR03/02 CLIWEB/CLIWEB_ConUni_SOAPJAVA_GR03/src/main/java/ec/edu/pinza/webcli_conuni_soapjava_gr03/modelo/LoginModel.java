@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class LoginModel {
 
-    private static final String ENDPOINT = "http://192.168.137.1:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin";
+    private static final String ENDPOINT = "http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSLogin";
 
     public boolean autenticar(String usuario, String contrasena) {
         try {
