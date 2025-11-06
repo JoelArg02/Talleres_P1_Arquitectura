@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import ec.edu.espe.conv_rtfull.data.model.WeightUnit
 import ec.edu.espe.conv_rtfull.databinding.FragmentWeightBinding
 import ec.edu.espe.conv_rtfull.ui.viewmodel.WeightViewModel
+import ec.edu.espe.conv_rtfull.utils.NumberFormatter
 
 /**
  * Fragment para conversión de peso
@@ -77,7 +78,8 @@ class WeightFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.conversionResult.observe(viewLifecycleOwner) { result ->
             result?.let {
-                binding.tvResult.text = String.format("%.4f %s", it.convertedValue, it.toUnit)
+                val formattedValue = NumberFormatter.formatNumber(it.convertedValue)
+                binding.tvResult.text = "$formattedValue ${it.toUnit}"
                 binding.tvError.visibility = View.GONE
             }
         }

@@ -7,6 +7,7 @@ namespace ConversionAPI.Enums
     {
         Celsius,
         Fahrenheit,
-        Kelvin
+        Kelvin,
+        Rankine,
     }
 }

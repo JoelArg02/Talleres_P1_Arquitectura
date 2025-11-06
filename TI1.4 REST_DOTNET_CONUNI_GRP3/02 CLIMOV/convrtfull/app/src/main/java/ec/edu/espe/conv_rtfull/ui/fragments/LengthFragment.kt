@@ -12,6 +12,7 @@ import ec.edu.espe.conv_rtfull.R
 import ec.edu.espe.conv_rtfull.data.model.LengthUnit
 import ec.edu.espe.conv_rtfull.databinding.FragmentLengthBinding
 import ec.edu.espe.conv_rtfull.ui.viewmodel.LengthViewModel
+import ec.edu.espe.conv_rtfull.utils.NumberFormatter
 
 /**
  * Fragment para conversión de longitud
@@ -78,7 +79,8 @@ class LengthFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.conversionResult.observe(viewLifecycleOwner) { result ->
             result?.let {
-                binding.tvResult.text = String.format("%.4f %s", it.convertedValue, it.toUnit)
+                val formattedValue = NumberFormatter.formatNumber(it.convertedValue)
+                binding.tvResult.text = "$formattedValue ${it.toUnit}"
                 binding.tvError.visibility = View.GONE
             }
         }

@@ -25,30 +25,30 @@ public class ConversionModel {
         this.restClient = restClient;
     }
 
-    public List<UnitOption> obtenerUnidades() {
-        return UnitOption.longitud();
+    public List<UnitOption> obtenerUnidades(String tipo) {
+        return UnitOption.porTipo(tipo);
     }
 
-    public ConversionResult convertir(double valor, String slugOrigen, String slugDestino) throws ConversionException {
-        UnitOption unidadOrigen = UnitOption.findBySlug(slugOrigen)
+    public ConversionResult convertir(double valor, String slugOrigen, String slugDestino, String tipo) throws ConversionException {
+        UnitOption unidadOrigen = UnitOption.findBySlug(slugOrigen, tipo)
                 .orElseThrow(() -> new ConversionException("Unidad de origen no valida."));
-        UnitOption unidadDestino = UnitOption.findBySlug(slugDestino)
+        UnitOption unidadDestino = UnitOption.findBySlug(slugDestino, tipo)
                 .orElseThrow(() -> new ConversionException("Unidad de destino no valida."));
 
         String payload = String.format(
                 Locale.US,
                 "{\n"
                 + "  \"value\": %.6f,\n"
-                + "  \"fromUnit\": %d,\n"
-                + "  \"toUnit\": %d\n"
+                + "  \"fromUnit\": \"%s\",\n"
+                + "  \"toUnit\": \"%s\"\n"
                 + "}",
                 valor,
-                unidadOrigen.getCodigoApi(),
-                unidadDestino.getCodigoApi()
+                unidadOrigen.getApiValue(),
+                unidadDestino.getApiValue()
         );
 
         try {
-            HttpResponse<String> response = restClient.postLengthConversion(payload);
+            HttpResponse<String> response = callApiByType(tipo, payload);
             int status = response.statusCode();
             String body = response.body();
 
@@ -62,6 +62,22 @@ public class ConversionModel {
             throw new ConversionException("La solicitud de conversion fue interrumpida.", e);
         } catch (IOException e) {
             throw new ConversionException("Error al comunicarse con el servicio de conversion.", e);
+        }
+    }
+
+    private HttpResponse<String> callApiByType(String tipo, String payload) throws IOException, InterruptedException {
+        if (tipo == null || tipo.isBlank()) {
+            return restClient.postWeightConversion(payload);
+        }
+        String tipoLower = tipo.toLowerCase(Locale.ROOT);
+        if ("masa".equals(tipoLower) || "weight".equals(tipoLower)) {
+            return restClient.postWeightConversion(payload);
+        } else if ("temperatura".equals(tipoLower) || "temperature".equals(tipoLower)) {
+            return restClient.postTemperatureConversion(payload);
+        } else if ("longitud".equals(tipoLower) || "length".equals(tipoLower)) {
+            return restClient.postLengthConversion(payload);
+        } else {
+            return restClient.postWeightConversion(payload);
         }
     }
 
@@ -79,7 +95,7 @@ public class ConversionModel {
                     : Double.NaN;
             String fromUnit = json.getString("fromUnit", unidadOrigen.getEtiqueta());
             String toUnit = json.getString("toUnit", unidadDestino.getEtiqueta());
-            String category = json.getString("category", "Longitud");
+            String category = json.getString("category", "");
             String timestampRaw = json.getString("timestamp", null);
             OffsetDateTime timestamp = null;
             if (timestampRaw != null && !timestampRaw.isBlank()) {

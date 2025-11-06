@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import ec.edu.espe.conv_rtfull.data.model.TemperatureUnit
 import ec.edu.espe.conv_rtfull.databinding.FragmentTemperatureBinding
 import ec.edu.espe.conv_rtfull.ui.viewmodel.TemperatureViewModel
+import ec.edu.espe.conv_rtfull.utils.NumberFormatter
 
 /**
  * Fragment para conversión de temperatura
@@ -77,7 +78,8 @@ class TemperatureFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.conversionResult.observe(viewLifecycleOwner) { result ->
             result?.let {
-                binding.tvResult.text = String.format("%.2f %s", it.convertedValue, it.toUnit)
+                val formattedValue = NumberFormatter.formatNumber(it.convertedValue)
+                binding.tvResult.text = "$formattedValue ${it.toUnit}"
                 binding.tvError.visibility = View.GONE
             }
         }

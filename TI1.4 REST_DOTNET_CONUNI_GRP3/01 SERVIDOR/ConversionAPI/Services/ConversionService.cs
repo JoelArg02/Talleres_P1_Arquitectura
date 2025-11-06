@@ -37,6 +37,7 @@ namespace ConversionAPI.Services
                 "Celsius" => "Celsius",
                 "Fahrenheit" => "Fahrenheit",
                 "Kelvin" => "Kelvin",
+                "Rankine" => "Rankine",
                 
                 // Volumen
                 "Liters" => "Litros",
@@ -152,6 +153,7 @@ namespace ConversionAPI.Services
                 TemperatureUnit.Celsius => request.Value,
                 TemperatureUnit.Fahrenheit => (request.Value - 32) * 5 / 9,
                 TemperatureUnit.Kelvin => request.Value - 273.15,
+                TemperatureUnit.Rankine => (request.Value - 491.67) * 5 / 9,
                 _ => throw new ArgumentException("Unidad de origen no válida")
             };
 
@@ -161,6 +163,7 @@ namespace ConversionAPI.Services
                 TemperatureUnit.Celsius => valueInCelsius,
                 TemperatureUnit.Fahrenheit => (valueInCelsius * 9 / 5) + 32,
                 TemperatureUnit.Kelvin => valueInCelsius + 273.15,
+                TemperatureUnit.Rankine => (valueInCelsius * 9 / 5) + 491.67,
                 _ => throw new ArgumentException("Unidad de destino no válida")
             };
 

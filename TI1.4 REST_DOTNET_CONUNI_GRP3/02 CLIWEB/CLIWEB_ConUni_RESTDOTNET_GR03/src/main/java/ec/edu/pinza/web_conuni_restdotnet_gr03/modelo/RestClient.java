@@ -9,7 +9,7 @@ import java.time.Duration;
 
 public class RestClient {
 
-    private static final String DEFAULT_BASE_URL = "http://localhost:5000/api";
+    private static final String DEFAULT_BASE_URL = "http://localhost:5003/api";
     private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
 
     private final HttpClient httpClient;
@@ -25,6 +25,28 @@ public class RestClient {
                 .connectTimeout(DEFAULT_TIMEOUT)
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
+    }
+
+    public HttpResponse<String> postWeightConversion(String jsonPayload) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(buildUri("/Weight/convert"))
+                .timeout(DEFAULT_TIMEOUT)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                .build();
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    public HttpResponse<String> postTemperatureConversion(String jsonPayload) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(buildUri("/Temperature/convert"))
+                .timeout(DEFAULT_TIMEOUT)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                .build();
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
     public HttpResponse<String> postLengthConversion(String jsonPayload) throws IOException, InterruptedException {

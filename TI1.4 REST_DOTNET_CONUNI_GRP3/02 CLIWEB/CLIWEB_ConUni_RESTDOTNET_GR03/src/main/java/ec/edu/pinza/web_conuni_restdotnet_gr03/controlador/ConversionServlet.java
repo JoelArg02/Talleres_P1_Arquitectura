@@ -22,7 +22,12 @@ public class ConversionServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
-        prepararCatalogos(req);
+        String tipo = req.getParameter("tipo");
+        if (tipo == null || tipo.isBlank()) {
+            tipo = "masa";
+        }
+        req.setAttribute("tipoConversion", tipo);
+        prepararCatalogos(req, tipo);
         req.getRequestDispatcher("/vista/conversion.jsp").forward(req, resp);
     }
 
@@ -37,24 +42,30 @@ public class ConversionServlet extends HttpServlet {
         valorParam = valorParam != null ? valorParam.trim() : null;
         String unidadOrigen = req.getParameter("inUnit");
         String unidadDestino = req.getParameter("outUnit");
+        String tipo = req.getParameter("tipo");
+        
+        if (tipo == null || tipo.isBlank()) {
+            tipo = "masa";
+        }
 
         if (unidadOrigen == null || unidadOrigen.isBlank()) {
-            unidadOrigen = "meters";
+            unidadOrigen = "kilograms";
         }
         if (unidadDestino == null || unidadDestino.isBlank()) {
-            unidadDestino = "kilometers";
+            unidadDestino = "pounds";
         }
 
         req.setAttribute("valor", valorParam);
         req.setAttribute("inUnit", unidadOrigen);
         req.setAttribute("outUnit", unidadDestino);
+        req.setAttribute("tipoConversion", tipo);
 
         if (valorParam == null || valorParam.isBlank()) {
             req.setAttribute("errorConversion", "Debe ingresar un valor a convertir.");
         } else {
             try {
                 double valor = Double.parseDouble(valorParam);
-                ConversionResult resultado = conversionModel.convertir(valor, unidadOrigen, unidadDestino);
+                ConversionResult resultado = conversionModel.convertir(valor, unidadOrigen, unidadDestino, tipo);
                 req.setAttribute("resultado", resultado);
             } catch (NumberFormatException ex) {
                 req.setAttribute("errorConversion", "Ingrese un valor numerico valido.");
@@ -63,7 +74,7 @@ public class ConversionServlet extends HttpServlet {
             }
         }
 
-        prepararCatalogos(req);
+        prepararCatalogos(req, tipo);
         req.getRequestDispatcher("/vista/conversion.jsp").forward(req, resp);
     }
 
@@ -72,7 +83,7 @@ public class ConversionServlet extends HttpServlet {
         return session != null && session.getAttribute("usuario") != null;
     }
 
-    private void prepararCatalogos(HttpServletRequest req) {
-        req.setAttribute("units", conversionModel.obtenerUnidades());
+    private void prepararCatalogos(HttpServletRequest req, String tipo) {
+        req.setAttribute("units", conversionModel.obtenerUnidades(tipo));
     }
 }

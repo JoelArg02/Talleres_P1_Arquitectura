@@ -13,7 +13,7 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Views
         private readonly ApiService _apiService;
 
         // Lista de los tipos principales
-        private readonly List<string> tiposDeConversion = new List<string> { "Longitud", "Peso", "Temperatura", "Volumen" };
+        private readonly List<string> tiposDeConversion = new List<string> { "Masa", "Temperatura", "Longitud" };
 
         public ConversionWindow(string username)
         {
@@ -55,14 +55,11 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Views
                 case "Longitud":
                     unidades = Enum.GetValues(typeof(LengthUnit)).Cast<LengthUnit>();
                     break;
-                case "Peso":
+                case "Masa":
                     unidades = Enum.GetValues(typeof(WeightUnit)).Cast<WeightUnit>();
                     break;
                 case "Temperatura":
                     unidades = Enum.GetValues(typeof(TemperatureUnit)).Cast<TemperatureUnit>();
-                    break;
-                case "Volumen":
-                    unidades = Enum.GetValues(typeof(VolumeUnit)).Cast<VolumeUnit>();
                     break;
             }
 
@@ -93,14 +90,11 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Views
                     case "Longitud":
                         requestDto = new LengthConversionRequestDto { Value = value, FromUnit = (LengthUnit)fromUnit, ToUnit = (LengthUnit)toUnit };
                         break;
-                    case "Peso":
+                    case "Masa":
                         requestDto = new WeightConversionRequestDto { Value = value, FromUnit = (WeightUnit)fromUnit, ToUnit = (WeightUnit)toUnit };
                         break;
                     case "Temperatura":
                         requestDto = new TemperatureConversionRequestDto { Value = value, FromUnit = (TemperatureUnit)fromUnit, ToUnit = (TemperatureUnit)toUnit };
-                        break;
-                    case "Volumen":
-                        requestDto = new VolumeConversionRequestDto { Value = value, FromUnit = (VolumeUnit)fromUnit, ToUnit = (VolumeUnit)toUnit };
                         break;
                 }
 
@@ -111,8 +105,9 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Views
 
                 if (resultado != null)
                 {
-                    // Formatear el resultado para mostrarlo de forma más elegante
-                    lblResultado.Text = $"{value:F4} {fromUnit} = {resultado.ConvertedValue:F4} {resultado.ToUnit}";
+                    // Formatear el resultado con el formato estándar
+                    string formattedResult = FormatNumber(resultado.ConvertedValue);
+                    lblResultado.Text = $"{FormatNumber(value)} {fromUnit} = {formattedResult} {resultado.ToUnit}";
                 }
                 else
                 {
@@ -133,6 +128,30 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Views
             finally
             {
                 btnConvertir.IsEnabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Formatea números siguiendo el estándar definido
+        /// </summary>
+        private string FormatNumber(double value)
+        {
+            double absValue = Math.Abs(value);
+            
+            // Para números muy pequeños (menores a 0.001) o muy grandes (mayores a 1,000,000)
+            if ((absValue > 0 && absValue < 0.001) || absValue >= 1_000_000)
+            {
+                return value.ToString("0.000000e+00");
+            }
+            // Para números normales, usar formato con 3 decimales
+            else if (absValue >= 1000)
+            {
+                return value.ToString("#,##0.000");
+            }
+            // Para números menores a 1000, usar 3 decimales
+            else
+            {
+                return value.ToString("0.000");
             }
         }
     }
