@@ -44,79 +44,90 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Selecciona los datos para transformar tu valor"
+                    android:text="Selecciona el tipo de conversión y las unidades"
                     android:textSize="14sp"
                     android:textColor="@color/text_medium"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="24dp"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo de Conversión"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_medium"
+                    android:layout_marginBottom="8dp"/>
+
+                <Spinner
+                    android:id="@+id/conversion_type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="@drawable/spinner_background"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_marginBottom="20dp"/>
+
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/mass_input_layout"
+                    android:id="@+id/value_input_layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Masa (kg)"
+                    android:hint="Valor a convertir"
+                    android:textColorHint="@color/text_dark"
                     app:boxStrokeColor="@color/border_gray"
-                    app:hintTextColor="@color/text_medium"
+                    app:hintTextColor="@color/text_dark"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusBottomEnd="12dp">
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    android:layout_marginBottom="20dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/mass_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:textColor="@color/text_dark"
-                        android:textSize="16sp"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/temp_input_layout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Temperatura (°C)"
-                    android:layout_marginTop="16dp"
-                    app:boxStrokeColor="@color/border_gray"
-                    app:hintTextColor="@color/text_medium"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusBottomEnd="12dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/temp_input"
+                        android:id="@+id/value_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal|numberSigned"
                         android:textColor="@color/text_dark"
+                        android:textColorHint="@color/text_dark"
                         android:textSize="16sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/longitude2_input_layout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Longitud (m)"
-                    android:layout_marginTop="16dp"
-                    app:boxStrokeColor="@color/border_gray"
-                    app:hintTextColor="@color/text_medium"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusBottomEnd="12dp">
+                    android:text="Unidad de Origen"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_medium"
+                    android:layout_marginBottom="8dp"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/longitude2_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal|numberSigned"
-                        android:textColor="@color/text_dark"
-                        android:textSize="16sp"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                <Spinner
+                    android:id="@+id/unit_from_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="@drawable/spinner_background"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unidad de Destino"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_medium"
+                    android:layout_marginBottom="8dp"/>
+
+                <Spinner
+                    android:id="@+id/unit_to_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="@drawable/spinner_background"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_marginBottom="20dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/convert_button"
@@ -143,7 +154,8 @@
             app:layout_constraintTop_toBottomOf="@id/conversion_card"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -167,241 +179,23 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="RESULTADOS"
+                        android:text="RESULTADO"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_dark"/>
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="MASA"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_medium"
-                    android:layout_marginBottom="12dp"/>
-
-                <LinearLayout
+                    android:id="@+id/result_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Kilogramos:"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_medium"/>
-
-                    <TextView
-                        android:id="@+id/result_kg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="---"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Libras:"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_medium"/>
-
-                    <TextView
-                        android:id="@+id/result_lb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="---"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Gramos:"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_medium"/>
-
-                    <TextView
-                        android:id="@+id/result_g"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="---"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/border_gray"
-                    android:layout_marginVertical="16dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TEMPERATURA"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_medium"
-                    android:letterSpacing="0.15"
-                    android:layout_marginBottom="12dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Celsius:"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_medium"/>
-
-                    <TextView
-                        android:id="@+id/result_celsius"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="---"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Fahrenheit:"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_medium"/>
-
-                    <TextView
-                        android:id="@+id/result_fahrenheit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="---"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Kelvin:"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_medium"/>
-
-                    <TextView
-                        android:id="@+id/result_kelvin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="---"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/border_gray"
-                    android:layout_marginVertical="16dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LONGITUD"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_medium"
-                    android:letterSpacing="0.15"
-                    android:layout_marginBottom="12dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Metros:"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_medium"/>
-
-                    <TextView
-                        android:id="@+id/result_long2_decimal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="---"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Centimetros:"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_medium"/>
-
-                    <TextView
-                        android:id="@+id/result_long2_radians"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="---"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_dark"/>
-                </LinearLayout>
+                    android:text=""
+                    android:textSize="18sp"
+                    android:textColor="@color/text_dark"
+                    android:textAlignment="center"
+                    android:padding="16dp"
+                    android:background="@color/bg_primary"
+                    android:layout_marginTop="8dp"/>
 
             </LinearLayout>
 

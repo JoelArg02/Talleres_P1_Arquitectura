@@ -13,6 +13,10 @@ public class ConUniMasaServicio {
             case "kilograms":
             case "kg": 
                 return value;
+            case "miligramos":
+            case "milligrams":
+            case "mg": 
+                return value / 1_000_000.0;
             case "gramos":
             case "grams":
             case "g": 
@@ -41,6 +45,10 @@ public class ConUniMasaServicio {
             case "kilograms":
             case "kg": 
                 return value;
+            case "miligramos":
+            case "milligrams":
+            case "mg": 
+                return value * 1_000_000.0;
             case "gramos":
             case "grams":
             case "g": 
@@ -64,6 +72,6 @@ public class ConUniMasaServicio {
     }
     
     public String[] getSupportedUnits() {
-        return new String[]{"kilogramos", "gramos", "libras", "onzas", "toneladas"};
+        return new String[]{"mg", "g", "kg", "lb", "oz", "t"};
     }
 }

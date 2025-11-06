@@ -19,6 +19,9 @@ public class ConUniTemperaturaServicio {
             case "kelvin":
             case "k": 
                 return value - 273.15;
+            case "rankine":
+            case "r":
+                return (value - 491.67) * 5.0 / 9.0;
             default: 
                 return 0.0;
         }
@@ -36,12 +39,15 @@ public class ConUniTemperaturaServicio {
             case "kelvin":
             case "k": 
                 return value + 273.15;
+            case "rankine":
+            case "r":
+                return (value + 273.15) * 9.0 / 5.0;
             default: 
                 return 0.0;
         }
     }
     
     public String[] getSupportedUnits() {
-        return new String[]{"celsius", "fahrenheit", "kelvin"};
+        return new String[]{"c", "f", "k", "r"};
     }
 }
