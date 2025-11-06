@@ -4,52 +4,41 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import ec.edu.espe.conuni_restfull_java.R
 import ec.edu.espe.conuni_restfull_java.databinding.ActivityMainBinding
-import ec.edu.espe.conuni_restfull_java.ui.conversion.ConversionViewModel
 import ec.edu.espe.conuni_restfull_java.ui.login.LoginActivity
 import ec.edu.espe.conuni_restfull_java.utils.SessionManager
 
 class MainActivity : AppCompatActivity() {
     
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: ConversionViewModel by viewModels()
     private lateinit var sessionManager: SessionManager
-    
-    private val tabTitles = listOf("Longitud", "Peso", "Temperatura")
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         
         sessionManager = SessionManager(this)
         
-        // Verificar si hay sesión activa
         if (!sessionManager.isLoggedIn()) {
             navigateToLogin()
             return
         }
         
-        setSupportActionBar(binding.toolbar)
-        setupViewPager()
-        loadSupportedTypes()
-    }
-    
-    private fun setupViewPager() {
-        val adapter = ConversionPagerAdapter(this)
-        binding.viewPager.adapter = adapter
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = tabTitles[position]
-        }.attach()
-    }
-    
-    private fun loadSupportedTypes() {
-        viewModel.loadSupportedTypes()
+        setSupportActionBar(binding.toolbar)
+        
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main)
+        appBarConfiguration = AppBarConfiguration.Builder(navController.graph).build()
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
     }
     
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -58,13 +47,23 @@ class MainActivity : AppCompatActivity() {
     }
     
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_logout -> {
-                logout()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        val id = item.itemId
+        
+        if (id == R.id.action_logout) {
+            showLogoutDialog()
+            return true
         }
+        
+        return super.onOptionsItemSelected(item)
+    }
+    
+    private fun showLogoutDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Cerrar Sesión")
+            .setMessage("¿Estás seguro de que deseas cerrar sesión?")
+            .setPositiveButton("Sí") { _, _ -> logout() }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
     
     private fun logout() {
@@ -73,7 +72,15 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun navigateToLogin() {
-        startActivity(Intent(this, LoginActivity::class.java))
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
         finish()
+    }
+    
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main)
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 }

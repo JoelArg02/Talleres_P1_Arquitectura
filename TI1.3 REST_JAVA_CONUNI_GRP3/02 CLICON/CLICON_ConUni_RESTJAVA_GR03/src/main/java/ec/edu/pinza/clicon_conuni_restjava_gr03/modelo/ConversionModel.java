@@ -20,6 +20,8 @@ public class ConversionModel {
     }
 
     public double conversionUnidades(double valor, String unidadOrigen, String unidadDestino) throws IOException, InterruptedException {
+        String tipo = detectarTipo(unidadOrigen);
+        
         String payload = """
             {
               "type": "%s",
@@ -28,7 +30,7 @@ public class ConversionModel {
               "outUnit": "%s"
             }
             """.formatted(
-                JsonUtils.escape(resolveType()),
+                JsonUtils.escape(tipo),
                 Double.toString(valor),
                 JsonUtils.escape(unidadOrigen),
                 JsonUtils.escape(unidadDestino)
@@ -55,14 +57,19 @@ public class ConversionModel {
         throw new IOException("Estado HTTP inesperado: " + response.statusCode());
     }
 
-    private String resolveType() {
-        String configured = System.getenv("CONUNI_CONVERSION_TYPE");
-        if (configured != null && !configured.isBlank()) {
-            return configured.trim();
+    private String detectarTipo(String unidad) {
+        String u = unidad.toLowerCase();
+        // Masa
+        if (u.matches("(mg|g|kg|lb|oz|t)")) {
+            return "masa";
         }
-        String property = System.getProperty("conuni.conversion.type");
-        if (property != null && !property.isBlank()) {
-            return property.trim();
+        // Temperatura
+        if (u.matches("(c|f|k|r)")) {
+            return "temperatura";
+        }
+        // Longitud
+        if (u.matches("(mm|cm|m|km|in|ft)")) {
+            return "longitud";
         }
         return DEFAULT_TYPE;
     }

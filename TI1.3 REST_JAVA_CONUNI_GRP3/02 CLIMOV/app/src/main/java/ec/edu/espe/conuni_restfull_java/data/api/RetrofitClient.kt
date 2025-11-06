@@ -11,7 +11,7 @@ object RetrofitClient {
     // URL base del servidor (ajusta según tu configuración)
     // Para emulador de Android: 10.0.2.2
     // Para dispositivo físico: IP de tu máquina
-    private const val BASE_URL = "http://192.168.137.1:8080/WS_ConUni_RESTJAVA_GR03/api/"
+    private const val BASE_URL = "http://192.168.100.32:8080/WS_ConUni_RESTJAVA_GR03/api/"
     
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

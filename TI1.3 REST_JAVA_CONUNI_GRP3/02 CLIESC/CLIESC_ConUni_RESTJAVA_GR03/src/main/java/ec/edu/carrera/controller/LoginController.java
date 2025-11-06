@@ -1,7 +1,7 @@
 package ec.edu.carrera.controller;
 
 import ec.edu.carrera.model.ApiService;
-import ec.edu.carrera.view.JConversionWindow;
+import ec.edu.carrera.view.JConversionWindowNew;
 import ec.edu.carrera.view.JLoginWindow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,11 +49,9 @@ public class LoginController implements ActionListener {
         }.execute();
     }
     
-    // CAMBIO: Acepta el username
+    // CAMBIO: Acepta el username y pasa ApiService al constructor
     private void abrirVentanaConversion(String username) {
-        JConversionWindow convView = new JConversionWindow(username); // Pasa el username
-        ApiService apiService = new ApiService();
-        new ConversionController(convView, apiService);
+        JConversionWindowNew convView = new JConversionWindowNew(username, model); // Pasa username y apiService
         convView.setVisible(true);
     }
 }
