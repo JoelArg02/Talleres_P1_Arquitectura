@@ -1,14 +1,16 @@
 using ConversionAPI.Enums;
+using System.Text.Json.Serialization;
 
 namespace ConversionAPI.DTOs
 {
-    /// <summary>
-    /// DTO para solicitud de conversión de longitud
-    /// </summary>
     public class LengthConversionRequestDto
     {
         public double Value { get; set; }
+        
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public LengthUnit FromUnit { get; set; }
+        
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public LengthUnit ToUnit { get; set; }
     }
 }

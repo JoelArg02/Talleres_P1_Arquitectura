@@ -30,10 +30,19 @@ public class ConversionModel {
     }
 
     public ConversionResult convertir(double valor, String slugOrigen, String slugDestino, String tipo) throws ConversionException {
+        System.out.println("=== ConversionModel.convertir ===");
+        System.out.println("Valor: " + valor);
+        System.out.println("Slug origen: " + slugOrigen);
+        System.out.println("Slug destino: " + slugDestino);
+        System.out.println("Tipo: " + tipo);
+        
         UnitOption unidadOrigen = UnitOption.findBySlug(slugOrigen, tipo)
                 .orElseThrow(() -> new ConversionException("Unidad de origen no valida."));
         UnitOption unidadDestino = UnitOption.findBySlug(slugDestino, tipo)
                 .orElseThrow(() -> new ConversionException("Unidad de destino no valida."));
+
+        System.out.println("Unidad origen API: " + unidadOrigen.getApiValue());
+        System.out.println("Unidad destino API: " + unidadDestino.getApiValue());
 
         String payload = String.format(
                 Locale.US,
@@ -46,21 +55,31 @@ public class ConversionModel {
                 unidadOrigen.getApiValue(),
                 unidadDestino.getApiValue()
         );
+        
+        System.out.println("Payload JSON: " + payload);
 
         try {
             HttpResponse<String> response = callApiByType(tipo, payload);
             int status = response.statusCode();
             String body = response.body();
+            
+            System.out.println("Response status: " + status);
+            System.out.println("Response body: " + body);
 
             if (status == 200) {
                 return parseConversion(body, unidadOrigen, unidadDestino);
             }
 
-            throw new ConversionException(buildErrorMessage(status, body));
+            String errorMsg = buildErrorMessage(status, body);
+            System.err.println("Error de conversion: " + errorMsg);
+            throw new ConversionException(errorMsg);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            System.err.println("Error: Solicitud interrumpida");
             throw new ConversionException("La solicitud de conversion fue interrumpida.", e);
         } catch (IOException e) {
+            System.err.println("Error de IO: " + e.getMessage());
+            e.printStackTrace();
             throw new ConversionException("Error al comunicarse con el servicio de conversion.", e);
         }
     }
