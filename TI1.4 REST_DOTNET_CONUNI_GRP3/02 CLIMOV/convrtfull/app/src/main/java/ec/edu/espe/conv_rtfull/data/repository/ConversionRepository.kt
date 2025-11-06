@@ -71,24 +71,4 @@ class ConversionRepository {
             }
         }
     }
-    
-    /**
-     * Convierte unidades de volumen
-     */
-    suspend fun convertVolume(value: Double, fromUnit: Int, toUnit: Int): Result<ConversionResponse> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val request = VolumeConversionRequest(value, fromUnit, toUnit)
-                val response = api.convertVolume(request)
-                
-                if (response.isSuccessful && response.body() != null) {
-                    Result.success(response.body()!!)
-                } else {
-                    Result.failure(Exception("Error: ${response.code()} - ${response.message()}"))
-                }
-            } catch (e: Exception) {
-                Result.failure(e)
-            }
-        }
-    }
 }

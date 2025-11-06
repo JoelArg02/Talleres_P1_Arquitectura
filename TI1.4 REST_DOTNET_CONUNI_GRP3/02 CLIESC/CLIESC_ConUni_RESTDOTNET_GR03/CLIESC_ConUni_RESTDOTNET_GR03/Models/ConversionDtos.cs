@@ -4,13 +4,11 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Models
 {
     // --- ENUMS (Copiados de tus archivos de servidor) ---
     //
-    public enum LengthUnit { Meters, Kilometers, Centimeters, Millimeters, Miles, Yards, Feet, Inches }
+    public enum LengthUnit { Meters, Kilometers, Centimeters, Millimeters, Inches, Feet }
     //
     public enum WeightUnit { Kilograms, Grams, Milligrams, Pounds, Ounces, Tons }
     //
-    public enum TemperatureUnit { Celsius, Fahrenheit, Kelvin }
-    //
-    public enum VolumeUnit { Liters, Milliliters, CubicMeters, Gallons, Quarts, Pints, Cups }
+    public enum TemperatureUnit { Celsius, Fahrenheit, Kelvin, Rankine }
     //
     // (UnitCategory no es necesario para los DTOs de conversión)
 
@@ -65,15 +63,5 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Models
         public TemperatureUnit FromUnit { get; set; } // <-- CAMBIO
         [JsonProperty("toUnit")]
         public TemperatureUnit ToUnit { get; set; }   // <-- CAMBIO
-    }
-
-    public class VolumeConversionRequestDto
-    {
-        [JsonProperty("value")]
-        public double Value { get; set; }
-        [JsonProperty("fromUnit")]
-        public VolumeUnit FromUnit { get; set; } // <-- CAMBIO
-        [JsonProperty("toUnit")]
-        public VolumeUnit ToUnit { get; set; }   // <-- CAMBIO
     }
 }

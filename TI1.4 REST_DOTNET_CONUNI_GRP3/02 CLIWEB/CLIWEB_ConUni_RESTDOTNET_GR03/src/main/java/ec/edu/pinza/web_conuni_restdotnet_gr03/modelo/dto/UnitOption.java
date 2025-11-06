@@ -8,28 +8,44 @@ import java.util.Optional;
 
 public final class UnitOption {
 
+    private static final List<UnitOption> MASA;
+    private static final List<UnitOption> TEMPERATURA;
     private static final List<UnitOption> LONGITUD;
 
     static {
-        List<UnitOption> opciones = new ArrayList<>();
-        opciones.add(new UnitOption("meters", 0, "Metros (m)"));
-        opciones.add(new UnitOption("kilometers", 1, "Kilometros (km)"));
-        opciones.add(new UnitOption("centimeters", 2, "Centimetros (cm)"));
-        opciones.add(new UnitOption("millimeters", 3, "Milimetros (mm)"));
-        opciones.add(new UnitOption("miles", 4, "Millas (mi)"));
-        opciones.add(new UnitOption("yards", 5, "Yardas (yd)"));
-        opciones.add(new UnitOption("feet", 6, "Pies (ft)"));
-        opciones.add(new UnitOption("inches", 7, "Pulgadas (in)"));
-        LONGITUD = Collections.unmodifiableList(opciones);
+        List<UnitOption> masa = new ArrayList<>();
+        masa.add(new UnitOption("milligrams", "Milligrams", "Miligramo (mg)"));
+        masa.add(new UnitOption("grams", "Grams", "Gramo (g)"));
+        masa.add(new UnitOption("kilograms", "Kilograms", "Kilogramo (kg)"));
+        masa.add(new UnitOption("pounds", "Pounds", "Libra (lb)"));
+        masa.add(new UnitOption("ounces", "Ounces", "Onza (oz)"));
+        masa.add(new UnitOption("tons", "Tons", "Tonelada (t)"));
+        MASA = Collections.unmodifiableList(masa);
+
+        List<UnitOption> temperatura = new ArrayList<>();
+        temperatura.add(new UnitOption("celsius", "Celsius", "Celsius (°C)"));
+        temperatura.add(new UnitOption("fahrenheit", "Fahrenheit", "Fahrenheit (°F)"));
+        temperatura.add(new UnitOption("kelvin", "Kelvin", "Kelvin (K)"));
+        temperatura.add(new UnitOption("rankine", "Rankine", "Rankine (°R)"));
+        TEMPERATURA = Collections.unmodifiableList(temperatura);
+
+        List<UnitOption> longitud = new ArrayList<>();
+        longitud.add(new UnitOption("millimeters", "Millimeters", "Milímetro (mm)"));
+        longitud.add(new UnitOption("centimeters", "Centimeters", "Centímetro (cm)"));
+        longitud.add(new UnitOption("meters", "Meters", "Metro (m)"));
+        longitud.add(new UnitOption("kilometers", "Kilometers", "Kilómetro (km)"));
+        longitud.add(new UnitOption("inches", "Inches", "Pulgada (in)"));
+        longitud.add(new UnitOption("feet", "Feet", "Pie (ft)"));
+        LONGITUD = Collections.unmodifiableList(longitud);
     }
 
     private final String slug;
-    private final int codigoApi;
+    private final String apiValue;
     private final String etiqueta;
 
-    public UnitOption(String slug, int codigoApi, String etiqueta) {
+    public UnitOption(String slug, String apiValue, String etiqueta) {
         this.slug = slug;
-        this.codigoApi = codigoApi;
+        this.apiValue = apiValue;
         this.etiqueta = etiqueta;
     }
 
@@ -37,24 +53,48 @@ public final class UnitOption {
         return slug;
     }
 
-    public int getCodigoApi() {
-        return codigoApi;
+    public String getApiValue() {
+        return apiValue;
     }
 
     public String getEtiqueta() {
         return etiqueta;
     }
 
+    public static List<UnitOption> masa() {
+        return MASA;
+    }
+
+    public static List<UnitOption> temperatura() {
+        return TEMPERATURA;
+    }
+
     public static List<UnitOption> longitud() {
         return LONGITUD;
     }
 
-    public static Optional<UnitOption> findBySlug(String slug) {
+    public static List<UnitOption> porTipo(String tipo) {
+        if (tipo == null || tipo.isBlank()) {
+            return masa();
+        }
+        String tipoLower = tipo.toLowerCase(Locale.ROOT);
+        if ("masa".equals(tipoLower) || "weight".equals(tipoLower)) {
+            return masa();
+        } else if ("temperatura".equals(tipoLower) || "temperature".equals(tipoLower)) {
+            return temperatura();
+        } else if ("longitud".equals(tipoLower) || "length".equals(tipoLower)) {
+            return longitud();
+        } else {
+            return masa();
+        }
+    }
+
+    public static Optional<UnitOption> findBySlug(String slug, String tipo) {
         if (slug == null || slug.isBlank()) {
             return Optional.empty();
         }
         String normalized = slug.toLowerCase(Locale.ROOT);
-        return LONGITUD.stream()
+        return porTipo(tipo).stream()
                 .filter(option -> option.slug.equalsIgnoreCase(normalized))
                 .findFirst();
     }

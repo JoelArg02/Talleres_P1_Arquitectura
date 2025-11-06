@@ -17,13 +17,77 @@ public class ConversionModel {
         this.baseUrl = baseUrl;
     }
 
-    public ConversionResult convertirLongitud(double valor, int unidadOrigen, int unidadDestino)
+    public ConversionResult convertirMasa(double valor, String unidadOrigen, String unidadDestino)
             throws IOException, InterruptedException {
         String payload = """
             {
               "value": %s,
-              "fromUnit": %d,
-              "toUnit": %d
+              "fromUnit": "%s",
+              "toUnit": "%s"
+            }
+            """.formatted(
+                Double.toString(valor),
+                unidadOrigen,
+                unidadDestino
+            );
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(buildUri("/Weight/convert"))
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(payload))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        int status = response.statusCode();
+        String body = response.body();
+
+        if (status == 200) {
+            return parseConversionResponse(body);
+        }
+
+        throw buildHttpException(status, body);
+    }
+
+    public ConversionResult convertirTemperatura(double valor, String unidadOrigen, String unidadDestino)
+            throws IOException, InterruptedException {
+        String payload = """
+            {
+              "value": %s,
+              "fromUnit": "%s",
+              "toUnit": "%s"
+            }
+            """.formatted(
+                Double.toString(valor),
+                unidadOrigen,
+                unidadDestino
+            );
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(buildUri("/Temperature/convert"))
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(payload))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        int status = response.statusCode();
+        String body = response.body();
+
+        if (status == 200) {
+            return parseConversionResponse(body);
+        }
+
+        throw buildHttpException(status, body);
+    }
+
+    public ConversionResult convertirLongitud(double valor, String unidadOrigen, String unidadDestino)
+            throws IOException, InterruptedException {
+        String payload = """
+            {
+              "value": %s,
+              "fromUnit": "%s",
+              "toUnit": "%s"
             }
             """.formatted(
                 Double.toString(valor),

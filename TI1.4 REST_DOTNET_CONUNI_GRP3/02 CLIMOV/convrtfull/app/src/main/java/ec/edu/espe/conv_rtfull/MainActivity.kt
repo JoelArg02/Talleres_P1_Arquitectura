@@ -37,9 +37,8 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> "Longitud"
-                1 -> "Peso"
+                1 -> "Masa"
                 2 -> "Temperatura"
-                3 -> "Volumen"
                 else -> "Tab $position"
             }
         }.attach()

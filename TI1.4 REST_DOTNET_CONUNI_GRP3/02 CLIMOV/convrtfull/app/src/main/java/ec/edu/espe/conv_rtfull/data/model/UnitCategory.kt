@@ -6,6 +6,5 @@ package ec.edu.espe.conv_rtfull.data.model
 enum class UnitCategory {
     LENGTH,
     WEIGHT,
-    TEMPERATURE,
-    VOLUME
+    TEMPERATURE
 }

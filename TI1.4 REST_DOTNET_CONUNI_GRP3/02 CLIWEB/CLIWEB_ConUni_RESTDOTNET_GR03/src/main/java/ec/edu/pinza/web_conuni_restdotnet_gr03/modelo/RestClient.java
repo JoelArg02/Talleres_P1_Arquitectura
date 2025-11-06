@@ -9,7 +9,7 @@ import java.time.Duration;
 
 public class RestClient {
 
-    private static final String DEFAULT_BASE_URL = "http://localhost:5000/api";
+    private static final String DEFAULT_BASE_URL = "http://localhost:5003/api";
     private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
 
     private final HttpClient httpClient;
@@ -27,15 +27,64 @@ public class RestClient {
                 .build();
     }
 
-    public HttpResponse<String> postLengthConversion(String jsonPayload) throws IOException, InterruptedException {
+    public HttpResponse<String> postWeightConversion(String jsonPayload) throws IOException, InterruptedException {
+        URI uri = buildUri("/Weight/convert");
+        System.out.println("=== RestClient.postWeightConversion ===");
+        System.out.println("URI: " + uri);
+        System.out.println("Payload: " + jsonPayload);
+        
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(buildUri("/Length/convert"))
+                .uri(uri)
                 .timeout(DEFAULT_TIMEOUT)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                 .build();
-        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("Response status: " + response.statusCode());
+        System.out.println("Response body: " + response.body());
+        return response;
+    }
+
+    public HttpResponse<String> postTemperatureConversion(String jsonPayload) throws IOException, InterruptedException {
+        URI uri = buildUri("/Temperature/convert");
+        System.out.println("=== RestClient.postTemperatureConversion ===");
+        System.out.println("URI: " + uri);
+        System.out.println("Payload: " + jsonPayload);
+        
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .timeout(DEFAULT_TIMEOUT)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                .build();
+        
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("Response status: " + response.statusCode());
+        System.out.println("Response body: " + response.body());
+        return response;
+    }
+
+    public HttpResponse<String> postLengthConversion(String jsonPayload) throws IOException, InterruptedException {
+        URI uri = buildUri("/Length/convert");
+        System.out.println("=== RestClient.postLengthConversion ===");
+        System.out.println("URI: " + uri);
+        System.out.println("Payload: " + jsonPayload);
+        
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .timeout(DEFAULT_TIMEOUT)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                .build();
+        
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("Response status: " + response.statusCode());
+        System.out.println("Response body: " + response.body());
+        return response;
     }
 
     private URI buildUri(String path) {

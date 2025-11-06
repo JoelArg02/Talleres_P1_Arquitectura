@@ -1,14 +1,16 @@
 using ConversionAPI.Enums;
+using System.Text.Json.Serialization;
 
 namespace ConversionAPI.DTOs
 {
-    /// <summary>
-    /// DTO para solicitud de conversión de temperatura
-    /// </summary>
     public class TemperatureConversionRequestDto
     {
         public double Value { get; set; }
+        
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public TemperatureUnit FromUnit { get; set; }
+        
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public TemperatureUnit ToUnit { get; set; }
     }
 }

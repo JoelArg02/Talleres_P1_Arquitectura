@@ -284,7 +284,7 @@
 
                 <!-- Footer -->
                 <TextBlock Grid.Row="2" 
-                           Text="Servicio .NET alojado en http://localhost:5000/api" 
+                           Text="Servicio .NET alojado en http://localhost:5003/api" 
                            HorizontalAlignment="Center" 
                            Foreground="#AAAAAA" 
                            FontSize="12" 

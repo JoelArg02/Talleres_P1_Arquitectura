@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import ec.edu.espe.conv_rtfull.ui.fragments.LengthFragment
 import ec.edu.espe.conv_rtfull.ui.fragments.TemperatureFragment
-import ec.edu.espe.conv_rtfull.ui.fragments.VolumeFragment
 import ec.edu.espe.conv_rtfull.ui.fragments.WeightFragment
 
 /**
@@ -13,14 +12,13 @@ import ec.edu.espe.conv_rtfull.ui.fragments.WeightFragment
  */
 class ConversionPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
     
-    override fun getItemCount(): Int = 4
+    override fun getItemCount(): Int = 3
     
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> LengthFragment()
             1 -> WeightFragment()
             2 -> TemperatureFragment()
-            3 -> VolumeFragment()
             else -> LengthFragment()
         }
     }

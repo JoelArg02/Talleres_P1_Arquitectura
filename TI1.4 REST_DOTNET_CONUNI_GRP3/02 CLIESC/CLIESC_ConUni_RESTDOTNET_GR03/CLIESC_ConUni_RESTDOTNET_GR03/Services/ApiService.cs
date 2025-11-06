@@ -52,12 +52,10 @@ namespace CLIESC_ConUni_RESTDOTNET_GR03.Services
             string endpoint;
             if (type == "Longitud")
                 endpoint = "Length/convert";
-            else if (type == "Peso")
+            else if (type == "Masa")
                 endpoint = "Weight/convert";
             else if (type == "Temperatura")
                 endpoint = "Temperature/convert";
-            else if (type == "Volumen")
-                endpoint = "Volume/convert";
             else
                 throw new System.ArgumentException("Tipo no válido");
 

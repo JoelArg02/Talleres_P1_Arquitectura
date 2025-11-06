@@ -18,7 +18,4 @@ interface ConversionApi {
     
     @POST("api/Temperature/convert")
     suspend fun convertTemperature(@Body request: TemperatureConversionRequest): Response<ConversionResponse>
-    
-    @POST("api/Volume/convert")
-    suspend fun convertVolume(@Body request: VolumeConversionRequest): Response<ConversionResponse>
 }

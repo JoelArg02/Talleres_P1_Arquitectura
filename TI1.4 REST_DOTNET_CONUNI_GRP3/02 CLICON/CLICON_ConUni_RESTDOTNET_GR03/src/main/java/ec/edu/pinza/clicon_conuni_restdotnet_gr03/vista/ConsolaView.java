@@ -6,17 +6,6 @@ import java.util.Scanner;
 
 public class ConsolaView {
 
-    private static final UnitOption[] UNIDADES_DISPONIBLES = {
-        new UnitOption(1, 0, "Metros (m)"),
-        new UnitOption(2, 1, "Kilometros (km)"),
-        new UnitOption(3, 2, "Centimetros (cm)"),
-        new UnitOption(4, 3, "Milimetros (mm)"),
-        new UnitOption(5, 4, "Millas (mi)"),
-        new UnitOption(6, 5, "Yardas (yd)"),
-        new UnitOption(7, 6, "Pies (ft)"),
-        new UnitOption(8, 7, "Pulgadas (in)")
-    };
-
     private final Scanner scanner = new Scanner(System.in);
 
     public int mostrarMenuPrincipal(boolean autenticado, String usuario) {
@@ -60,21 +49,109 @@ public class ConsolaView {
         }
     }
 
-    public int seleccionarUnidad(String mensaje) {
+    public String seleccionarUnidadMasa(String mensaje) {
         System.out.println();
         System.out.println(mensaje);
-        for (UnitOption unidad : UNIDADES_DISPONIBLES) {
-            System.out.println("  " + unidad.opcionMenu() + ") " + unidad.etiqueta());
-        }
-        while (true) {
-            int opcion = leerOpcionNumerica("Elija una opcion");
-            for (UnitOption unidad : UNIDADES_DISPONIBLES) {
-                if (unidad.opcionMenu() == opcion) {
-                    return unidad.codigoApi();
-                }
+        System.out.println("  1) Miligramo (mg)");
+        System.out.println("  2) Gramo (g)");
+        System.out.println("  3) Kilogramo (kg)");
+        System.out.println("  4) Libra (lb)");
+        System.out.println("  5) Onza (oz)");
+        System.out.println("  6) Tonelada (t)");
+        
+        int opcion = leerOpcionNumerica("Elija una opcion");
+        return switch (opcion) {
+            case 1 -> "Milligrams";
+            case 2 -> "Grams";
+            case 3 -> "Kilograms";
+            case 4 -> "Pounds";
+            case 5 -> "Ounces";
+            case 6 -> "Tons";
+            default -> {
+                System.out.println("ADVERTENCIA: Opcion invalida, se usara Kilogramos por defecto.");
+                yield "Kilograms";
             }
-            System.out.println("ADVERTENCIA: Opcion invalida. Intente nuevamente.");
-        }
+        };
+    }
+    
+    public String seleccionarUnidadTemperatura(String mensaje) {
+        System.out.println();
+        System.out.println(mensaje);
+        System.out.println("  1) Celsius (C)");
+        System.out.println("  2) Fahrenheit (F)");
+        System.out.println("  3) Kelvin (K)");
+        System.out.println("  4) Rankine (R)");
+        
+        int opcion = leerOpcionNumerica("Elija una opcion");
+        return switch (opcion) {
+            case 1 -> "Celsius";
+            case 2 -> "Fahrenheit";
+            case 3 -> "Kelvin";
+            case 4 -> "Rankine";
+            default -> {
+                System.out.println("ADVERTENCIA: Opcion invalida, se usara Celsius por defecto.");
+                yield "Celsius";
+            }
+        };
+    }
+    
+    public String seleccionarUnidadLongitud(String mensaje) {
+        System.out.println();
+        System.out.println(mensaje);
+        System.out.println("  1) Milimetro (mm)");
+        System.out.println("  2) Centimetro (cm)");
+        System.out.println("  3) Metro (m)");
+        System.out.println("  4) Kilometro (km)");
+        System.out.println("  5) Pulgada (in)");
+        System.out.println("  6) Pie (ft)");
+        
+        int opcion = leerOpcionNumerica("Elija una opcion");
+        return switch (opcion) {
+            case 1 -> "Millimeters";
+            case 2 -> "Centimeters";
+            case 3 -> "Meters";
+            case 4 -> "Kilometers";
+            case 5 -> "Inches";
+            case 6 -> "Feet";
+            default -> {
+                System.out.println("ADVERTENCIA: Opcion invalida, se usara Metros por defecto.");
+                yield "Meters";
+            }
+        };
+    }
+    
+    public String formatearUnidadMasa(String codigo) {
+        return switch (codigo) {
+            case "Milligrams" -> "Miligramo (mg)";
+            case "Grams" -> "Gramo (g)";
+            case "Kilograms" -> "Kilogramo (kg)";
+            case "Pounds" -> "Libra (lb)";
+            case "Ounces" -> "Onza (oz)";
+            case "Tons" -> "Tonelada (t)";
+            default -> codigo;
+        };
+    }
+    
+    public String formatearUnidadTemperatura(String codigo) {
+        return switch (codigo) {
+            case "Celsius" -> "Celsius (C)";
+            case "Fahrenheit" -> "Fahrenheit (F)";
+            case "Kelvin" -> "Kelvin (K)";
+            case "Rankine" -> "Rankine (R)";
+            default -> codigo;
+        };
+    }
+    
+    public String formatearUnidadLongitud(String codigo) {
+        return switch (codigo) {
+            case "Millimeters" -> "Milimetro (mm)";
+            case "Centimeters" -> "Centimetro (cm)";
+            case "Meters" -> "Metro (m)";
+            case "Kilometers" -> "Kilometro (km)";
+            case "Inches" -> "Pulgada (in)";
+            case "Feet" -> "Pie (ft)";
+            default -> codigo;
+        };
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -85,15 +162,6 @@ public class ConsolaView {
         System.out.println();
         System.out.print("Presione ENTER para continuar...");
         scanner.nextLine();
-    }
-
-    public String formatearUnidad(int codigo) {
-        for (UnitOption unidad : UNIDADES_DISPONIBLES) {
-            if (unidad.codigoApi() == codigo) {
-                return unidad.etiqueta();
-            }
-        }
-        return null;
     }
 
     private void mostrarEncabezado(String titulo) {
@@ -135,7 +203,7 @@ public class ConsolaView {
         }
     }
 
-    private int leerOpcionNumerica(String mensaje) {
+    public int leerOpcionNumerica(String mensaje) {
         while (true) {
             String entrada = leerLinea(mensaje);
             try {
@@ -149,8 +217,5 @@ public class ConsolaView {
     private String leerLinea(String mensaje) {
         System.out.print(mensaje + ": ");
         return scanner.nextLine().trim();
-    }
-
-    private record UnitOption(int opcionMenu, int codigoApi, String etiqueta) {
     }
 }
