@@ -6,11 +6,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import ec.edu.espe.soap_conuni_clmov_gro3.R;
 import ec.edu.espe.soap_conuni_clmov_gro3.arguello.servicios.ConUniServicio;
 import ec.edu.espe.soap_conuni_clmov_gro3.databinding.FragmentFirstBinding;
 
@@ -19,6 +26,20 @@ public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
     private ConUniServicio conversionService;
     private static final String TAG = "FirstFragment";
+    
+    private String[] conversionTypes = {"MASA", "TEMPERATURA", "LONGITUD"};
+    private String[][] unitsByType = {
+        {"Miligramo (mg)", "Gramo (g)", "Kilogramo (kg)", "Libra (lb)", "Onza (oz)", "Tonelada (t)"},
+        {"Celsius (c)", "Fahrenheit (f)", "Kelvin (k)", "Rankine (r)"},
+        {"Milímetro (mm)", "Centímetro (cm)", "Metro (m)", "Kilómetro (km)", "Pulgada (in)", "Pie (ft)"}
+    };
+    private String[][] unitCodesByType = {
+        {"mg", "g", "kg", "lb", "oz", "t"},
+        {"c", "f", "k", "r"},
+        {"mm", "cm", "m", "km", "in", "ft"}
+    };
+    
+    private int currentTypeIndex = 0;
 
     @Override
     public View onCreateView(
@@ -33,23 +54,79 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setupConversionTypeSpinner();
+        setupUnitSpinners();
+        
         binding.convertButton.setOnClickListener(v -> performConversion());
+    }
+    
+    private void setupConversionTypeSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            requireContext(),
+            R.layout.spinner_item,
+            conversionTypes
+        );
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        binding.conversionTypeSpinner.setAdapter(adapter);
+        
+        binding.conversionTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentTypeIndex = position;
+                updateUnitSpinners();
+                binding.resultCard.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+    
+    private void setupUnitSpinners() {
+        updateUnitSpinners();
+    }
+    
+    private void updateUnitSpinners() {
+        String[] units = unitsByType[currentTypeIndex];
+        
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            requireContext(),
+            R.layout.spinner_item,
+            units
+        );
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        
+        binding.unitFromSpinner.setAdapter(adapter);
+        binding.unitToSpinner.setAdapter(adapter);
+        
+        if (units.length > 1) {
+            binding.unitToSpinner.setSelection(1);
+        }
     }
 
     private void performConversion() {
-        String massStr = binding.massInput.getText().toString().trim();
-        String tempStr = binding.tempInput.getText().toString().trim();
-        String longStr = binding.longitude2Input.getText().toString().trim();
+        String valueStr = binding.valueInput.getText().toString().trim();
         
-        if (massStr.isEmpty() && tempStr.isEmpty() && longStr.isEmpty()) {
-            Toast.makeText(requireContext(), "Ingrese al menos un valor", Toast.LENGTH_SHORT).show();
+        if (valueStr.isEmpty()) {
+            Toast.makeText(requireContext(), "Ingrese un valor", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        int fromIndex = binding.unitFromSpinner.getSelectedItemPosition();
+        int toIndex = binding.unitToSpinner.getSelectedItemPosition();
+        
+        if (fromIndex == toIndex) {
+            Toast.makeText(requireContext(), "Las unidades deben ser diferentes", Toast.LENGTH_SHORT).show();
             return;
         }
 
         binding.convertButton.setEnabled(false);
         binding.errorText.setVisibility(View.GONE);
         
-        new ConversionTask().execute(massStr, tempStr, longStr);
+        String fromUnit = unitCodesByType[currentTypeIndex][fromIndex];
+        String toUnit = unitCodesByType[currentTypeIndex][toIndex];
+        
+        new ConversionTask().execute(valueStr, fromUnit, toUnit);
     }
     
     private String formatNumber(double value) {
@@ -71,49 +148,22 @@ public class FirstFragment extends Fragment {
             ConversionResult result = new ConversionResult();
             
             try {
-                String massStr = params[0];
-                String tempStr = params[1];
-                String longStr = params[2];
+                double value = Double.parseDouble(params[0]);
+                String fromUnit = params[1];
+                String toUnit = params[2];
                 
-                if (!massStr.isEmpty()) {
-                    double massKg = Double.parseDouble(massStr);
-                    result.massKg = massKg;
-                    result.massMg = conversionService.conversion(massKg, "kg", "mg");
-                    result.massG = conversionService.conversion(massKg, "kg", "g");
-                    result.massLb = conversionService.conversion(massKg, "kg", "lb");
-                    result.massOz = conversionService.conversion(massKg, "kg", "oz");
-                    result.massT = conversionService.conversion(massKg, "kg", "t");
-                    result.hasMass = true;
-                }
-                
-                if (!tempStr.isEmpty()) {
-                    double tempC = Double.parseDouble(tempStr);
-                    result.tempC = tempC;
-                    result.tempF = conversionService.conversion(tempC, "c", "f");
-                    result.tempK = conversionService.conversion(tempC, "c", "k");
-                    result.tempR = conversionService.conversion(tempC, "c", "r");
-                    result.hasTemp = true;
-                }
-                
-                if (!longStr.isEmpty()) {
-                    double longM = Double.parseDouble(longStr);
-                    result.longM = longM;
-                    result.longMm = conversionService.conversion(longM, "m", "mm");
-                    result.longCm = conversionService.conversion(longM, "m", "cm");
-                    result.longKm = conversionService.conversion(longM, "m", "km");
-                    result.longIn = conversionService.conversion(longM, "m", "in");
-                    result.longFt = conversionService.conversion(longM, "m", "ft");
-                    result.hasLong = true;
-                }
-                
+                result.value = value;
+                result.fromUnit = unitsByType[currentTypeIndex][binding.unitFromSpinner.getSelectedItemPosition()];
+                result.toUnit = unitsByType[currentTypeIndex][binding.unitToSpinner.getSelectedItemPosition()];
+                result.resultValue = conversionService.conversion(value, fromUnit, toUnit);
                 result.success = true;
                 
             } catch (NumberFormatException e) {
                 Log.e(TAG, "Error de formato de numero", e);
-                result.error = "Valores invalidos";
+                result.error = "Valor inválido";
             } catch (Exception e) {
                 Log.e(TAG, "Error en conversion", e);
-                result.error = "Error al conectar con el servidor";
+                result.error = "Error al conectar con el servidor: " + e.getMessage();
             }
             
             return result;
@@ -127,54 +177,27 @@ public class FirstFragment extends Fragment {
                 binding.errorText.setText(result.error);
                 binding.errorText.setVisibility(View.VISIBLE);
                 Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show();
+                binding.resultCard.setVisibility(View.GONE);
                 return;
             }
             
-            if (result.hasMass) {
-                binding.resultKg.setText(formatNumber(result.massKg) + " kg");
-                binding.resultG.setText(formatNumber(result.massG) + " g");
-                binding.resultLb.setText(formatNumber(result.massLb) + " lb");
-            } else {
-                binding.resultKg.setText("---");
-                binding.resultG.setText("---");
-                binding.resultLb.setText("---");
-            }
+            String resultText = formatNumber(result.value) + " " + result.fromUnit + 
+                              "\n=\n" + formatNumber(result.resultValue) + " " + result.toUnit;
             
-            if (result.hasTemp) {
-                binding.resultCelsius.setText(formatNumber(result.tempC) + " C");
-                binding.resultFahrenheit.setText(formatNumber(result.tempF) + " F");
-                binding.resultKelvin.setText(formatNumber(result.tempK) + " K");
-            } else {
-                binding.resultCelsius.setText("---");
-                binding.resultFahrenheit.setText("---");
-                binding.resultKelvin.setText("---");
-            }
-            
-            if (result.hasLong) {
-                binding.resultLong2Decimal.setText(formatNumber(result.longM) + " m");
-                binding.resultLong2Radians.setText(formatNumber(result.longCm) + " cm");
-            } else {
-                binding.resultLong2Decimal.setText("---");
-                binding.resultLong2Radians.setText("---");
-            }
-            
+            binding.resultText.setText(resultText);
+            binding.resultCard.setVisibility(View.VISIBLE);
             binding.errorText.setVisibility(View.GONE);
-            Toast.makeText(requireContext(), "Conversion exitosa", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Conversión exitosa", Toast.LENGTH_SHORT).show();
         }
     }
     
     private static class ConversionResult {
         boolean success = false;
         String error = "";
-        
-        boolean hasMass = false;
-        double massMg, massG, massKg, massLb, massOz, massT;
-        
-        boolean hasTemp = false;
-        double tempC, tempF, tempK, tempR;
-        
-        boolean hasLong = false;
-        double longMm, longCm, longM, longKm, longIn, longFt;
+        double value;
+        double resultValue;
+        String fromUnit;
+        String toUnit;
     }
 
     @Override
