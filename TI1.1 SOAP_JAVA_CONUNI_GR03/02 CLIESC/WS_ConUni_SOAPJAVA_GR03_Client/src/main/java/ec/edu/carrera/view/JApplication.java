@@ -15,7 +15,7 @@ import java.util.Objects;
 public class JApplication extends JFrame {
 
     private JTextField txtNumber;
-    private JComboBox<String> cmbInUnit, cmbOutUnit;
+    private JComboBox<UnitItem> cmbInUnit, cmbOutUnit;
     private JButton btnConvert, btnClear, btnSwap;
     private JLabel lblResult, statusLabel, lblTitle;
 
@@ -55,7 +55,59 @@ public class JApplication extends JFrame {
     private final Font FONT_STATUS = new Font("Segoe UI", Font.ITALIC, 12);
     private static final int CORNER_RADIUS = 12;
 
-    private final String[] units = {"meters", "kilometers", "centimeters"};
+    private JComboBox<String> cmbConversionType;
+    private final String[] conversionTypes = {"Masa", "Temperatura", "Longitud"};
+    
+    private static class UnitItem {
+        String code;
+        String display;
+        
+        UnitItem(String code, String display) {
+            this.code = code;
+            this.display = display;
+        }
+        
+        @Override
+        public String toString() {
+            return display;
+        }
+    }
+    
+    private final UnitItem[] masaUnits = {
+        new UnitItem("mg", "Miligramo (mg)"),
+        new UnitItem("g", "Gramo (g)"),
+        new UnitItem("kg", "Kilogramo (kg)"),
+        new UnitItem("lb", "Libra (lb)"),
+        new UnitItem("oz", "Onza (oz)"),
+        new UnitItem("t", "Tonelada (t)")
+    };
+    
+    private final UnitItem[] temperaturaUnits = {
+        new UnitItem("c", "Celsius (°C)"),
+        new UnitItem("f", "Fahrenheit (°F)"),
+        new UnitItem("k", "Kelvin (K)"),
+        new UnitItem("r", "Rankine (°R)")
+    };
+    
+    private final UnitItem[] longitudUnits = {
+        new UnitItem("mm", "Milímetro (mm)"),
+        new UnitItem("cm", "Centímetro (cm)"),
+        new UnitItem("m", "Metro (m)"),
+        new UnitItem("km", "Kilómetro (km)"),
+        new UnitItem("in", "Pulgada (in)"),
+        new UnitItem("ft", "Pie (ft)")
+    };
+    
+    private UnitItem[] getUnitsForCurrentType() {
+        String selected = (String) cmbConversionType.getSelectedItem();
+        if (selected == null) return masaUnits;
+        switch (selected) {
+            case "Masa": return masaUnits;
+            case "Temperatura": return temperaturaUnits;
+            case "Longitud": return longitudUnits;
+            default: return masaUnits;
+        }
+    }
 
     public JApplication(String username) {
         this.username = username;
@@ -121,8 +173,9 @@ public class JApplication extends JFrame {
         txtNumber.setBorder(new RoundBorder(BORDER_GRAY, 1, CORNER_RADIUS));
         txtNumber.setText(""); // Sin texto por default
 
-        cmbInUnit = createStyledComboBox(units);
-        cmbOutUnit = createStyledComboBox(units);
+        cmbConversionType = createStyledComboBox(conversionTypes);
+        cmbInUnit = createStyledComboBoxUnits(masaUnits);
+        cmbOutUnit = createStyledComboBoxUnits(masaUnits);
 
         btnConvert = createStyledButton("CONVERTIR", ACCENT_BLUE, ACCENT_BLUE_DARK, TEXT_LIGHT, FONT_BUTTON);
         btnClear = createStyledButton("LIMPIAR", GRAY_BUTTON, GRAY_BUTTON_DARK, TEXT_DARK, FONT_BUTTON);
@@ -209,6 +262,34 @@ public class JApplication extends JFrame {
         });
         return cmb;
     }
+    
+    private JComboBox<UnitItem> createStyledComboBoxUnits(UnitItem[] items) {
+        JComboBox<UnitItem> cmb = new JComboBox<>(items);
+        cmb.setFont(FONT_COMBO);
+        cmb.setBackground(BACKGROUND_SECONDARY);
+        cmb.setForeground(TEXT_DARK);
+        cmb.setBorder(new RoundBorder(BORDER_GRAY, 1, CORNER_RADIUS));
+        cmb.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        cmb.setOpaque(true);
+        cmb.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                label.setOpaque(true);
+                label.setBorder(new EmptyBorder(8, 10, 8, 10));
+                if (isSelected) {
+                    label.setBackground(ACCENT_BLUE_DARK);
+                    label.setForeground(TEXT_LIGHT);
+                } else {
+                    label.setBackground(BACKGROUND_SECONDARY);
+                    label.setForeground(TEXT_DARK);
+                }
+                return label;
+            }
+        });
+        return cmb;
+    }
 
     // Menú usuario (cerrar sesión)
     private void showUserMenu(MouseEvent e) {
@@ -258,21 +339,29 @@ public class JApplication extends JFrame {
     mainPanel.add(verticalHeader, gbc);
 
     // ... resto igual
-    gbc.gridy = 1; gbc.insets = new Insets(0, 0, 13, 0);
+    gbc.gridy = 1; gbc.insets = new Insets(0, 0, 8, 0);
+    JLabel lblType = new JLabel("Tipo de Conversión:", SwingConstants.LEFT);
+    lblType.setFont(FONT_SUBTITLE); lblType.setForeground(TEXT_MEDIUM);
+    mainPanel.add(lblType, gbc);
+    
+    gbc.gridy = 2; gbc.insets = new Insets(0, 0, 13, 0);
+    mainPanel.add(cmbConversionType, gbc);
+    
+    gbc.gridy = 3; gbc.insets = new Insets(0, 0, 13, 0);
     mainPanel.add(txtNumber, gbc);
-    gbc.gridy = 2; gbc.insets = new Insets(0, 0, 18, 0);
+    gbc.gridy = 4; gbc.insets = new Insets(0, 0, 18, 0);
     mainPanel.add(statusLabel, gbc);
 
     gbc.gridwidth = 1; gbc.weightx = 0; gbc.insets = new Insets(0, 0, 3, 0);
     JLabel lblFrom = new JLabel("De:", SwingConstants.LEFT);
     lblFrom.setFont(FONT_SUBTITLE); lblFrom.setForeground(TEXT_MEDIUM);
-    gbc.gridy = 3; gbc.gridx = 0; mainPanel.add(lblFrom, gbc);
+    gbc.gridy = 5; gbc.gridx = 0; mainPanel.add(lblFrom, gbc);
 
     JLabel lblTo = new JLabel("A:", SwingConstants.LEFT);
     lblTo.setFont(FONT_SUBTITLE); lblTo.setForeground(TEXT_MEDIUM);
-    gbc.gridy = 3; gbc.gridx = 2; mainPanel.add(lblTo, gbc);
+    gbc.gridy = 5; gbc.gridx = 2; mainPanel.add(lblTo, gbc);
 
-    gbc.gridy = 4; gbc.insets = new Insets(0, 0, 14, 0);
+    gbc.gridy = 6; gbc.insets = new Insets(0, 0, 14, 0);
     gbc.gridx = 0; gbc.weightx = 1.0; mainPanel.add(cmbInUnit, gbc);
 
     gbc.gridx = 1; gbc.weightx = 0;
@@ -287,10 +376,10 @@ public class JApplication extends JFrame {
     buttonPanel.setOpaque(false);
     buttonPanel.add(btnConvert);
     buttonPanel.add(btnClear);
-    gbc.gridy = 5; gbc.gridx = 0; gbc.gridwidth = 3; gbc.weightx = 1.0;
+    gbc.gridy = 7; gbc.gridx = 0; gbc.gridwidth = 3; gbc.weightx = 1.0;
     gbc.insets = new Insets(8, 0, 18, 0); mainPanel.add(buttonPanel, gbc);
 
-    gbc.gridy = 6; gbc.insets = new Insets(0, 0, 0, 0);
+    gbc.gridy = 8; gbc.insets = new Insets(0, 0, 0, 0);
     gbc.gridwidth = 3; mainPanel.add(lblResult, gbc);
 
     add(mainPanel, BorderLayout.CENTER);
@@ -309,6 +398,8 @@ public class JApplication extends JFrame {
         btnConvert.addActionListener(e -> performConversion());
         btnClear.addActionListener(e -> clearAll());
         btnSwap.addActionListener(e -> swapUnits());
+        
+        cmbConversionType.addActionListener(e -> updateUnits());
 
         userPanel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) { showUserMenu(e); }
@@ -325,6 +416,23 @@ public class JApplication extends JFrame {
         });
     }
 
+    private String formatNumber(double value) {
+        double absValue = Math.abs(value);
+        
+        // Para números muy pequeños (menores a 0.001) o muy grandes (mayores a 1,000,000)
+        if ((absValue > 0 && absValue < 0.001) || absValue >= 1_000_000) {
+            return String.format("%.6e", value);
+        }
+        // Para números normales, usar formato con separador de miles y 3 decimales
+        else if (absValue >= 1000) {
+            return String.format("%,.3f", value);
+        }
+        // Para números menores a 1000, usar 3 decimales sin separador
+        else {
+            return String.format("%.3f", value);
+        }
+    }
+
     private void performConversion() {
             try {
                 String text = txtNumber.getText().trim().replace(',', '.');
@@ -334,8 +442,17 @@ public class JApplication extends JFrame {
                 }
                 int intNumber = (int) number;
 
-                String inUnit = (String) cmbInUnit.getSelectedItem();
-                String outUnit = (String) cmbOutUnit.getSelectedItem();
+                UnitItem inUnitItem = (UnitItem) cmbInUnit.getSelectedItem();
+                UnitItem outUnitItem = (UnitItem) cmbOutUnit.getSelectedItem();
+                
+                if (inUnitItem == null || outUnitItem == null) {
+                    statusLabel.setText("⚠️ Debe seleccionar unidades válidas.");
+                    statusLabel.setForeground(ERROR_RED);
+                    return;
+                }
+                
+                String inUnit = inUnitItem.code;
+                String outUnit = outUnitItem.code;
 
                 statusLabel.setText("Convirtiendo via SOAP...");
                 statusLabel.setForeground(ACCENT_BLUE);
@@ -355,7 +472,8 @@ public class JApplication extends JFrame {
                         btnConvert.setEnabled(true);
                         try {
                             double result = get();
-                            lblResult.setText(String.format("%,.4f %s", result, Objects.requireNonNull(outUnit).substring(0, 1).toLowerCase()));
+                            String formattedResult = formatNumber(result);
+                            lblResult.setText(formattedResult + " " + outUnitItem.display);
                             statusLabel.setText("Conversión completada con éxito");
                             statusLabel.setForeground(SUCCESS_GREEN);
                             lblResult.setForeground(SUCCESS_GREEN);
@@ -401,10 +519,21 @@ public class JApplication extends JFrame {
             }
         }
 
+    private void updateUnits() {
+        UnitItem[] units = getUnitsForCurrentType();
+        cmbInUnit.setModel(new DefaultComboBoxModel<>(units));
+        cmbOutUnit.setModel(new DefaultComboBoxModel<>(units));
+        cmbInUnit.setSelectedIndex(0);
+        cmbOutUnit.setSelectedIndex(units.length > 1 ? 1 : 0);
+        lblResult.setText("0.00");
+        statusLabel.setText("Listo para convertir");
+        statusLabel.setForeground(TEXT_LIGHT_GRAY);
+    }
+    
     private void clearAll() {
         txtNumber.setText("");
-        cmbInUnit.setSelectedIndex(0);
-        cmbOutUnit.setSelectedIndex(1);
+        cmbConversionType.setSelectedIndex(0);
+        updateUnits();
         lblResult.setText("0.00");
         statusLabel.setText("Campos reiniciados");
         statusLabel.setForeground(TEXT_LIGHT_GRAY);

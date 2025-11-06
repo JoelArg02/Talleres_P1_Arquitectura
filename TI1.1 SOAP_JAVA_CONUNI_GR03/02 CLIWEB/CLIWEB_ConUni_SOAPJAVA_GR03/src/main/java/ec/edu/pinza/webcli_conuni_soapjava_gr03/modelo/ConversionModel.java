@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class ConversionModel {
 
-    private static final String ENDPOINT = "http://192.168.137.1:8080/WS_ConUni_SOAPJAVA_GR03/WSConUni";
+    private static final String ENDPOINT = "http://localhost:8080/WS_ConUni_SOAPJAVA_GR03/WSConUni";
 
     public double convertir(double valor, String inUnit, String outUnit) {
         try {

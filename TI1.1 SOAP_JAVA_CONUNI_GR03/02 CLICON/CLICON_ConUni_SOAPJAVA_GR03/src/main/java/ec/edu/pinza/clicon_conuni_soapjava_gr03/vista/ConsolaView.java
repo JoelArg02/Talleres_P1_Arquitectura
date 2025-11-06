@@ -6,10 +6,29 @@ import java.util.Scanner;
 
 public class ConsolaView {
 
-    private static final String[][] UNIDADES_DISPONIBLES = {
-        {"1", "meters", "Metros (m)"},
-        {"2", "kilometers", "Kilometros (km)"},
-        {"3", "centimeters", "Centimetros (cm)"}
+    private static final String[][] UNIDADES_MASA = {
+        {"1", "mg", "Miligramo (mg)"},
+        {"2", "g", "Gramo (g)"},
+        {"3", "kg", "Kilogramo (kg)"},
+        {"4", "lb", "Libra (lb)"},
+        {"5", "oz", "Onza (oz)"},
+        {"6", "t", "Tonelada (t)"}
+    };
+    
+    private static final String[][] UNIDADES_TEMPERATURA = {
+        {"1", "c", "Celsius (C)"},
+        {"2", "f", "Fahrenheit (F)"},
+        {"3", "k", "Kelvin (K)"},
+        {"4", "r", "Rankine (R)"}
+    };
+    
+    private static final String[][] UNIDADES_LONGITUD = {
+        {"1", "mm", "Milimetro (mm)"},
+        {"2", "cm", "Centimetro (cm)"},
+        {"3", "m", "Metro (m)"},
+        {"4", "km", "Kilometro (km)"},
+        {"5", "in", "Pulgada (in)"},
+        {"6", "ft", "Pie (ft)"}
     };
 
     private final Scanner scanner = new Scanner(System.in);
@@ -67,15 +86,49 @@ public class ConsolaView {
         }
     }
 
-    public String seleccionarUnidad(String mensaje) {
+    public String seleccionarUnidadMasa(String mensaje) {
         System.out.println();
         System.out.println(mensaje);
-        for (String[] unidad : UNIDADES_DISPONIBLES) {
+        for (String[] unidad : UNIDADES_MASA) {
             System.out.println("  " + unidad[0] + ") " + unidad[2]);
         }
         while (true) {
             String opcion = leerLinea("Elija una opcion");
-            for (String[] unidad : UNIDADES_DISPONIBLES) {
+            for (String[] unidad : UNIDADES_MASA) {
+                if (unidad[0].equals(opcion)) {
+                    return unidad[1];
+                }
+            }
+            System.out.println("ADVERTENCIA: Opcion invalida. Intente nuevamente.");
+        }
+    }
+    
+    public String seleccionarUnidadTemperatura(String mensaje) {
+        System.out.println();
+        System.out.println(mensaje);
+        for (String[] unidad : UNIDADES_TEMPERATURA) {
+            System.out.println("  " + unidad[0] + ") " + unidad[2]);
+        }
+        while (true) {
+            String opcion = leerLinea("Elija una opcion");
+            for (String[] unidad : UNIDADES_TEMPERATURA) {
+                if (unidad[0].equals(opcion)) {
+                    return unidad[1];
+                }
+            }
+            System.out.println("ADVERTENCIA: Opcion invalida. Intente nuevamente.");
+        }
+    }
+    
+    public String seleccionarUnidadLongitud(String mensaje) {
+        System.out.println();
+        System.out.println(mensaje);
+        for (String[] unidad : UNIDADES_LONGITUD) {
+            System.out.println("  " + unidad[0] + ") " + unidad[2]);
+        }
+        while (true) {
+            String opcion = leerLinea("Elija una opcion");
+            for (String[] unidad : UNIDADES_LONGITUD) {
                 if (unidad[0].equals(opcion)) {
                     return unidad[1];
                 }
@@ -94,8 +147,26 @@ public class ConsolaView {
         scanner.nextLine();
     }
 
-    public String formatearUnidad(String codigo) {
-        for (String[] unidad : UNIDADES_DISPONIBLES) {
+    public String formatearUnidadMasa(String codigo) {
+        for (String[] unidad : UNIDADES_MASA) {
+            if (unidad[1].equals(codigo)) {
+                return unidad[2];
+            }
+        }
+        return codigo;
+    }
+    
+    public String formatearUnidadTemperatura(String codigo) {
+        for (String[] unidad : UNIDADES_TEMPERATURA) {
+            if (unidad[1].equals(codigo)) {
+                return unidad[2];
+            }
+        }
+        return codigo;
+    }
+    
+    public String formatearUnidadLongitud(String codigo) {
+        for (String[] unidad : UNIDADES_LONGITUD) {
             if (unidad[1].equals(codigo)) {
                 return unidad[2];
             }

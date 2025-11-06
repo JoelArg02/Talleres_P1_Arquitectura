@@ -28,11 +28,7 @@ public class ConversionServlet extends HttpServlet {
 
         double resultado = model.convertir(valor, inUnit, outUnit);
 
-        req.setAttribute("valor", valor);
-        req.setAttribute("inUnit", inUnit);
-        req.setAttribute("outUnit", outUnit);
-        req.setAttribute("resultado", resultado);
-
-        req.getRequestDispatcher("/vista/conversion.jsp").forward(req, resp);
+        resp.setContentType("text/html;charset=UTF-8");
+        resp.getWriter().println("<div data-resultado=\"" + resultado + "\"></div>");
     }
 }
