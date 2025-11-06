@@ -1,131 +1,134 @@
 ﻿using CLIESC_ConUni_SOAPDOTNET_GR03.ConversionServiceRef;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
-using System.Web.Services.Protocols; // Para SoapException
+using System.Web.Services.Protocols;
 using System.Windows;
-using System.Windows.Controls; // Necesario para ComboBoxItem
+using System.Windows.Controls;
 
 namespace CLIESC_ConUni_SOAPDOTNET_GR03
 {
     public partial class ConversionWindow : Window
     {
+        private class UnitItem
+        {
+            public string Code { get; set; }
+            public string Display { get; set; }
+
+            public override string ToString() => Display;
+        }
+
+        private readonly UnitItem[] masaUnits = new[]
+        {
+            new UnitItem { Code = "mg", Display = "Miligramo (mg)" },
+            new UnitItem { Code = "g", Display = "Gramo (g)" },
+            new UnitItem { Code = "kg", Display = "Kilogramo (kg)" },
+            new UnitItem { Code = "lb", Display = "Libra (lb)" },
+            new UnitItem { Code = "oz", Display = "Onza (oz)" },
+            new UnitItem { Code = "t", Display = "Tonelada (t)" }
+        };
+
+        private readonly UnitItem[] temperaturaUnits = new[]
+        {
+            new UnitItem { Code = "c", Display = "Celsius (°C)" },
+            new UnitItem { Code = "f", Display = "Fahrenheit (°F)" },
+            new UnitItem { Code = "k", Display = "Kelvin (K)" },
+            new UnitItem { Code = "r", Display = "Rankine (°R)" }
+        };
+
+        private readonly UnitItem[] longitudUnits = new[]
+        {
+            new UnitItem { Code = "mm", Display = "Milímetro (mm)" },
+            new UnitItem { Code = "cm", Display = "Centímetro (cm)" },
+            new UnitItem { Code = "m", Display = "Metro (m)" },
+            new UnitItem { Code = "km", Display = "Kilómetro (km)" },
+            new UnitItem { Code = "in", Display = "Pulgada (in)" },
+            new UnitItem { Code = "ft", Display = "Pie (ft)" }
+        };
+
         public ConversionWindow(string username)
         {
             InitializeComponent();
-
-            // Establecer el nombre de usuario en el TextBlock
             txtUsuarioNombre.Text = username;
+            
+            // Inicializar unidades por defecto (Masa)
+            UpdateUnits();
         }
 
-        /// <summary>
-        /// Este método se dispara cuando el usuario hace clic en "Cerrar sesión"
-        /// </summary>
         private void cmbUserMenu_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            // 1. Abrir una nueva ventana de Login
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
-
-            // 2. Cerrar esta ventana de Conversión
             this.Close();
         }
 
-        // --- El resto de tu código de conversión no cambia en absoluto ---
+        private void cmbConversionType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateUnits();
+            if (resultPanel != null)
+            {
+                resultPanel.Visibility = Visibility.Collapsed;
+            }
+            if (lblError != null)
+            {
+                lblError.Text = "";
+            }
+        }
+
+        private void UpdateUnits()
+        {
+            if (cmbConversionType == null || cmbInUnit == null || cmbOutUnit == null)
+                return;
+
+            var selectedType = ((ComboBoxItem)cmbConversionType.SelectedItem)?.Content?.ToString();
+            
+            UnitItem[] units = selectedType switch
+            {
+                "Masa" => masaUnits,
+                "Temperatura" => temperaturaUnits,
+                "Longitud" => longitudUnits,
+                _ => masaUnits
+            };
+
+            cmbInUnit.ItemsSource = units;
+            cmbOutUnit.ItemsSource = units;
+            
+            cmbInUnit.SelectedIndex = 0;
+            cmbOutUnit.SelectedIndex = units.Length > 1 ? 1 : 0;
+        }
 
         private async void btnConvertir_Click(object sender, RoutedEventArgs e)
         {
             var conversionClient = new Service();
-            LimpiarResultados();
             lblError.Text = "";
+            resultPanel.Visibility = Visibility.Collapsed;
 
             try
             {
-                // 1. Lógica de Pre-conversión
-                double massValue = double.Parse(txtMassValue.Text);
-                string massUnit = (cmbMassUnit.SelectedItem as ComboBoxItem).Content.ToString();
-                double massInKg = 0;
-
-                if (massUnit == "Gramos")
+                if (!double.TryParse(txtValue.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double value))
                 {
-                    massInKg = massValue / 1000.0;
-                }
-                else if (massUnit == "Libras")
-                {
-                    massInKg = massValue / 2.20462262185;
-                }
-                else
-                {
-                    massInKg = massValue;
+                    lblError.Text = "Por favor, ingresa un valor numérico válido.";
+                    return;
                 }
 
-                double tempValue = double.Parse(txtTempValue.Text);
-                string tempUnit = (cmbTempUnit.SelectedItem as ComboBoxItem).Content.ToString();
-                double tempInCelsius = 0;
+                var inUnit = (cmbInUnit.SelectedItem as UnitItem)?.Code;
+                var outUnit = (cmbOutUnit.SelectedItem as UnitItem)?.Code;
 
-                if (tempUnit == "Fahrenheit")
+                if (string.IsNullOrEmpty(inUnit) || string.IsNullOrEmpty(outUnit))
                 {
-                    tempInCelsius = (tempValue - 32) * 5.0 / 9.0;
-                }
-                else if (tempUnit == "Kelvin")
-                {
-                    tempInCelsius = tempValue - 273.15;
-                }
-                else
-                {
-                    tempInCelsius = tempValue;
+                    lblError.Text = "Por favor, selecciona las unidades de conversión.";
+                    return;
                 }
 
-                // 2. Crear el 'request'
-                var request = new ConversionRequest
-                {
-                    MassKg = massInKg,
-                    MassKgSpecified = true,
-                    TemperatureCelsius = tempInCelsius,
-                    TemperatureCelsiusSpecified = true,
-                    Latitude = double.Parse(txtLatitude.Text),
-                    LatitudeSpecified = true,
-                    Longitude = double.Parse(txtLongitude.Text),
-                    LongitudeSpecified = true,
-                    Longitude2 = double.Parse(txtLongitude2.Text),
-                    Longitude2Specified = true
-                };
-
-                // 3. Pasa el 'request' al Hilo de Fondo
-                var response = await Task.Run(() =>
-                    conversionClient.Convert(request)
+                double result = await Task.Run(() =>
+                    conversionClient.ConvertUnit(value, inUnit, outUnit)
                 );
 
-                // 4. Mostrar resultado principal (basado en la conversión de masa)
-                string unidadOrigen = (cmbMassUnit.SelectedItem as ComboBoxItem).Content.ToString();
-                string resultadoPrincipal = "";
-                
-                if (unidadOrigen == "Kilogramos")
-                {
-                    resultadoPrincipal = $"{massValue:F2} kg = {response.MassLb:F2} lb";
-                }
-                else if (unidadOrigen == "Gramos")
-                {
-                    resultadoPrincipal = $"{massValue:F2} g = {response.MassKg:F2} kg";
-                }
-                else if (unidadOrigen == "Libras")
-                {
-                    resultadoPrincipal = $"{massValue:F2} lb = {response.MassKg:F2} kg";
-                }
+                var inUnitDisplay = (cmbInUnit.SelectedItem as UnitItem)?.Display;
+                var outUnitDisplay = (cmbOutUnit.SelectedItem as UnitItem)?.Display;
 
-                lblResultado.Text = resultadoPrincipal;
-
-                // 5. Mostrar resultados detallados
-                lblResultMassLb.Text = $"Libras (Lb): {response.MassLb:F2}";
-                lblResultMassG.Text = $"Gramos (G): {response.MassG:F2}";
-                lblResultMassKg.Text = $"Kilogramos (Kg): {response.MassKg:F2}";
-
-                lblResultTempF.Text = $"Fahrenheit (F): {response.TemperatureFahrenheit:F2}";
-                lblResultTempK.Text = $"Kelvin (K): {response.TemperatureKelvin:F2}";
-                lblResultTempC.Text = $"Celsius (C): {response.TemperatureCelsius:F2}";
-
-                lblResultLatDMS.Text = $"Latitud 1: {FormatDMS(response.LatitudeDMS)}";
-                lblResultLonDMS.Text = $"Longitud 1: {FormatDMS(response.LongitudeDMS)}";
-                lblResultLon2DMS.Text = $"Longitud 2: {FormatDMS(response.Longitude2DMS)}";
+                lblResultado.Text = $"{FormatNumber(value)} {inUnitDisplay} = {FormatNumber(result)} {outUnitDisplay}";
+                resultPanel.Visibility = Visibility.Visible;
             }
             catch (SoapException exSoap)
             {
@@ -133,32 +136,33 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
             }
             catch (FormatException)
             {
-                lblError.Text = "Por favor, ingresa solo números válidos en los campos de entrada.";
+                lblError.Text = "Por favor, ingresa solo números válidos.";
             }
             catch (Exception ex)
             {
-                lblError.Text = $"Error al convertir o conectar: {ex.Message}. ¿Servicio WCFService ejecutándose?";
+                lblError.Text = $"Error al convertir: {ex.Message}. ¿Servicio ejecutándose?";
             }
         }
 
-        private string FormatDMS(CoordinateDMS dms)
+        private string FormatNumber(double value)
         {
-            if (dms == null) return "N/A";
-            return $"{dms.Degrees}° {dms.Minutes}' {dms.Seconds:F2}\" {dms.Hemisphere}";
-        }
+            double absValue = Math.Abs(value);
 
-        private void LimpiarResultados()
-        {
-            lblResultado.Text = "";
-            lblResultMassLb.Text = "Libras (Lb): ...";
-            lblResultMassG.Text = "Gramos (G): ...";
-            lblResultMassKg.Text = "Kilogramos (Kg): ...";
-            lblResultTempF.Text = "Fahrenheit (F): ...";
-            lblResultTempK.Text = "Kelvin (K): ...";
-            lblResultTempC.Text = "Celsius (C): ...";
-            lblResultLatDMS.Text = "Latitud 1: ...";
-            lblResultLonDMS.Text = "Longitud 1: ...";
-            lblResultLon2DMS.Text = "Longitud 2: ...";
+            // Para números muy pequeños o muy grandes
+            if ((absValue > 0 && absValue < 0.001) || absValue >= 1_000_000)
+            {
+                return value.ToString("0.000000e+00", CultureInfo.InvariantCulture);
+            }
+            // Para números normales >= 1000
+            else if (absValue >= 1000)
+            {
+                return value.ToString("N3", CultureInfo.InvariantCulture);
+            }
+            // Para números menores a 1000
+            else
+            {
+                return value.ToString("0.000", CultureInfo.InvariantCulture);
+            }
         }
     }
 }

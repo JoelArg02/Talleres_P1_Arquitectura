@@ -41,7 +41,6 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
 
         private async void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            var loginClient = new LoginService();
             lblLoginResult.Text = "Validando...";
 
             // 1. Leemos los valores de la UI en el Hilo de UI.
@@ -57,15 +56,30 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
 
             try
             {
+                var loginClient = new LoginService();
+                
                 // 2. Pasamos las variables al Hilo de Fondo.
                 var response = await Task.Run(() =>
                     loginClient.ValidarCredenciales(username, password)
                 );
 
-                // 3. Volvemos al Hilo de UI para comprobar la respuesta
-                if (response.Success)
+                // 3. Validamos que la respuesta no sea nula
+                if (response == null)
+                {
+                    lblLoginResult.Text = "Error: No se recibió respuesta del servidor";
+                    return;
+                }
+
+                // Debug: mostrar valores reales
+                System.Diagnostics.Debug.WriteLine($"Respuesta recibida: Success={response.Success} SuccessSpecified={response.SuccessSpecified} Message={response.Message}");
+
+                // 4. Volvemos al Hilo de UI para comprobar la respuesta
+                // IMPORTANTE: Verificar SuccessSpecified primero
+                if (response.SuccessSpecified && response.Success)
                 {
                     // ¡Login exitoso!
+                    lblLoginResult.Text = "Login exitoso, cargando...";
+                    
                     // Creamos la ventana de conversión pasándole el nombre de usuario
                     ConversionWindow conversionWindow = new ConversionWindow(username);
                     conversionWindow.Show();
@@ -76,7 +90,9 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03
                 else
                 {
                     // Credenciales inválidas
-                    lblLoginResult.Text = response.Message;
+                    lblLoginResult.Text = !string.IsNullOrEmpty(response.Message)
+                        ? response.Message
+                        : "Credenciales inválidas";
                 }
             }
             catch (SoapException exSoap)

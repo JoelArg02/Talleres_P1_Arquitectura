@@ -195,14 +195,14 @@
                                    Height="42"/>
                         </Border>
 
-                        <TextBlock Text="Conversion de Masa" 
+                        <TextBlock Text="Conversion de Unidades" 
                                    FontSize="28" 
                                    FontWeight="Bold" 
                                    Foreground="#333333"
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,8"/>
 
-                        <TextBlock Text="Selecciona el tipo de conversion que necesites" 
+                        <TextBlock Text="Selecciona el tipo y realiza la conversion" 
                                    FontSize="18" 
                                    Foreground="#666666"
                                    HorizontalAlignment="Center"
@@ -221,90 +221,48 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
+
+                            <!-- Tipo de Conversion -->
+                            <TextBlock Text="Tipo de Conversion" 
+                                       Grid.Row="0"
+                                       Style="{StaticResource FieldLabel}"/>
+                            <ComboBox Grid.Row="1"
+                                      x:Name="cmbConversionType" 
+                                      SelectedIndex="0"
+                                      SelectionChanged="cmbConversionType_SelectionChanged"
+                                      Style="{StaticResource RoundedComboBox}">
+                                <ComboBoxItem Content="Masa"/>
+                                <ComboBoxItem Content="Temperatura"/>
+                                <ComboBoxItem Content="Longitud"/>
+                            </ComboBox>
 
                             <!-- Campo Valor -->
                             <TextBlock Text="Valor" 
-                                       Grid.Row="0"
+                                       Grid.Row="2"
                                        Style="{StaticResource FieldLabel}"/>
-                            <TextBox Grid.Row="1"
-                                     x:Name="txtMassValue" 
-                                     Text="100"
+                            <TextBox Grid.Row="3"
+                                     x:Name="txtValue" 
+                                     Text=""
                                      Style="{StaticResource RoundedTextBox}"/>
 
                             <!-- Campo Unidad origen -->
-                            <TextBlock Text="Unidad origen" 
-                                       Grid.Row="2"
-                                       Style="{StaticResource FieldLabel}"/>
-                            <ComboBox Grid.Row="3"
-                                      x:Name="cmbMassUnit" 
-                                      SelectedIndex="0"
-                                      Style="{StaticResource RoundedComboBox}">
-                                <ComboBoxItem Content="Kilogramos"/>
-                                <ComboBoxItem Content="Gramos"/>
-                                <ComboBoxItem Content="Libras"/>
-                            </ComboBox>
-
-                            <!-- Campo Unidad destino (para temperatura) -->
-                            <TextBlock Text="Unidad destino (Temperatura)" 
+                            <TextBlock Text="De" 
                                        Grid.Row="4"
                                        Style="{StaticResource FieldLabel}"/>
                             <ComboBox Grid.Row="5"
-                                      x:Name="cmbTempUnit" 
+                                      x:Name="cmbInUnit" 
                                       SelectedIndex="0"
-                                      Style="{StaticResource RoundedComboBox}">
-                                <ComboBoxItem Content="Celsius"/>
-                                <ComboBoxItem Content="Fahrenheit"/>
-                                <ComboBoxItem Content="Kelvin"/>
-                            </ComboBox>
+                                      Style="{StaticResource RoundedComboBox}"/>
 
-                            <!-- Campo Temperatura -->
-                            <TextBlock Text="Temperatura" 
+                            <!-- Campo Unidad destino -->
+                            <TextBlock Text="A" 
                                        Grid.Row="6"
                                        Style="{StaticResource FieldLabel}"/>
-                            <TextBox Grid.Row="7"
-                                     x:Name="txtTempValue" 
-                                     Text="20"
-                                     Style="{StaticResource RoundedTextBox}"/>
-
-                            <!-- Campos de coordenadas -->
-                            <TextBlock Text="Latitud" 
-                                       Grid.Row="8"
-                                       Style="{StaticResource FieldLabel}"/>
-                            <TextBox Grid.Row="9"
-                                     x:Name="txtLatitude" 
-                                     Text="40.7128"
-                                     Style="{StaticResource RoundedTextBox}"/>
-                        </Grid>
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="10"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Longitud 1" 
-                                           Style="{StaticResource FieldLabel}"/>
-                                <TextBox x:Name="txtLongitude" 
-                                         Text="-74.0060"
-                                         Style="{StaticResource RoundedTextBox}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="2">
-                                <TextBlock Text="Longitud 2" 
-                                           Style="{StaticResource FieldLabel}"/>
-                                <TextBox x:Name="txtLongitude2" 
-                                         Text="-118.2437"
-                                         Style="{StaticResource RoundedTextBox}"/>
-                            </StackPanel>
+                            <ComboBox Grid.Row="7"
+                                      x:Name="cmbOutUnit" 
+                                      SelectedIndex="1"
+                                      Style="{StaticResource RoundedComboBox}"/>
                         </Grid>
 
                         <!-- Botón Convertir -->
@@ -312,7 +270,7 @@
                                 Content="Convertir" 
                                 Click="btnConvertir_Click" 
                                 Style="{StaticResource PrimaryButton}"
-                                Margin="0,0,0,15"/>
+                                Margin="0,20,0,15"/>
 
                         <!-- Mensaje de error -->
                         <TextBlock x:Name="lblError" 
@@ -323,82 +281,26 @@
                                    MinHeight="18"
                                    Margin="0,0,0,10"/>
 
-                        <!-- Resultado grande -->
-                        <TextBlock x:Name="lblResultado" 
-                                   FontSize="36"
-                                   FontWeight="Bold"
-                                   Foreground="#333333"
-                                   TextAlignment="Center"
-                                   TextWrapping="Wrap"
-                                   Margin="0,10,0,20"/>
-
-                        <!-- Tarjetas de resultados detallados -->
-                        <Border Background="#F7F9FB"
+                        <!-- Resultado -->
+                        <Border x:Name="resultPanel" 
+                                Background="#F7F9FB"
                                 CornerRadius="12"
                                 Padding="20"
-                                Margin="0,0,0,10">
+                                Margin="0,10,0,10"
+                                Visibility="Collapsed">
                             <StackPanel>
-                                <TextBlock Text="Masa:" 
+                                <TextBlock Text="Resultado de Conversion" 
                                            FontWeight="Bold" 
                                            Foreground="#4A90E2"
-                                           Margin="0,0,0,8"/>
-                                <TextBlock x:Name="lblResultMassLb" 
-                                           Text="Libras (Lb): ..."
-                                           Foreground="#666666"
-                                           Margin="0,0,0,4"/>
-                                <TextBlock x:Name="lblResultMassG" 
-                                           Text="Gramos (G): ..."
-                                           Foreground="#666666"
-                                           Margin="0,0,0,4"/>
-                                <TextBlock x:Name="lblResultMassKg" 
-                                           Text="Kilogramos (Kg): ..."
-                                           Foreground="#666666"/>
-                            </StackPanel>
-                        </Border>
-
-                        <Border Background="#F7F9FB"
-                                CornerRadius="12"
-                                Padding="20"
-                                Margin="0,0,0,10">
-                            <StackPanel>
-                                <TextBlock Text="Temperatura:" 
-                                           FontWeight="Bold" 
-                                           Foreground="#4A90E2"
-                                           Margin="0,0,0,8"/>
-                                <TextBlock x:Name="lblResultTempF" 
-                                           Text="Fahrenheit (F): ..."
-                                           Foreground="#666666"
-                                           Margin="0,0,0,4"/>
-                                <TextBlock x:Name="lblResultTempK" 
-                                           Text="Kelvin (K): ..."
-                                           Foreground="#666666"
-                                           Margin="0,0,0,4"/>
-                                <TextBlock x:Name="lblResultTempC" 
-                                           Text="Celsius (C): ..."
-                                           Foreground="#666666"/>
-                            </StackPanel>
-                        </Border>
-
-                        <Border Background="#F7F9FB"
-                                CornerRadius="12"
-                                Padding="20"
-                                Margin="0,0,0,10">
-                            <StackPanel>
-                                <TextBlock Text="Coordenadas (DMS):" 
-                                           FontWeight="Bold" 
-                                           Foreground="#4A90E2"
-                                           Margin="0,0,0,8"/>
-                                <TextBlock x:Name="lblResultLatDMS" 
-                                           Text="Latitud 1: ..."
-                                           Foreground="#666666"
-                                           Margin="0,0,0,4"/>
-                                <TextBlock x:Name="lblResultLonDMS" 
-                                           Text="Longitud 1: ..."
-                                           Foreground="#666666"
-                                           Margin="0,0,0,4"/>
-                                <TextBlock x:Name="lblResultLon2DMS" 
-                                           Text="Longitud 2: ..."
-                                           Foreground="#666666"/>
+                                           FontSize="16"
+                                           Margin="0,0,0,12"/>
+                                <Border Height="2" Background="#4A90E2" Margin="0,0,0,12"/>
+                                <TextBlock x:Name="lblResultado" 
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           Foreground="#333333"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>

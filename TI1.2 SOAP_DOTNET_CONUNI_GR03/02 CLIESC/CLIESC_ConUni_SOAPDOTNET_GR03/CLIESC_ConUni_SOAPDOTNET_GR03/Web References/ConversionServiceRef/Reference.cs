@@ -31,6 +31,8 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03.ConversionServiceRef {
         
         private System.Threading.SendOrPostCallback ConvertOperationCompleted;
         
+        private System.Threading.SendOrPostCallback ConvertUnitOperationCompleted;
+        
         private bool useDefaultCredentialsSetExplicitly;
         
         /// <remarks/>
@@ -73,12 +75,25 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03.ConversionServiceRef {
         public event ConvertCompletedEventHandler ConvertCompleted;
         
         /// <remarks/>
+        public event ConvertUnitCompletedEventHandler ConvertUnitCompleted;
+        
+        /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/IService/Convert", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public ConversionResponse Convert([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] ConversionRequest request) {
             object[] results = this.Invoke("Convert", new object[] {
                         request});
             return ((ConversionResponse)(results[0]));
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/IService/ConvertUnit", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public double ConvertUnit(double value, string inUnit, string outUnit) {
+            object[] results = this.Invoke("ConvertUnit", new object[] {
+                        value,
+                        inUnit,
+                        outUnit});
+            return ((double)(results[0]));
         }
         
         /// <remarks/>
@@ -99,6 +114,29 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03.ConversionServiceRef {
             if ((this.ConvertCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ConvertCompleted(this, new ConvertCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        public void ConvertUnitAsync(double value, string inUnit, string outUnit) {
+            this.ConvertUnitAsync(value, inUnit, outUnit, null);
+        }
+        
+        /// <remarks/>
+        public void ConvertUnitAsync(double value, string inUnit, string outUnit, object userState) {
+            if ((this.ConvertUnitOperationCompleted == null)) {
+                this.ConvertUnitOperationCompleted = new System.Threading.SendOrPostCallback(this.OnConvertUnitOperationCompleted);
+            }
+            this.InvokeAsync("ConvertUnit", new object[] {
+                        value,
+                        inUnit,
+                        outUnit}, this.ConvertUnitOperationCompleted, userState);
+        }
+        
+        private void OnConvertUnitOperationCompleted(object arg) {
+            if ((this.ConvertUnitCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.ConvertUnitCompleted(this, new ConvertUnitCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -734,6 +772,32 @@ namespace CLIESC_ConUni_SOAPDOTNET_GR03.ConversionServiceRef {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((ConversionResponse)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9221.0")]
+    public delegate void ConvertUnitCompletedEventHandler(object sender, ConvertUnitCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9221.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class ConvertUnitCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal ConvertUnitCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public double Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((double)(this.results[0]));
             }
         }
     }
