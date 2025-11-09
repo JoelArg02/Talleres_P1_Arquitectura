@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver_eureka
+    restart: always
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"
+    ports:
+      - "1434:1433"  # host:container (puerto 1434 para evitar conflictos locales)
+    volumes:
+      - ./init:/var/opt/mssql/scripts
