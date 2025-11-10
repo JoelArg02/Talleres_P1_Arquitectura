@@ -34,8 +34,17 @@
 # Java / Maven
 **/target/
 **/*.class
-**/*.jar
 **/*.war
 **/*.ear
 
 # Keep local.properties only once (removed duplicate)
+/TI1.7 RESTFUL_JAVA_CONDBB_EUREKABANK_GR03/02. CLIESC/eurekabank_escritorio/dist/
+/TI1.7 RESTFUL_JAVA_CONDBB_EUREKABANK_GR03/02. CLICON/eurekabank_consola/dist/
+/TI1.7 REST_JAVA_CONDBB_EUREKABANK_GR03/02. CLICON/eurekabank_consola/dist/
+/TI1.7 REST_JAVA_CONDBB_EUREKABANK_GR03/02. CLICON/eurekabank_consola/nbproject/private/
+/TI1.7 REST_JAVA_CONDBB_EUREKABANK_GR03/02. CLIESC/eurekabank_escritorio/dist/
+/TI1.7 REST_JAVA_CONDBB_EUREKABANK_GR03/02. CLIESC/eurekabank_escritorio/nbproject/private/
+/TI1.8 REST_DOTNET_CONDBB_EUREKABANK_GR03/02. CLICON/eurekabank_consola/dist/
+/TI1.8 REST_DOTNET_CONDBB_EUREKABANK_GR03/02. CLICON/eurekabank_consola/nbproject/private/
+/TI1.8 REST_DOTNET_CONDBB_EUREKABANK_GR03/02. CLIESC/eurekabank_escritorio/nbproject/private/
+/TI1.8 REST_DOTNET_CONDBB_EUREKABANK_GR03/02. CLIESC/eurekabank_escritorio/dist/
