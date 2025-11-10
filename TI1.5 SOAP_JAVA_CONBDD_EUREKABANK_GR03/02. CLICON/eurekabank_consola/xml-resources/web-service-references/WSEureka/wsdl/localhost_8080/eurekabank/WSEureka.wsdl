@@ -16,12 +16,6 @@
 <message name="regDepositoResponse">
 <part name="parameters" element="tns:regDepositoResponse"/>
 </message>
-<message name="traerMovimientos">
-<part name="parameters" element="tns:traerMovimientos"/>
-</message>
-<message name="traerMovimientosResponse">
-<part name="parameters" element="tns:traerMovimientosResponse"/>
-</message>
 <message name="regTransferencia">
 <part name="parameters" element="tns:regTransferencia"/>
 </message>
@@ -34,6 +28,18 @@
 <message name="regRetiroResponse">
 <part name="parameters" element="tns:regRetiroResponse"/>
 </message>
+<message name="traerBalances">
+<part name="parameters" element="tns:traerBalances"/>
+</message>
+<message name="traerBalancesResponse">
+<part name="parameters" element="tns:traerBalancesResponse"/>
+</message>
+<message name="traerMovimientos">
+<part name="parameters" element="tns:traerMovimientos"/>
+</message>
+<message name="traerMovimientosResponse">
+<part name="parameters" element="tns:traerMovimientosResponse"/>
+</message>
 <portType name="WSEureka">
 <operation name="login">
 <input wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/loginRequest" message="tns:login"/>
@@ -43,10 +49,6 @@
 <input wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/regDepositoRequest" message="tns:regDeposito"/>
 <output wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/regDepositoResponse" message="tns:regDepositoResponse"/>
 </operation>
-<operation name="traerMovimientos">
-<input wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/traerMovimientosRequest" message="tns:traerMovimientos"/>
-<output wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/traerMovimientosResponse" message="tns:traerMovimientosResponse"/>
-</operation>
 <operation name="regTransferencia">
 <input wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/regTransferenciaRequest" message="tns:regTransferencia"/>
 <output wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/regTransferenciaResponse" message="tns:regTransferenciaResponse"/>
@@ -54,6 +56,14 @@
 <operation name="regRetiro">
 <input wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/regRetiroRequest" message="tns:regRetiro"/>
 <output wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/regRetiroResponse" message="tns:regRetiroResponse"/>
+</operation>
+<operation name="traerBalances">
+<input wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/traerBalancesRequest" message="tns:traerBalances"/>
+<output wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/traerBalancesResponse" message="tns:traerBalancesResponse"/>
+</operation>
+<operation name="traerMovimientos">
+<input wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/traerMovimientosRequest" message="tns:traerMovimientos"/>
+<output wsam:Action="http://controller.eurekabank.edu.ec/WSEureka/traerMovimientosResponse" message="tns:traerMovimientosResponse"/>
 </operation>
 </portType>
 <binding name="WSEurekaPortBinding" type="tns:WSEureka">
@@ -76,15 +86,6 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="traerMovimientos">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
 <operation name="regTransferencia">
 <soap:operation soapAction=""/>
 <input>
@@ -95,6 +96,24 @@
 </output>
 </operation>
 <operation name="regRetiro">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="traerBalances">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="traerMovimientos">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

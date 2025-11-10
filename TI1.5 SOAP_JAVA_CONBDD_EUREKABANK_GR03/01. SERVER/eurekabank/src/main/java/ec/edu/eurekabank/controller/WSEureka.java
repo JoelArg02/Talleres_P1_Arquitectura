@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ec.edu.eurekabank.controller;
+package ec.edu.gr03.controller;
 
 import ec.edu.eurekabank.model.Movimiento;
 import ec.edu.eurekabank.model.Cuenta;
