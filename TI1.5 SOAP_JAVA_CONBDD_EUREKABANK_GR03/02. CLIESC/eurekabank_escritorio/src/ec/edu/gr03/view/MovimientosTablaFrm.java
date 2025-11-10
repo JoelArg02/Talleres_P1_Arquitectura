@@ -35,7 +35,7 @@ public class MovimientosTablaFrm extends javax.swing.JFrame {
     public MovimientosTablaFrm(String numeroCuenta) {
 
         // 1. OBTENER DATOS (igual que tu código original)
-        List<ec.edu.eurekabank.controller.Movimiento> lista = ec.edu.gr03.model.EurekaBankClient.traerMovimientos(numeroCuenta);
+        List<ec.edu.gr03.controller.Movimiento> lista = ec.edu.gr03.model.EurekaBankClient.traerMovimientos(numeroCuenta);
 
         // 2. CONFIGURAR EL JFRAME
         setTitle("EurekaBank - Movimientos");
@@ -93,7 +93,7 @@ public class MovimientosTablaFrm extends javax.swing.JFrame {
             lblCuenta.setText("No se encontraron registros para la cuenta: " + numeroCuenta);
         } else {
             lblCuenta.setText("Mostrando movimientos de la cuenta: " + numeroCuenta);
-            for (ec.edu.eurekabank.controller.Movimiento mov : lista) {
+            for (ec.edu.gr03.controller.Movimiento mov : lista) {
                 modelo.addRow(new Object[]{
                         mov.getNromov(),
                         // Formatear la fecha

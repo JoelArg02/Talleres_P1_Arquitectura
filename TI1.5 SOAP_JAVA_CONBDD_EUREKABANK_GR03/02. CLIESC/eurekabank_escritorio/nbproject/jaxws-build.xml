@@ -33,22 +33,5 @@
         <delete dir="${build.generated.dir}/jax-wsCache/WSEureka"/>
         <delete dir="${build.generated.sources.dir}/jax-ws/ec/edu/gr03/controller"/>
     </target>
-    <target name="wsimport-client-WSEureka_1" depends="wsimport-init">
-        <mkdir dir="${build.generated.dir}/jax-wsCache/WSEureka_1"/>
-        <property name="wsdl-WSEureka_1" location="xml-resources/web-service-references/WSEureka_1/wsdl/localhost_8080/eurekabank/WSEureka.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WSEureka_1" destdir="${build.generated.dir}/jax-wsCache/WSEureka_1" wsdl="${wsdl-WSEureka_1}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/eurekabank/WSEureka?wsdl" xnocompile="true" xendorsed="true">
-            <depends file="${wsdl-WSEureka_1}"/>
-            <produces dir="${build.generated.dir}/jax-wsCache/WSEureka_1"/>
-        </wsimport>
-        <copy todir="${build.generated.sources.dir}/jax-ws">
-            <fileset dir="${build.generated.dir}/jax-wsCache/WSEureka_1">
-                <include name="**/*.java"/>
-            </fileset>
-        </copy>
-    </target>
-    <target name="wsimport-client-clean-WSEureka_1" depends="-init-project">
-        <delete dir="${build.generated.dir}/jax-wsCache/WSEureka_1"/>
-        <delete dir="${build.generated.sources.dir}/jax-ws/ec/edu/eurekabank/controller"/>
-    </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-WSEureka, wsimport-client-WSEureka_1"/>
+    <target name="wsimport-client-generate" depends="wsimport-client-WSEureka"/>
 </project>

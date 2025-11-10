@@ -35,6 +35,7 @@ public class MovimientosFrm extends javax.swing.JFrame {
     private JButton btnRetiro;
     private JButton btnDeposito;
     private JButton btnTransferencia;
+    private JButton btnBalances;
     private JButton btnCerrarSesion;
 
     // Colores del diseño
@@ -88,6 +89,7 @@ public class MovimientosFrm extends javax.swing.JFrame {
         String iconRet = "/ec/edu/gr03/img/icon_retiro.png";
         String iconDep = "/ec/edu/gr03/img/icon_deposito.png";
         String iconTrans = "/ec/edu/gr03/img/icon_transferencia.png";
+        String iconBal = "/ec/edu/gr03/img/icon_balances.png";
         String iconLogout = "/ec/edu/gr03/img/icon_logout.png";
 
         gbcLeft.gridy = 1;
@@ -108,9 +110,13 @@ public class MovimientosFrm extends javax.swing.JFrame {
         gbcLeft.gridy = 4;
         btnTransferencia = createNavButton("Transferencia", iconTrans);
         pnlLeft.add(btnTransferencia, gbcLeft);
+        
+        gbcLeft.gridy = 5;
+        btnBalances = createNavButton("Balances", iconBal);
+        pnlLeft.add(btnBalances, gbcLeft);
 
         // Botón de Cerrar Sesión (empujado al fondo)
-        gbcLeft.gridy = 5;
+        gbcLeft.gridy = 6;
         gbcLeft.weighty = 1; // ESTO EMPUJA EL BOTÓN HACIA ABAJO
         gbcLeft.anchor = GridBagConstraints.SOUTH; // Anclar al sur
         gbcLeft.insets = new Insets(5, 0, 20, 0); // Padding inferior
@@ -192,6 +198,7 @@ public class MovimientosFrm extends javax.swing.JFrame {
         btnRetiro.addActionListener(e -> irARetiro());
         btnDeposito.addActionListener(e -> irADeposito());
         btnTransferencia.addActionListener(e -> irATransferencia());
+        btnBalances.addActionListener(e -> irABalances());
         btnCerrarSesion.addActionListener(e -> irALogin());
 
 
@@ -312,6 +319,12 @@ public class MovimientosFrm extends javax.swing.JFrame {
     private void irATransferencia() {
         TransferenciasFrm transFrm = new TransferenciasFrm();
         transFrm.setVisible(true);
+        this.dispose();
+    }
+
+    private void irABalances() {
+        BalancesFrm balancesFrm = new BalancesFrm();
+        balancesFrm.setVisible(true);
         this.dispose();
     }
 

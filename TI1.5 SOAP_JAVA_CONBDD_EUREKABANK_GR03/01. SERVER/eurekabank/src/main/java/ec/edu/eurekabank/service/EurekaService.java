@@ -2,6 +2,7 @@ package ec.edu.eurekabank.service;
 
 import ec.edu.eurekabank.db.AccesoDB;
 import ec.edu.eurekabank.model.Movimiento;
+import ec.edu.eurekabank.model.Cuenta;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -251,6 +252,49 @@ public class EurekaService {
         }
 
         return acceso;
+    }
+
+    public List<Cuenta> leerBalances() {
+        Connection cn = null;
+        List<Cuenta> lista = new ArrayList<>();
+        String sql = "SELECT " +
+            "c.chr_cuencodigo AS numeroCuenta, " +
+            "CONCAT(cl.vch_clienombre, ' ', cl.vch_cliepaterno, ' ', cl.vch_cliematerno) AS nombreCliente, " +
+            "c.dec_cuensaldo AS saldo, " +
+            "m.vch_monedescripcion AS moneda, " +
+            "c.vch_cuenestado AS estado " +
+            "FROM cuenta c " +
+            "INNER JOIN cliente cl ON c.chr_cliecodigo = cl.chr_cliecodigo " +
+            "INNER JOIN modena m ON c.chr_monecodigo = m.chr_monecodigo " +
+            "WHERE c.vch_cuenestado = 'ACTIVO' " +
+            "ORDER BY c.chr_cuencodigo";
+
+        try {
+            cn = AccesoDB.getConnection();
+            PreparedStatement pstm = cn.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
+
+            while (rs.next()) {
+                Cuenta cuenta = new Cuenta();
+                cuenta.setNumeroCuenta(rs.getString("numeroCuenta"));
+                cuenta.setNombreCliente(rs.getString("nombreCliente"));
+                cuenta.setSaldo(rs.getDouble("saldo"));
+                cuenta.setMoneda(rs.getString("moneda"));
+                cuenta.setEstado(rs.getString("estado"));
+
+                lista.add(cuenta);
+            }
+            rs.close();
+            pstm.close();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al leer balances: " + e.getMessage());
+        } finally {
+            try {
+                if (cn != null) cn.close();
+            } catch (Exception e) {
+            }
+        }
+        return lista;
     }
 
 }

@@ -6,6 +6,7 @@
 package ec.edu.eurekabank.controller;
 
 import ec.edu.eurekabank.model.Movimiento;
+import ec.edu.eurekabank.model.Cuenta;
 import ec.edu.eurekabank.service.EurekaService;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,5 +112,22 @@ public class WSEureka {
     public boolean login(@WebParam(name = "username") String username, @WebParam(name = "password") String password) {
         EurekaService service = new EurekaService();
         return service.login(username, password);
+    }
+    
+    /**
+     * Web service operation
+     * @return Retorna la lista de todas las cuentas activas con sus balances
+     */
+    @WebMethod(operationName = "traerBalances")
+    @WebResult(name = "cuenta")
+    public List<Cuenta> traerBalances() {
+        List<Cuenta> lista;
+        try {
+            EurekaService service = new EurekaService();
+            lista = service.leerBalances();
+        } catch (Exception e) {
+            lista = new ArrayList<>();
+        }
+        return lista;
     }
 }
