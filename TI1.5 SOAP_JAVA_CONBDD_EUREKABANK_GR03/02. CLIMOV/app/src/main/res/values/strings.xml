@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">EurekaBank</string>
+    
+    <string name="login_title">INICIAR SESIÓN</string>
+    <string name="username">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="username_hint">Ingrese su usuario</string>
+    <string name="password_hint">Ingrese su contraseña</string>
+    
+    <string name="navigation_drawer_open">Abrir menú de navegación</string>
+    <string name="navigation_drawer_close">Cerrar menú de navegación</string>
+    
+    <string name="nav_movimientos">Movimientos</string>
+    <string name="nav_retiro">Retiro</string>
+    <string name="nav_deposito">Deposito</string>
+    <string name="nav_transferencia">Transferencia</string>
+    <string name="nav_balances">Balances</string>
+    <string name="nav_cerrar_sesion">Cerrar Sesión</string>
+    
+    <string name="deposito_title">REALIZAR DEPÓSITO</string>
+    <string name="numero_cuenta">Número de Cuenta</string>
+    <string name="importe">Importe ($)</string>
+    <string name="cuenta_hint">Ej: 000123456</string>
+    <string name="importe_hint">Ej: 100.00</string>
+    <string name="realizar_deposito">Realizar Depósito</string>
+    
+    <string name="retiro_title">REALIZAR RETIRO</string>
+    <string name="realizar_retiro">Realizar Retiro</string>
+    
+    <string name="transferencia_title">REALIZAR TRANSFERENCIA</string>
+    <string name="cuenta_origen">Cuenta Origen</string>
+    <string name="cuenta_destino">Cuenta Destino</string>
+    <string name="cuenta_destino_hint">Ej: 000987654</string>
+    <string name="transferir">Transferir</string>
+    
+    <string name="movimientos_title">CONSULTAR MOVIMIENTOS</string>
+    <string name="ver_movimientos">Ver Movimientos</string>
+    <string name="movimientos_tabla_title">MOVIMIENTOS DE LA CUENTA</string>
+    
+    <string name="balances_title">BALANCES DE CUENTAS</string>
+    
+    <string name="loading">Cargando...</string>
+    <string name="success">Éxito</string>
+    <string name="error">Error</string>
+</resources>
