@@ -1,0 +1,25 @@
+# Usar imagen base de Mono para .NET Framework
+FROM mono:latest
+
+# Instalar dependencias necesarias
+RUN apt-get update && apt-get install -y \
+    nuget \
+    xsp4 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copiar archivos del proyecto
+COPY . .
+
+# Restaurar paquetes NuGet
+RUN nuget restore "01. SERVIDOR.csproj" -PackagesDirectory ./packages
+
+# Compilar el proyecto
+RUN msbuild "01. SERVIDOR.csproj" /p:Configuration=Release /p:OutputPath=./bin
+
+# Exponer el puerto 8080
+EXPOSE 8080
+
+# Ejecutar la aplicación con XSP (servidor web de Mono)
+CMD ["xsp4", "--port", "8080", "--applications", "/:.", "--nonstop"]
