@@ -160,10 +160,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Si hay un mensaje en el parámetro URL, mostrarlo
     const urlParams = new URLSearchParams(window.location.search);
     const mensaje = urlParams.get('mensaje');
-    const tipo = urlParams.get('tipo') || 'info';
+    const tipo = urlParams.get('tipo') || 'success';
     
     if (mensaje) {
         mostrarAlerta(decodeURIComponent(mensaje), tipo);
+        
+        // Limpiar los parámetros de la URL sin recargar la página
+        const url = new URL(window.location);
+        url.searchParams.delete('mensaje');
+        url.searchParams.delete('tipo');
+        window.history.replaceState({}, document.title, url);
     }
 });
 

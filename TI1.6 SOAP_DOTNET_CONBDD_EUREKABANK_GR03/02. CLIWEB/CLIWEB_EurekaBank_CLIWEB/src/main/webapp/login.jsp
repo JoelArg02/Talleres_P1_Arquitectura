@@ -29,13 +29,6 @@
                     </div>
                 <% } %>
                 
-                <!-- Mostrar mensaje de sesión cerrada -->
-                <% if (request.getParameter("mensaje") != null) { %>
-                    <div class="alert alert-success">
-                        <%= request.getParameter("mensaje") %>
-                    </div>
-                <% } %>
-                
                 <form action="login" method="post" onsubmit="return validarLogin()">
                     <div class="form-group">
                         <label for="username" class="form-label">Usuario</label>
