@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Servlet para cerrar sesión
@@ -24,8 +26,9 @@ public class LogoutServlet extends HttpServlet {
             session.invalidate();
         }
         
-        // Redirigir al login con mensaje
-        response.sendRedirect("login.jsp?mensaje=Sesion cerrada exitosamente&tipo=success");
+        // Redirigir al login con mensaje codificado en UTF-8
+        String mensaje = URLEncoder.encode("Sesión cerrada correctamente", StandardCharsets.UTF_8);
+        response.sendRedirect("login.jsp?mensaje=" + mensaje);
     }
     
     @Override

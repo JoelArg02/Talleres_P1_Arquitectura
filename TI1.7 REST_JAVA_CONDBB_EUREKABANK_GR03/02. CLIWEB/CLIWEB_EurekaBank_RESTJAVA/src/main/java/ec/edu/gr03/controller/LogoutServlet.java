@@ -20,13 +20,11 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // Invalidar la sesión
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
         
-        // Redirigir al login con mensaje codificado en UTF-8
         String mensaje = URLEncoder.encode("Sesión cerrada correctamente", StandardCharsets.UTF_8);
         response.sendRedirect("login.jsp?mensaje=" + mensaje);
     }
