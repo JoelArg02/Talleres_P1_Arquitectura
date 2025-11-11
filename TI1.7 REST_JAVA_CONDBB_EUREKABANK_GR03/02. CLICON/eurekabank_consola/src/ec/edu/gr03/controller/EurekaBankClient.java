@@ -5,6 +5,7 @@
 package ec.edu.gr03.controller;
 
 import ec.edu.gr03.model.Movimiento;
+import ec.edu.gr03.model.Cuenta;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 
@@ -54,6 +55,16 @@ public class EurekaBankClient {
         EurekaBankController ebc = new EurekaBankController();
         try {
             Movimiento[] array = ebc.traerMovimientos(Movimiento[].class, cuenta);
+            return List.of(array);
+        } finally {
+            ebc.close();
+        }
+    }
+
+    public static List<Cuenta> traerBalances() {
+        EurekaBankController ebc = new EurekaBankController();
+        try {
+            Cuenta[] array = ebc.traerBalances(Cuenta[].class);
             return List.of(array);
         } finally {
             ebc.close();

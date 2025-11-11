@@ -1,6 +1,7 @@
 package ec.edu.gr03.controller;
 
 import ec.edu.gr03.model.Movimiento;
+import ec.edu.gr03.model.Cuenta;
 import ec.edu.gr03.view.LoginView;
 import ec.edu.gr03.view.MenuView;
 
@@ -71,6 +72,23 @@ public class MainController {
                             importe
                         );
                         System.out.println(fila);
+                    }
+                }
+
+                case 5 -> {
+                    var lista = EurekaBankClient.traerBalances();
+
+                    // Título
+                    menuView.mostrarMensaje("\n=== BALANCES DE TODAS LAS CUENTAS ===\n");
+
+                    // Encabezado
+                    menuView.mostrarMensaje("N° Cuenta\tCliente\t\t\t\t\t\tSaldo\t\tEstado");
+                    menuView.mostrarMensaje("--------------------------------------------------------------------------------------------------------------------");
+
+                    // Cuerpo
+                    for (Cuenta cuenta : lista) {
+                        System.out.printf("%-16s%-48s%-16.2f%-10s\n",
+                        cuenta.getNumeroCuenta(), cuenta.getNombreCliente(), cuenta.getSaldo(), cuenta.getEstado());
                     }
                 }
 
