@@ -39,9 +39,9 @@ class MovimientosAdapter : RecyclerView.Adapter<MovimientosAdapter.MovimientoVie
         private val tvImporte: TextView = itemView.findViewById(R.id.tvImporte)
 
         fun bind(movimiento: Movimiento) {
-            tvTipoMovimiento.text = movimiento.tipoMovimiento
-            tvFecha.text = movimiento.fecha
-            tvNumeroCuenta.text = movimiento.numeroCuenta
+            tvTipoMovimiento.text = "${movimiento.tipo} (${movimiento.accion})"
+            tvFecha.text = movimiento.fecha.substring(0, 10)
+            tvNumeroCuenta.text = "Cuenta: ${movimiento.cuenta}"
             tvImporte.text = "$${df.format(movimiento.importe)}"
         }
     }

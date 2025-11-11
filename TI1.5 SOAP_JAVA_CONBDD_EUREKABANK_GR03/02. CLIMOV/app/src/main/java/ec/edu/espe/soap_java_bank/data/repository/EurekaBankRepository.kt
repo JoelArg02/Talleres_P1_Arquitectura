@@ -38,9 +38,10 @@ class EurekaBankRepository {
         val data = movimientosService.obtenerMovimientos(cuenta)
         return data.map { 
             Movimiento(
-                idMovimiento = it["idMovimiento"]?.toIntOrNull() ?: 0,
-                numeroCuenta = it["numeroCuenta"] ?: "",
-                tipoMovimiento = it["tipoMovimiento"] ?: "",
+                nromov = it["nromov"] ?: "0",
+                cuenta = it["cuenta"] ?: "",
+                tipo = it["tipo"] ?: "",
+                accion = it["accion"] ?: "",
                 importe = it["importe"]?.toDoubleOrNull() ?: 0.0,
                 fecha = it["fecha"] ?: ""
             )

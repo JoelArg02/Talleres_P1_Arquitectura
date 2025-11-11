@@ -2,6 +2,7 @@ package ec.edu.espe.soap_java_bank.ui.activity
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ class MovimientosTablaActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MovimientosAdapter
     private lateinit var progressBar: ProgressBar
+    private lateinit var btnCerrar: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +30,15 @@ class MovimientosTablaActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerMovimientos)
         progressBar = findViewById(R.id.progressBar)
+        btnCerrar = findViewById(R.id.btnCerrar)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = MovimientosAdapter()
         recyclerView.adapter = adapter
+
+        btnCerrar.setOnClickListener {
+            finish()
+        }
 
         val cuenta = intent.getStringExtra("CUENTA") ?: ""
 
