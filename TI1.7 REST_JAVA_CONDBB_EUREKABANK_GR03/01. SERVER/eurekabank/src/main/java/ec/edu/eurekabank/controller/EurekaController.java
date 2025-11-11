@@ -1,6 +1,7 @@
 package ec.edu.eurekabank.controller;
 
 import ec.edu.eurekabank.model.Movimiento;
+import ec.edu.eurekabank.model.Cuenta;
 import ec.edu.eurekabank.service.EurekaService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -75,6 +76,18 @@ public class EurekaController {
             return Response.ok().entity(true).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity(false).build();
+        }
+    }
+
+    @GET
+    @Path("/balances")
+    public Response traerBalances() {
+        try {
+            List<Cuenta> lista = service.leerBalances();
+            return Response.ok(lista).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                           .entity("Error al obtener balances.").build();
         }
     }
 }

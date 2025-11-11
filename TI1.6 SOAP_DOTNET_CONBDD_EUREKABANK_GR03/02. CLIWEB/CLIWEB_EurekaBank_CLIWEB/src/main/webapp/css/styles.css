@@ -1,0 +1,366 @@
+/* ===================================
+   EUREKA BANK - Estilos Principales
+   Colores y diseño basados en el cliente escritorio
+   =================================== */
+
+:root {
+    /* Colores principales */
+    --color-principal: #22313f; /* Azul oscuro (34, 49, 63) */
+    --color-secundario: #3498db; /* Azul brillante (52, 152, 219) */
+    --color-texto: #ecf0f1; /* Blanco grisáceo (236, 240, 241) */
+    --color-gris-fondo: #f5f5f5; /* Fondo claro (245, 245, 245) */
+    --color-hint: #808080; /* Gris para placeholders */
+    --color-logout: #a02828; /* Rojo sutil (160, 40, 40) */
+    --color-panel-izq: #000000; /* Negro */
+    --color-hover: #323232; /* Gris oscuro (50, 50, 50) */
+    --color-exito: #27ae60; /* Verde */
+    --color-error: #e74c3c; /* Rojo */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-gris-fondo);
+    color: #333;
+    line-height: 1.6;
+}
+
+/* ===================================
+   CONTENEDOR PRINCIPAL
+   =================================== */
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===================================
+   PANEL LATERAL (NAVEGACIÓN)
+   =================================== */
+
+.sidebar {
+    width: 300px;
+    background-color: var(--color-panel-izq);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+}
+
+.logo-container {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.logo {
+    max-width: 250px;
+    height: auto;
+}
+
+.nav-menu {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-button {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    margin: 5px 0;
+    background-color: var(--color-panel-izq);
+    color: var(--color-texto);
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.nav-button:hover {
+    background-color: var(--color-hover);
+}
+
+.nav-button.active {
+    background-color: var(--color-secundario);
+    color: white;
+}
+
+.nav-button.logout {
+    background-color: var(--color-logout);
+    margin-top: auto; /* Empuja el botón hacia abajo */
+}
+
+.nav-button.logout:hover {
+    background-color: #8b2020;
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+}
+
+/* ===================================
+   PANEL PRINCIPAL (CONTENIDO)
+   =================================== */
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===================================
+   FORMULARIOS
+   =================================== */
+
+.form-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--color-principal);
+    text-align: center;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--color-principal);
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 8px;
+    font-size: 16px;
+    border: none;
+    border-bottom: 2px solid var(--color-secundario);
+    background-color: white;
+    transition: border-color 0.3s;
+    outline: none;
+}
+
+.form-input:focus {
+    border-bottom-color: #2980b9;
+}
+
+.form-input::placeholder {
+    color: var(--color-hint);
+}
+
+.form-button {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: var(--color-secundario);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.form-button:hover {
+    background-color: #2980b9;
+}
+
+.form-button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+/* ===================================
+   LOGIN (DISEÑO ESPECIAL)
+   =================================== */
+
+.login-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.login-sidebar {
+    width: 300px;
+    background-color: var(--color-panel-izq);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-main {
+    flex: 1;
+    background-color: var(--color-gris-fondo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===================================
+   TABLAS
+   =================================== */
+
+.table-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--color-principal);
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.data-table thead {
+    background-color: var(--color-secundario);
+    color: white;
+}
+
+.data-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.data-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* ===================================
+   MENSAJES Y ALERTAS
+   =================================== */
+
+.alert {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* ===================================
+   UTILIDADES
+   =================================== */
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* ===================================
+   RESPONSIVO
+   =================================== */
+
+@media (max-width: 768px) {
+    .container, .login-container {
+        flex-direction: column;
+    }
+    
+    .sidebar, .login-sidebar {
+        width: 100%;
+        padding: 20px;
+    }
+    
+    .logo {
+        max-width: 150px;
+    }
+    
+    .form-container {
+        padding: 20px;
+    }
+    
+    .nav-button {
+        padding: 12px 20px;
+    }
+}

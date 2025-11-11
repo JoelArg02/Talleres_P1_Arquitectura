@@ -55,6 +55,12 @@ public class EurekaBankController {
                 .get(responseType);
     }
 
+    public <T> T traerBalances(Class<T> responseType) throws ClientErrorException {
+        return webTarget.path("balances")
+                .request()
+                .get(responseType);
+    }
+
     public void close() {
         client.close();
     }
