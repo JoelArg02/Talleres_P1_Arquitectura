@@ -73,6 +73,7 @@
       <DependentUpon>MovimientoController.svc</DependentUpon>
     </Compile>
     <Compile Include="ec.edu.monster.db\ConexionBD.cs" />
+    <Compile Include="ec.edu.monster.modelo\Cuenta.cs" />
     <Compile Include="ec.edu.monster.modelo\Movimiento.cs" />
     <Compile Include="ec.edu.monster.servicio\MovimientoServicio.cs" />
     <Compile Include="Global.asax.cs">

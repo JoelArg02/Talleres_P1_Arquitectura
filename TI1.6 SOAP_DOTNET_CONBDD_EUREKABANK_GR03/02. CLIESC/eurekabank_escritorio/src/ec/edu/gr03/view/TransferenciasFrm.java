@@ -37,6 +37,7 @@ public class TransferenciasFrm extends javax.swing.JFrame {
     private JButton btnRetiro;
     private JButton btnDeposito;
     private JButton btnTransferencia;
+    private JButton btnBalances;
     private JButton btnCerrarSesion;
 
     // Colores del diseño
@@ -93,6 +94,7 @@ public class TransferenciasFrm extends javax.swing.JFrame {
         String iconRet = "/ec/edu/gr03/img/icon_retiro.png";
         String iconDep = "/ec/edu/gr03/img/icon_deposito.png";
         String iconTrans = "/ec/edu/gr03/img/icon_transferencia.png";
+        String iconBal = "/ec/edu/gr03/img/icon_balances.png";
         String iconLogout = "/ec/edu/gr03/img/icon_logout.png";
 
         gbcLeft.gridy = 1; // Re-indexado (antes era 2)
@@ -114,8 +116,12 @@ public class TransferenciasFrm extends javax.swing.JFrame {
         btnTransferencia.setForeground(Color.WHITE);
         pnlLeft.add(btnTransferencia, gbcLeft);
 
-        // Botón de Cerrar Sesión (empujado al fondo)
         gbcLeft.gridy = 5; // Re-indexado
+        btnBalances = createNavButton("Balances", iconBal);
+        pnlLeft.add(btnBalances, gbcLeft);
+
+        // Botón de Cerrar Sesión (empujado al fondo)
+        gbcLeft.gridy = 6; // Re-indexado
         gbcLeft.weighty = 1; // ESTO EMPUJA EL BOTÓN HACIA ABAJO
         gbcLeft.anchor = GridBagConstraints.SOUTH; // Anclar al sur
         gbcLeft.insets = new Insets(5, 0, 20, 0); // Padding inferior
@@ -224,6 +230,7 @@ public class TransferenciasFrm extends javax.swing.JFrame {
         btnMovimientos.addActionListener(e -> irAMovimientos());
         btnRetiro.addActionListener(e -> irARetiro());
         btnDeposito.addActionListener(e -> irADeposito());
+        btnBalances.addActionListener(e -> irABalances());
         btnCerrarSesion.addActionListener(e -> irALogin());
         // El botón de Transferencia no hace nada, ya estamos aquí.
 
@@ -351,6 +358,12 @@ public class TransferenciasFrm extends javax.swing.JFrame {
     private void irADeposito() {
         DepositoFrm depositoFrm = new DepositoFrm();
         depositoFrm.setVisible(true);
+        this.dispose(); // Opcional
+    }
+
+    private void irABalances() {
+        BalancesFrm balancesFrm = new BalancesFrm();
+        balancesFrm.setVisible(true);
         this.dispose(); // Opcional
     }
 

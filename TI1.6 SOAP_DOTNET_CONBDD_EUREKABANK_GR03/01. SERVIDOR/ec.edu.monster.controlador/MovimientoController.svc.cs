@@ -41,5 +41,10 @@ namespace ec.edu.monster.controlador
         {
             return MovimientoServicio.Login(username, password);
         }
+
+        public List<Cuenta> TraerBalances()
+        {
+            return MovimientoServicio.ListarBalances();
+        }
     }
 }

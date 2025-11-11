@@ -11,6 +11,7 @@ public class MenuView {
         System.out.println("2. Realizar retiro");
         System.out.println("3. Realizar transferencia");
         System.out.println("4. Ver movimientos");
+        System.out.println("5. Ver balances");
         System.out.println("0. Salir");
         System.out.print("Seleccione una opción: ");
         return Integer.parseInt(scanner.nextLine());

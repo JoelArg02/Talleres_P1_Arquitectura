@@ -73,6 +73,34 @@ public class MainController {
                     }
                 }
 
+                case 5 -> {
+                    var arrayBalances = EurekaBankClient.traerBalances();
+                    
+                    if (arrayBalances == null || arrayBalances.getCuenta() == null) {
+                        menuView.mostrarMensaje("No hay cuentas activas para mostrar.");
+                    } else {
+                        List<org.datacontract.schemas._2004._07.ec_edu_monster.Cuenta> lista = arrayBalances.getCuenta();
+                        
+                        // Título
+                        menuView.mostrarMensaje("\n=== BALANCES DE TODAS LAS CUENTAS ===\n");
+
+                        // Encabezado
+                        menuView.mostrarMensaje("N° Cuenta\tCliente\t\t\t\t\t\tSaldo\t\tEstado");
+                        menuView.mostrarMensaje("--------------------------------------------------------------------------------------------------------------------");
+
+                        // Cuerpo
+                        for (org.datacontract.schemas._2004._07.ec_edu_monster.Cuenta cuenta : lista) {
+                            String numeroCuenta = cuenta.getNumeroCuenta() != null ? cuenta.getNumeroCuenta().getValue() : "";
+                            String nombreCliente = cuenta.getNombreCliente() != null ? cuenta.getNombreCliente().getValue() : "";
+                            double saldo = cuenta.getSaldo();
+                            String estado = cuenta.getEstado() != null ? cuenta.getEstado().getValue() : "";
+                            
+                            System.out.printf("%-16s%-48s%-16.2f%-10s\n",
+                                numeroCuenta, nombreCliente, saldo, estado);
+                        }
+                    }
+                }
+
                 case 0 -> {
                     salir = true;
                     menuView.mostrarMensaje("Gracias por usar el sistema.");

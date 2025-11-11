@@ -40,6 +40,12 @@ public class EurekaBankClient {
         return port.registrarTransferencia(cuentaOrigen, cuentaDestino, importe);
     }
     
+    public static org.datacontract.schemas._2004._07.ec_edu_monster.ArrayOfCuenta traerBalances() {
+        org.tempuri.MovimientoController service = new org.tempuri.MovimientoController();
+        org.tempuri.IMovimientoController port = service.getBasicHttpBindingIMovimientoController();
+        return port.traerBalances();
+    }
+    
     public static double ObtenerSaldo(List<Movimiento> movimientos) {
         double saldo = 0;
         for (Movimiento movimiento : movimientos) {

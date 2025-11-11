@@ -21,5 +21,8 @@ namespace ec.edu.monster.controlador
 
         [OperationContract]
         bool Login(string username, string password);
+
+        [OperationContract]
+        List<Cuenta> TraerBalances();
     }
 }

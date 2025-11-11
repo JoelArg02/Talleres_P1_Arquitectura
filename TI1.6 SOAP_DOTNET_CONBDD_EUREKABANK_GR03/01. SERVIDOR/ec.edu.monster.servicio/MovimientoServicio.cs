@@ -146,7 +146,7 @@ namespace ec.edu.monster.servicio
                 SELECT COUNT(1)
                 FROM usuario
                 WHERE vch_emplusuario = @user
-                  AND vch_emplclave = CONVERT(VARCHAR(40), HASHBYTES('SHA1', CAST(@pass AS VARCHAR(100))), 2)
+                  AND vch_emplclave = CONVERT(VARCHAR(40), HASHBYTES('SHA1', @pass), 2)
                   AND vch_emplestado = 'ACTIVO'";
 
             using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["EurekaDB"].ConnectionString))
@@ -161,6 +161,42 @@ namespace ec.edu.monster.servicio
                     return Convert.ToInt32(result) == 1;
                 }
             }
+        }
+
+        public static List<Cuenta> ListarBalances()
+        {
+            var lista = new List<Cuenta>();
+            string sql = @"
+                SELECT
+                    c.chr_cuencodigo AS numeroCuenta,
+                    CONCAT(cl.vch_clienombre, ' ', cl.vch_cliepaterno, ' ', cl.vch_cliematerno) AS nombreCliente,
+                    c.dec_cuensaldo AS saldo,
+                    m.vch_monedescripcion AS moneda,
+                    c.vch_cuenestado AS estado
+                FROM cuenta c
+                INNER JOIN cliente cl ON c.chr_cliecodigo = cl.chr_cliecodigo
+                INNER JOIN modena m ON c.chr_monecodigo = m.chr_monecodigo
+                WHERE c.vch_cuenestado = 'ACTIVO'
+                ORDER BY c.chr_cuencodigo";
+
+            using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["EurekaDB"].ConnectionString))
+            {
+                cn.Open();
+                SqlCommand cmd = new SqlCommand(sql, cn);
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    lista.Add(new Cuenta
+                    {
+                        NumeroCuenta = dr["numeroCuenta"].ToString(),
+                        NombreCliente = dr["nombreCliente"].ToString(),
+                        Saldo = Convert.ToDouble(dr["saldo"]),
+                        Moneda = dr["moneda"].ToString(),
+                        Estado = dr["estado"].ToString()
+                    });
+                }
+            }
+            return lista;
         }
 
     }

@@ -10,45 +10,44 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.text.DecimalFormat;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField; // Mantenido por si acaso
-import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-import javax.swing.border.MatteBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
-public class MovimientosFrm extends javax.swing.JFrame {
+public class BalancesFrm extends javax.swing.JFrame {
 
-    // --- Variables de componentes (conservamos los nombres originales) ---
-    private JButton btnVerMovimientos;
-    private JTextField txtCuenta;
-
-    // --- Variables para la nueva navegación ---
+    // --- Variables para la navegación ---
     private JButton btnMovimientos;
     private JButton btnRetiro;
     private JButton btnDeposito;
     private JButton btnTransferencia;
     private JButton btnBalances;
     private JButton btnCerrarSesion;
+    
+    // Tabla para mostrar los balances
+    private JTable tblBalances;
+    private DefaultTableModel modeloTabla;
 
     // Colores del diseño
     private final Color COLOR_PANEL_IZQUIERDO = Color.BLACK;
     private final Color COLOR_SECUNDARIO = new Color(52, 152, 219); // Azul brillante
     private final Color COLOR_TEXTO = new Color(236, 240, 241); // Blanco grisáceo
     private final Color COLOR_GRIS_FONDO = new Color(245, 245, 245); // Fondo claro
-    private final Color COLOR_HINT = Color.GRAY; // Para placeholders
     private final Color COLOR_LOGOUT = new Color(160, 40, 40); // Rojo sutil
 
-    public MovimientosFrm() {
+    public BalancesFrm() {
         // --- 1. Configuración del JFrame principal ---
-        setTitle("EurekaBank - Movimientos");
+        setTitle("EurekaBank - Balances");
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(800, 600));
         setLocationRelativeTo(null); // Centrar
@@ -70,7 +69,6 @@ public class MovimientosFrm extends javax.swing.JFrame {
         gbcLeft.insets = new Insets(30, 20, 30, 20); // Padding superior e inferior
         JLabel lblLogo = new JLabel();
         try {
-            // Usamos logo.png como pediste
             ImageIcon originalIcon = new ImageIcon(getClass().getResource("/ec/edu/gr03/img/logo.png"));
             Image scaledImage = originalIcon.getImage().getScaledInstance(250, 170, Image.SCALE_SMOOTH);
             lblLogo.setIcon(new ImageIcon(scaledImage));
@@ -94,9 +92,6 @@ public class MovimientosFrm extends javax.swing.JFrame {
 
         gbcLeft.gridy = 1;
         btnMovimientos = createNavButton("Movimientos", iconMov);
-        // --- ESTE ES EL BOTÓN ACTIVO ---
-        btnMovimientos.setBackground(COLOR_SECUNDARIO);
-        btnMovimientos.setForeground(Color.WHITE);
         pnlLeft.add(btnMovimientos, gbcLeft);
 
         gbcLeft.gridy = 2;
@@ -110,9 +105,12 @@ public class MovimientosFrm extends javax.swing.JFrame {
         gbcLeft.gridy = 4;
         btnTransferencia = createNavButton("Transferencia", iconTrans);
         pnlLeft.add(btnTransferencia, gbcLeft);
-
+        
         gbcLeft.gridy = 5;
         btnBalances = createNavButton("Balances", iconBal);
+        // --- ESTE ES EL BOTÓN ACTIVO ---
+        btnBalances.setBackground(COLOR_SECUNDARIO);
+        btnBalances.setForeground(Color.WHITE);
         pnlLeft.add(btnBalances, gbcLeft);
 
         // Botón de Cerrar Sesión (empujado al fondo)
@@ -124,89 +122,132 @@ public class MovimientosFrm extends javax.swing.JFrame {
         btnCerrarSesion.setBackground(COLOR_LOGOUT); // Color rojo sutil
         pnlLeft.add(btnCerrarSesion, gbcLeft);
 
-        // --- 3. Panel Derecho (Formulario de Consulta) ---
+        // --- 3. Panel Derecho (Tabla de Balances) ---
         JPanel pnlRight = new JPanel(new GridBagLayout());
         pnlRight.setBackground(COLOR_GRIS_FONDO); // Fondo gris claro
 
-        // Panel interno para centrar el formulario
-        JPanel pnlForm = new JPanel(new GridBagLayout());
-        pnlForm.setBackground(Color.WHITE); // El formulario en sí es blanco
-        pnlForm.setBorder(BorderFactory.createCompoundBorder(
+        // Panel interno para la tabla
+        JPanel pnlTabla = new JPanel(new BorderLayout());
+        pnlTabla.setBackground(Color.WHITE); // El panel en sí es blanco
+        pnlTabla.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-                BorderFactory.createEmptyBorder(40, 40, 40, 40) // Padding interno
+                BorderFactory.createEmptyBorder(20, 20, 20, 20) // Padding interno
         ));
 
-        GridBagConstraints gbcForm = new GridBagConstraints();
-        gbcForm.gridx = 0;
-        gbcForm.gridwidth = GridBagConstraints.REMAINDER;
-        gbcForm.fill = GridBagConstraints.HORIZONTAL;
-        gbcForm.insets = new Insets(10, 5, 10, 5); // Espaciado
+        // Título "Balances de Cuentas"
+        JLabel lblTitle = new JLabel("BALANCES DE CUENTAS");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setForeground(COLOR_PANEL_IZQUIERDO);
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        pnlTabla.add(lblTitle, BorderLayout.NORTH);
 
-        // Título "Consultar Movimientos"
-        gbcForm.gridy = 0;
-        gbcForm.insets = new Insets(0, 5, 25, 5); // Más espacio abajo
-        JLabel lblLoginTitle = new JLabel("CONSULTAR MOVIMIENTOS");
-        lblLoginTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblLoginTitle.setForeground(COLOR_PANEL_IZQUIERDO); // Color negro
-        lblLoginTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        pnlForm.add(lblLoginTitle, gbcForm);
-
-        // Resetear insets
-        gbcForm.insets = new Insets(10, 5, 10, 5);
-
-        // --- Formulario ---
-        // Cuenta
-        gbcForm.gridy = 1;
-        JLabel lblCuenta = new JLabel("Número de Cuenta");
-        lblCuenta.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        pnlForm.add(lblCuenta, gbcForm);
-
-        gbcForm.gridy = 2;
-        txtCuenta = new JTextField(20);
-        txtCuenta.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        txtCuenta.setBorder(createFieldBorder());
-        txtCuenta.setBackground(pnlForm.getBackground());
-        addPlaceholder(txtCuenta, "Ej: 000123456");
-        pnlForm.add(txtCuenta, gbcForm);
-
-        // Botón de Ver Movimientos
-        gbcForm.gridy = 3;
-        gbcForm.insets = new Insets(30, 5, 10, 5); // Más espacio arriba
-        btnVerMovimientos = new JButton("Ver Movimientos");
-        btnVerMovimientos.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        btnVerMovimientos.setBackground(COLOR_SECUNDARIO);
-        btnVerMovimientos.setForeground(Color.WHITE);
-        btnVerMovimientos.setFocusPainted(false);
-        btnVerMovimientos.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnVerMovimientos.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        pnlForm.add(btnVerMovimientos, gbcForm);
-
-        // Añadir panel del formulario al panel derecho (para centrarlo)
-        pnlRight.add(pnlForm, new GridBagConstraints());
-
-        // --- 4. AÑADIR LOS LISTENERS (TU LÓGICA) ---
-
-        // Lógica del formulario
-        btnVerMovimientos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerMovimientosActionPerformed(evt);
+        // Crear tabla
+        String[] columnas = {"N° Cuenta", "Cliente", "Saldo", "Estado"};
+        modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // No editable
             }
-        });
+        };
+        tblBalances = new JTable(modeloTabla);
+        tblBalances.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tblBalances.setRowHeight(30);
+        tblBalances.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tblBalances.getTableHeader().setBackground(COLOR_SECUNDARIO);
+        tblBalances.getTableHeader().setForeground(Color.WHITE);
+        tblBalances.setSelectionBackground(new Color(173, 216, 230));
+        
+        // Alinear columnas
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        tblBalances.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        tblBalances.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        
+        // Alinear saldo a la derecha
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        tblBalances.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
 
-        // Lógica de Navegación
-        // El botón de Movimientos no hace nada, ya estamos aquí.
+        JScrollPane scrollPane = new JScrollPane(tblBalances);
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        pnlTabla.add(scrollPane, BorderLayout.CENTER);
+
+        // Añadir panel de tabla al panel derecho (para centrarlo)
+        GridBagConstraints gbcRight = new GridBagConstraints();
+        gbcRight.fill = GridBagConstraints.BOTH;
+        gbcRight.weightx = 1;
+        gbcRight.weighty = 1;
+        gbcRight.insets = new Insets(20, 20, 20, 20);
+        pnlRight.add(pnlTabla, gbcRight);
+
+        // --- 4. AÑADIR LOS LISTENERS ---
+        btnMovimientos.addActionListener(e -> irAMovimientos());
         btnRetiro.addActionListener(e -> irARetiro());
         btnDeposito.addActionListener(e -> irADeposito());
         btnTransferencia.addActionListener(e -> irATransferencia());
-        btnBalances.addActionListener(e -> irABalances());
         btnCerrarSesion.addActionListener(e -> irALogin());
-
 
         // --- 5. Ensamblaje Final ---
         getContentPane().add(pnlLeft, BorderLayout.WEST);
         getContentPane().add(pnlRight, BorderLayout.CENTER);
 
         pack(); // Ajusta el tamaño de la ventana
+        
+        // Cargar los balances
+        cargarBalances();
+    }
+
+    /**
+     * Carga los balances desde el servicio web y los muestra en la tabla.
+     */
+    private void cargarBalances() {
+        try {
+            // Limpiar la tabla
+            modeloTabla.setRowCount(0);
+            
+            // Obtener los balances del servicio
+            org.datacontract.schemas._2004._07.ec_edu_monster.ArrayOfCuenta arrayBalances = 
+                ec.edu.gr03.model.EurekaBankClient.traerBalances();
+            
+            if (arrayBalances == null || arrayBalances.getCuenta() == null) {
+                JOptionPane.showMessageDialog(this, 
+                    "No hay cuentas activas para mostrar.", 
+                    "Información", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
+            List<org.datacontract.schemas._2004._07.ec_edu_monster.Cuenta> balances = 
+                arrayBalances.getCuenta();
+            
+            // Formato para números
+            DecimalFormat df = new DecimalFormat("#,##0.00");
+            
+            // Llenar la tabla
+            for (org.datacontract.schemas._2004._07.ec_edu_monster.Cuenta cuenta : balances) {
+                Object[] fila = new Object[4];
+                fila[0] = cuenta.getNumeroCuenta() != null ? cuenta.getNumeroCuenta().getValue() : "";
+                fila[1] = cuenta.getNombreCliente() != null ? cuenta.getNombreCliente().getValue() : "";
+                fila[2] = df.format(cuenta.getSaldo());
+                fila[3] = cuenta.getEstado() != null ? cuenta.getEstado().getValue() : "";
+                modeloTabla.addRow(fila);
+            }
+            
+            if (balances.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "No hay cuentas activas para mostrar.", 
+                    "Información", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al cargar los balances: " + ex.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -256,55 +297,15 @@ public class MovimientosFrm extends javax.swing.JFrame {
         return button;
     }
 
-    /**
-     * Crea un borde estilizado para los campos de texto (solo línea inferior).
-     */
-    private Border createFieldBorder() {
-        Border line = new MatteBorder(0, 0, 2, 0, COLOR_SECUNDARIO.darker()); // Línea azul oscura
-        Border padding = BorderFactory.createEmptyBorder(5, 5, 5, 5); // Padding
-        return BorderFactory.createCompoundBorder(line, padding);
-    }
-
-    /**
-     * Añade texto de placeholder (marcador de posición) a un campo de texto.
-     */
-    private void addPlaceholder(JTextField field, String placeholder) {
-        field.setText(placeholder);
-        field.setForeground(COLOR_HINT);
-
-        if (field instanceof JPasswordField) {
-            ((JPasswordField) field).setEchoChar((char) 0);
-        }
-
-        field.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (field.getText().equals(placeholder)) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                    if (field instanceof JPasswordField) {
-                        ((JPasswordField) field).setEchoChar('•');
-                    }
-                }
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (field.getText().isEmpty()) {
-                    field.setForeground(COLOR_HINT);
-                    field.setText(placeholder);
-                    if (field instanceof JPasswordField) {
-                        ((JPasswordField) field).setEchoChar((char) 0);
-                    }
-                }
-            }
-        });
-    }
-
     // =========================================================================
-    //   TUS MÉTODOS DE NAVEGACIÓN (adaptados de tu código original)
+    //   MÉTODOS DE NAVEGACIÓN
     // =========================================================================
 
-    // Estos métodos reemplazan tus 'menu...MouseClicked'
+    private void irAMovimientos() {
+        MovimientosFrm movFrm = new MovimientosFrm();
+        movFrm.setVisible(true);
+        this.dispose();
+    }
 
     private void irARetiro() {
         RetiroFrm retiroFrm = new RetiroFrm();
@@ -324,38 +325,10 @@ public class MovimientosFrm extends javax.swing.JFrame {
         this.dispose();
     }
 
-    private void irABalances() {
-        BalancesFrm balancesFrm = new BalancesFrm();
-        balancesFrm.setVisible(true);
-        this.dispose();
-    }
-
     private void irALogin() {
-        LoginFrm transFrm = new LoginFrm();
-        transFrm.setVisible(true);
+        LoginFrm loginFrm = new LoginFrm();
+        loginFrm.setVisible(true);
         this.dispose();
-    }
-
-    // =========================================================================
-    //   TU LÓGICA DE NEGOCIO ORIGINAL (adaptada con placeholder)
-    // =========================================================================
-
-    private void btnVerMovimientosActionPerformed(java.awt.event.ActionEvent evt) {
-        String numeroCuenta = txtCuenta.getText().trim();
-
-        // Validación para el placeholder
-        if (numeroCuenta.equals("Ej: 000123456")) {
-            numeroCuenta = "";
-        }
-
-        if (numeroCuenta.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Debe ingresar un número de cuenta.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Llama a la ventana de la tabla
-        MovimientosTablaFrm movimientosFrm = new MovimientosTablaFrm(numeroCuenta);
-        movimientosFrm.setVisible(true);
     }
 
     /**
@@ -363,7 +336,6 @@ public class MovimientosFrm extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -372,20 +344,14 @@ public class MovimientosFrm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MovimientosFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BalancesFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
         /* Create and display the form */
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MovimientosFrm().setVisible(true);
+                new BalancesFrm().setVisible(true);
             }
         });
     }
-
-    // --- Variables generadas por NetBeans (eliminadas) ---
-    // private javax.swing.JButton btnVerMovimientos;
-    // ...
-    // private javax.swing.JTextField txtCuenta;
 }
