@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "dotnet_restfull"
+rootProject.name = "soap_dotnet"
 include(":app")
- 
