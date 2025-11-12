@@ -2,6 +2,7 @@ package ec.edu.espe.rest_java_bank.data.remote
 
 import ec.edu.espe.rest_java_bank.data.models.Cuenta
 import ec.edu.espe.rest_java_bank.data.models.Movimiento
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -25,18 +26,18 @@ interface EurekaBankApiService {
     suspend fun registrarDeposito(
         @Query("cuenta") cuenta: String,
         @Query("importe") importe: Double
-    ): Response<String>
+    ): Response<ResponseBody>
     
     @POST("retiro")
     suspend fun registrarRetiro(
         @Query("cuenta") cuenta: String,
         @Query("importe") importe: Double
-    ): Response<String>
+    ): Response<ResponseBody>
     
     @POST("transferencia")
     suspend fun registrarTransferencia(
         @Query("cuentaOrigen") cuentaOrigen: String,
         @Query("cuentaDestino") cuentaDestino: String,
         @Query("importe") importe: Double
-    ): Response<String>
+    ): Response<ResponseBody>
 }

@@ -60,7 +60,7 @@ class EurekaBankRepository {
             try {
                 val response = apiService.registrarDeposito(cuenta, importe)
                 if (response.isSuccessful) {
-                    val message = response.body() ?: "Depósito exitoso"
+                    val message = response.body()?.string()?.trim()?.removeSurrounding("\"") ?: "Depósito exitoso"
                     when {
                         message.contains("ERROR:", ignoreCase = true) -> OperacionResult.Error(message)
                         message.contains("no existe", ignoreCase = true) -> OperacionResult.Error(message)
@@ -75,13 +75,13 @@ class EurekaBankRepository {
             }
         }
     }
-    
+
     suspend fun registrarRetiro(cuenta: String, importe: Double): OperacionResult<String> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiService.registrarRetiro(cuenta, importe)
                 if (response.isSuccessful) {
-                    val message = response.body() ?: "Retiro exitoso"
+                    val message = response.body()?.string()?.trim()?.removeSurrounding("\"") ?: "Retiro exitoso"
                     when {
                         message.contains("ERROR:", ignoreCase = true) -> OperacionResult.Error(message)
                         message.contains("Saldo insuficiente", ignoreCase = true) -> OperacionResult.Error(message)
@@ -98,18 +98,20 @@ class EurekaBankRepository {
             }
         }
     }
-    
+
+
     suspend fun registrarTransferencia(cuentaOrigen: String, cuentaDestino: String, importe: Double): OperacionResult<String> {
         return withContext(Dispatchers.IO) {
             try {
                 val response = apiService.registrarTransferencia(cuentaOrigen, cuentaDestino, importe)
                 if (response.isSuccessful) {
-                    val message = response.body() ?: "Transferencia exitosa"
-                    if (message.contains("ERROR", ignoreCase = true) || 
-                        message.contains("error", ignoreCase = false)) {
-                        OperacionResult.Error(message)
-                    } else {
-                        OperacionResult.Success(message)
+                    val message = response.body()?.string()?.trim()?.removeSurrounding("\"") ?: "Transferencia exitosa"
+                    when {
+                        message.contains("ERROR:", ignoreCase = true) -> OperacionResult.Error(message)
+                        message.contains("Saldo insuficiente", ignoreCase = true) -> OperacionResult.Error(message)
+                        message.contains("no existe", ignoreCase = true) -> OperacionResult.Error(message)
+                        message.contains("no está activa", ignoreCase = true) -> OperacionResult.Error(message)
+                        else -> OperacionResult.Success(message)
                     }
                 } else {
                     val errorBody = response.errorBody()?.string()
@@ -121,3 +123,4 @@ class EurekaBankRepository {
         }
     }
 }
+
