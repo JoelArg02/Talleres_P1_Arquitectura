@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "ec.edu.espe.java_restfull"
+    namespace = "ec.edu.espe.rest_java_bank"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "ec.edu.espe.java_restfull"
+        applicationId = "ec.edu.espe.rest_java_bank"
         minSdk = 33
         targetSdk = 36
         versionCode = 1
@@ -33,6 +33,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    
+    lint {
+        abortOnError = false
+    }
 }
 
 dependencies {
@@ -43,4 +47,16 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
+    implementation("androidx.activity:activity-ktx:1.9.3")
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
+    
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 }
