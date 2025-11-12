@@ -1,7 +1,6 @@
-version: '3.8'
-
 services:
   sqlserver:
+    platform: linux/amd64
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver_eureka
     restart: always
@@ -10,6 +9,24 @@ services:
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Express"
     ports:
-      - "1434:1433"  # host:container (puerto 1434 para evitar conflictos locales)
+      - "1434:1433"
     volumes:
-      - ./init:/var/opt/mssql/scripts
+      - ./init:/docker-entrypoint-initdb.d
+      - sqlserver_data:/var/opt/mssql
+    entrypoint: ["/bin/bash", "/docker-entrypoint-initdb.d/entrypoint.sh"]
+
+  servidor:
+    build:
+      context: ../01. SERVIDOR
+      dockerfile: Dockerfile
+    container_name: servidor_eureka
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - sqlserver
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=eurekabank;User Id=sa;Password=YourStrong!Passw0rd;
+
+volumes:
+  sqlserver_data:
