@@ -1,3 +1,0 @@
-<%@ ServiceHost Language="C#" Debug="true"
-    Service="ec.edu.monster.controlador.MovimientoController"
-    CodeBehind="MovimientoController.svc.cs" %>
