@@ -1,8 +1,7 @@
 package ec.edu.gr03.view;
 
-import ec.edu.gr03.controller.EurekaBankClient; // Para el Saldo
-import ec.edu.gr03.controller.EurekaBankController; // Para parseFechaDotNet
-import ec.edu.gr03.model.Movimiento; // Modelo local
+import ec.edu.gr03.controller.Movimiento;
+import ec.edu.gr03.model.EurekaBankClient;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,7 +10,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List; // Para la lista
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,7 +26,7 @@ public class MovimientosTablaFrm extends javax.swing.JFrame {
     // --- Variables de componentes (conservamos los nombres originales) ---
     private javax.swing.JLabel lblCuenta;
     private javax.swing.JTable tblMovimientos;
-    private javax.swing.JLabel lblSaldo; // Variable para el saldo
+    private javax.swing.JLabel lblSaldo; // <--- VARIABLE AÑADIDA
 
     // Colores del diseño
     private final Color COLOR_HEADER = Color.BLACK;
@@ -37,22 +38,22 @@ public class MovimientosTablaFrm extends javax.swing.JFrame {
      */
     public MovimientosTablaFrm(String numeroCuenta) {
 
-        // 1. OBTENER DATOS (lógica de tu nuevo proyecto)
-        List<Movimiento> lista = ec.edu.gr03.controller.EurekaBankClient.traerMovimientos(numeroCuenta);
+        // 1. OBTENER DATOS
+        List<Movimiento> lista = EurekaBankClient.traerMovimientos(numeroCuenta);
 
-        // 2. CONFIGURAR EL JFRAME
+        // 2. CONFIGURAR EL JFRAME (del 1er archivo)
         setTitle("EurekaBank - Movimientos");
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE); // Importante
         setMinimumSize(new Dimension(800, 600));
         setLocationRelativeTo(null); // Centrar
         getContentPane().setLayout(new BorderLayout());
 
-        // 3. PANEL PRINCIPAL
+        // 3. PANEL PRINCIPAL (del 1er archivo)
         JPanel pnlMain = new JPanel(new BorderLayout(10, 10));
         pnlMain.setBackground(COLOR_GRIS_FONDO);
         pnlMain.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // 4. PANEL DE TÍTULO (Fusionado con tu lógica de 'initComponents')
+        // 4. PANEL DE TÍTULO (Fusionado)
         JPanel pnlHeader = new JPanel(new GridBagLayout());
         pnlHeader.setBackground(Color.WHITE); // Fondo blanco
         pnlHeader.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
@@ -63,7 +64,6 @@ public class MovimientosTablaFrm extends javax.swing.JFrame {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.weightx = 1.0;
 
-        // Título "Historial de Movimientos" (reemplaza a "EurekaBank" y "Movimientos")
         JLabel lblTitle = new JLabel("Historial de Movimientos");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
         lblTitle.setForeground(COLOR_HEADER);
@@ -77,7 +77,7 @@ public class MovimientosTablaFrm extends javax.swing.JFrame {
         lblCuenta.setForeground(Color.GRAY);
         pnlHeader.add(lblCuenta, gbc);
 
-        // --- ETIQUETA DE SALDO AÑADIDA (de tu lógica) ---
+        // --- ETIQUETA DE SALDO AÑADIDA ---
         gbc.gridy = 2;
         lblSaldo = new JLabel(); // Se inicializa aquí
         lblSaldo.setFont(new Font("Segoe UI", Font.BOLD, 16)); // En negrita
@@ -96,31 +96,36 @@ public class MovimientosTablaFrm extends javax.swing.JFrame {
         modelo.addColumn("Acción");
         modelo.addColumn("Importe");
 
-        // Llenar el modelo con los datos (lógica de tu nuevo proyecto)
-        if (lista.isEmpty()) {
+        // Formateador de fecha
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+        // Llenar el modelo con los datos
+        if (lista == null || lista.isEmpty()) {
             lblCuenta.setText("No se encontraron registros para la cuenta: " + numeroCuenta);
             lblSaldo.setText("Saldo: N/A");
         } else {
             lblCuenta.setText("Mostrando movimientos de la cuenta: " + numeroCuenta);
+            // Calcular saldo
+            String saldo = String.format("%.2f", EurekaBankClient.ObtenerSaldo(lista));
+            lblSaldo.setText("Saldo Actual: $" + saldo);
 
-            // --- LÓGICA DE SALDO (de tu código) ---
-            String saldo = String.format("%.2f", EurekaBankClient.ObtenerSaldo(lista)) + "$";
-            lblSaldo.setText("Saldo Actual: " + saldo);
+            // Revertir la lista para mostrar del más reciente al más antiguo
+            Collections.reverse(lista);
 
-            // Llenar el modelo
-            for (Movimiento mov : lista) { // Sin .reversed()
+            for (Movimiento mov : lista) {
                 modelo.addRow(new Object[]{
-                        mov.getNromov(),
-                        // --- LÓGICA DE FECHA (de tu código) ---
-                        EurekaBankController.parseFechaDotNet(mov.getFecha()),
+                        mov.getNroMov(),
+                        // Formatear la fecha (ya viene como String del JSON)
+                        mov.getFecha(),
                         mov.getTipo(),
                         mov.getAccion(),
-                        mov.getImporte()
+                        // Formatear el importe a 2 decimales
+                        String.format("%.2f", mov.getImporte())
                 });
             }
         }
 
-        // Crear y estilizar la JTable
+        // Crear y estilizar la JTable (del 1er archivo)
         tblMovimientos = new JTable(modelo);
 
         // --- ESTILO DE LA TABLA ---
@@ -143,7 +148,7 @@ public class MovimientosTablaFrm extends javax.swing.JFrame {
         header.setPreferredSize(new Dimension(100, 40));
         header.setBorder(BorderFactory.createLineBorder(COLOR_HEADER));
 
-        // 6. SCROLL PANE
+        // 6. SCROLL PANE (del 1er archivo)
         JScrollPane jScrollPane1 = new JScrollPane(tblMovimientos);
         jScrollPane1.setBorder(BorderFactory.createEmptyBorder()); // Sin borde
         jScrollPane1.getViewport().setBackground(Color.WHITE); // Fondo blanco

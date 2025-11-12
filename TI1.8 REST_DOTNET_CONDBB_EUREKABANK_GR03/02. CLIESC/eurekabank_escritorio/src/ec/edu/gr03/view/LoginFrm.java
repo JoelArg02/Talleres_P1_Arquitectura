@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
+import java.awt.EventQueue; // Importación necesaria
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,7 +21,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
-import javax.swing.border.MatteBorder;
+import javax.swing.border.MatteBorder; // Para la línea inferior de los campos
 
 public class LoginFrm extends javax.swing.JFrame {
 
@@ -59,7 +59,7 @@ public class LoginFrm extends javax.swing.JFrame {
         // Logo
         JLabel lblLogo = new JLabel();
         try {
-            // Asegúrate de que logo.png (o logo.jpeg si lo prefieres) esté en esta ruta
+            // Asegúrate de que logo.png esté en esta ruta
             ImageIcon originalIcon = new ImageIcon(getClass().getResource("/ec/edu/gr03/img/logo.png"));
             Image scaledImage = originalIcon.getImage().getScaledInstance(250, 170, Image.SCALE_SMOOTH);
             lblLogo.setIcon(new ImageIcon(scaledImage));
@@ -220,9 +220,8 @@ public class LoginFrm extends javax.swing.JFrame {
             return;
         }
 
-        // --- CORRECCIÓN AQUÍ ---
-        // Llamar al cliente para hacer login (apuntando al paquete 'controller')
-        boolean loginExitoso = ec.edu.gr03.controller.EurekaBankClient.login(username, password);
+        // Llamar al cliente para hacer login
+        boolean loginExitoso = ec.edu.gr03.model.EurekaBankClient.login(username, password);
 
         // Verificar el resultado
         if (loginExitoso) {
@@ -264,7 +263,7 @@ public class LoginFrm extends javax.swing.JFrame {
         });
     }
 
-    // --- Variables generadas por NetBeans (eliminadas) ---
+    // --- Las variables generadas por NetBeans (eliminadas) ---
     // private javax.swing.JButton btnLogin;
     // ...
     // private javax.swing.JTextField txtUsername;

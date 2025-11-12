@@ -37,6 +37,7 @@ public class TransferenciasFrm extends javax.swing.JFrame {
     private JButton btnRetiro;
     private JButton btnDeposito;
     private JButton btnTransferencia;
+    private JButton btnBalances;
     private JButton btnCerrarSesion;
 
     // Colores del diseño
@@ -82,6 +83,9 @@ public class TransferenciasFrm extends javax.swing.JFrame {
         }
         pnlLeft.add(lblLogo, gbcLeft);
 
+        // --- TÍTULO ELIMINADO ---
+        // El título "EurekaBank" que estaba aquí se ha quitado.
+
         // --- Botones de Navegación ---
         gbcLeft.insets = new Insets(5, 0, 5, 0); // Sin padding lateral para que los botones se estiren
 
@@ -90,29 +94,34 @@ public class TransferenciasFrm extends javax.swing.JFrame {
         String iconRet = "/ec/edu/gr03/img/icon_retiro.png";
         String iconDep = "/ec/edu/gr03/img/icon_deposito.png";
         String iconTrans = "/ec/edu/gr03/img/icon_transferencia.png";
+        String iconBal = "/ec/edu/gr03/img/icon_balances.png";
         String iconLogout = "/ec/edu/gr03/img/icon_logout.png";
 
-        gbcLeft.gridy = 1;
+        gbcLeft.gridy = 1; // Re-indexado (antes era 2)
         btnMovimientos = createNavButton("Movimientos", iconMov);
         pnlLeft.add(btnMovimientos, gbcLeft);
 
-        gbcLeft.gridy = 2;
+        gbcLeft.gridy = 2; // Re-indexado
         btnRetiro = createNavButton("Retiro", iconRet);
         pnlLeft.add(btnRetiro, gbcLeft);
 
-        gbcLeft.gridy = 3;
+        gbcLeft.gridy = 3; // Re-indexado
         btnDeposito = createNavButton("Deposito", iconDep);
         pnlLeft.add(btnDeposito, gbcLeft);
 
-        gbcLeft.gridy = 4;
+        gbcLeft.gridy = 4; // Re-indexado
         btnTransferencia = createNavButton("Transferencia", iconTrans);
         // ESTE ES EL BOTÓN ACTIVO
         btnTransferencia.setBackground(COLOR_SECUNDARIO);
         btnTransferencia.setForeground(Color.WHITE);
         pnlLeft.add(btnTransferencia, gbcLeft);
 
+        gbcLeft.gridy = 5; // Re-indexado
+        btnBalances = createNavButton("Balances", iconBal);
+        pnlLeft.add(btnBalances, gbcLeft);
+
         // Botón de Cerrar Sesión (empujado al fondo)
-        gbcLeft.gridy = 5;
+        gbcLeft.gridy = 6; // Re-indexado
         gbcLeft.weighty = 1; // ESTO EMPUJA EL BOTÓN HACIA ABAJO
         gbcLeft.anchor = GridBagConstraints.SOUTH; // Anclar al sur
         gbcLeft.insets = new Insets(5, 0, 20, 0); // Padding inferior
@@ -221,6 +230,7 @@ public class TransferenciasFrm extends javax.swing.JFrame {
         btnMovimientos.addActionListener(e -> irAMovimientos());
         btnRetiro.addActionListener(e -> irARetiro());
         btnDeposito.addActionListener(e -> irADeposito());
+        btnBalances.addActionListener(e -> irABalances());
         btnCerrarSesion.addActionListener(e -> irALogin());
         // El botón de Transferencia no hace nada, ya estamos aquí.
 
@@ -330,7 +340,7 @@ public class TransferenciasFrm extends javax.swing.JFrame {
     }
 
     // =========================================================================
-    //   TUS MÉTODOS DE NAVEGACIÓN (adaptados de tu código original)
+    //   TUS MÉTODOS DE NAVEGACIÓN (adaptados)
     // =========================================================================
 
     private void irAMovimientos() {
@@ -348,6 +358,12 @@ public class TransferenciasFrm extends javax.swing.JFrame {
     private void irADeposito() {
         DepositoFrm depositoFrm = new DepositoFrm();
         depositoFrm.setVisible(true);
+        this.dispose(); // Opcional
+    }
+
+    private void irABalances() {
+        BalancesFrm balancesFrm = new BalancesFrm();
+        balancesFrm.setVisible(true);
         this.dispose(); // Opcional
     }
 
@@ -390,11 +406,11 @@ public class TransferenciasFrm extends javax.swing.JFrame {
                 return;
             }
 
-            // Ejecutar transferencia (apuntando a 'controller')
-            int resultado = ec.edu.gr03.controller.EurekaBankClient.regTransferencia(cuentaOrigen, cuentaDestino, importe);
+            // Ejecutar transferencia (Usando la lógica de String de tu archivo antiguo)
+            String resultado = ec.edu.gr03.model.EurekaBankClient.regTransferencia(cuentaOrigen, cuentaDestino, importe);
 
             // Verificar resultado
-            if (resultado == 1) {
+            if ("1".equals(resultado)) {
                 JOptionPane.showMessageDialog(this, "Transferencia realizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 // Limpiar campos
                 addPlaceholder(txtCuentaOrigen, "Ej: 000123456");
