@@ -19,7 +19,7 @@
     <target name="wsimport-client-MovimientoController" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/MovimientoController"/>
         <property name="wsdl-MovimientoController" location="xml-resources/web-service-references/MovimientoController/wsdl/localhost_55325/ec.edu.monster.controlador/MovimientoController.svc.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/MovimientoController" destdir="${build.generated.dir}/jax-wsCache/MovimientoController" wsdl="${wsdl-MovimientoController}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:55325/ec.edu.monster.controlador/MovimientoController.svc?wsdl" xnocompile="true" xendorsed="true">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/MovimientoController" destdir="${build.generated.dir}/jax-wsCache/MovimientoController" wsdl="${wsdl-MovimientoController}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://10.181.89.248:55325/ec.edu.monster.controlador/MovimientoController.svc?wsdl" xnocompile="true" xendorsed="true">
             <depends file="${wsdl-MovimientoController}"/>
             <produces dir="${build.generated.dir}/jax-wsCache/MovimientoController"/>
         </wsimport>

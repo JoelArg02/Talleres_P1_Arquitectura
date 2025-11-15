@@ -10,11 +10,13 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class EurekaBankClient {
     
-    private static final String BASE_URI = "http://localhost:60245/api/movimiento";
+    private static final String BASE_URI = "http://10.181.89.248:60245/api/movimiento";
     
     public static List<Movimiento> traerMovimientos(String cuenta) {
         Client client = ClientBuilder.newClient();
@@ -27,7 +29,20 @@ public class EurekaBankClient {
                     .request(MediaType.APPLICATION_JSON)
                     .get(Movimiento[].class);
             
-            return new ArrayList<>(Arrays.asList(array));
+            List<Movimiento> lista = new ArrayList<>(Arrays.asList(array));
+            
+            // Ordenar por fecha de MAYOR a MENOR (más reciente primero)
+            Collections.sort(lista, new Comparator<Movimiento>() {
+                @Override
+                public int compare(Movimiento m1, Movimiento m2) {
+                    if (m1.getFecha() == null && m2.getFecha() == null) return 0;
+                    if (m1.getFecha() == null) return 1;
+                    if (m2.getFecha() == null) return -1;
+                    return m2.getFecha().compareTo(m1.getFecha());
+                }
+            });
+            
+            return lista;
         } catch (Exception e) {
             System.err.println("Error al traer movimientos: " + e.getMessage());
             e.printStackTrace();

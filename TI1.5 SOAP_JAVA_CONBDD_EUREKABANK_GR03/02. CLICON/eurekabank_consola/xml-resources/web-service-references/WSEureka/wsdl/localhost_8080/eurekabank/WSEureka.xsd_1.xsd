@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?><!-- Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.3.payara-p1 (metro-4.0.3.payara-maintenance-004e4e3; 2023-11-08T12:59:53+0000) XMLWS-Impl/4.0.2 XMLWS-API/4.0.1 XMLB-Impl/4.0.4 XMLB-API/4.0.1 git-revision#004e4e3. --><xs:schema xmlns:tns="http://controller.eurekabank.edu.ec/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://controller.eurekabank.edu.ec/">
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.3.payara-p1 (metro-4.0.3.payara-maintenance-004e4e3; 2023-11-08T12:59:53+0000) XMLWS-Impl/4.0.2 XMLWS-API/4.0.1 XMLB-Impl/4.0.4 XMLB-API/4.0.1 git-revision#004e4e3. --><xs:schema xmlns:tns="http://controller.gr03.edu.ec/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://controller.gr03.edu.ec/">
 
 <xs:element name="cuenta" type="tns:cuenta"/>
 
@@ -27,33 +27,6 @@
 <xs:element name="traerMovimientos" type="tns:traerMovimientos"/>
 
 <xs:element name="traerMovimientosResponse" type="tns:traerMovimientosResponse"/>
-
-<xs:complexType name="regTransferencia">
-<xs:sequence>
-<xs:element name="cuentaOrigen" type="xs:string" minOccurs="0"/>
-<xs:element name="cuentaDestino" type="xs:string" minOccurs="0"/>
-<xs:element name="importe" type="xs:double"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="regTransferenciaResponse">
-<xs:sequence>
-<xs:element name="estado" type="xs:int"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="login">
-<xs:sequence>
-<xs:element name="username" type="xs:string" minOccurs="0"/>
-<xs:element name="password" type="xs:string" minOccurs="0"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="loginResponse">
-<xs:sequence>
-<xs:element name="return" type="xs:boolean"/>
-</xs:sequence>
-</xs:complexType>
 
 <xs:complexType name="regRetiro">
 <xs:sequence>
@@ -91,6 +64,46 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="login">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="loginResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="regTransferencia">
+<xs:sequence>
+<xs:element name="cuentaOrigen" type="xs:string" minOccurs="0"/>
+<xs:element name="cuentaDestino" type="xs:string" minOccurs="0"/>
+<xs:element name="importe" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="regTransferenciaResponse">
+<xs:sequence>
+<xs:element name="estado" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="regDeposito">
+<xs:sequence>
+<xs:element name="cuenta" type="xs:string" minOccurs="0"/>
+<xs:element name="importe" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="regDepositoResponse">
+<xs:sequence>
+<xs:element name="estado" type="xs:int"/>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="traerBalances">
 <xs:sequence/>
 </xs:complexType>
@@ -108,19 +121,6 @@
 <xs:element name="nombreCliente" type="xs:string" minOccurs="0"/>
 <xs:element name="numeroCuenta" type="xs:string" minOccurs="0"/>
 <xs:element name="saldo" type="xs:double"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="regDeposito">
-<xs:sequence>
-<xs:element name="cuenta" type="xs:string" minOccurs="0"/>
-<xs:element name="importe" type="xs:double"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="regDepositoResponse">
-<xs:sequence>
-<xs:element name="estado" type="xs:int"/>
 </xs:sequence>
 </xs:complexType>
 </xs:schema>

@@ -11,8 +11,10 @@ import java.util.concurrent.TimeUnit
 
 abstract class BaseSoapClient {
     
-    protected val baseUrl = "http://10.0.2.2:8080/eurekabank/WSEureka"
-    
+//    protected val baseUrl = "http://10.0.2.2:8080/eurekabank/WSEureka"
+    protected val baseUrl = "http://10.40.16.227:8080/eurekabank/WSEureka"
+
+
     protected val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)

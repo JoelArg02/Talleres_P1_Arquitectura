@@ -22,7 +22,7 @@
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>wsdlLocation</wsimport-option-name>
-          <wsimport-option-value>http://localhost:55325/ec.edu.monster.controlador/MovimientoController.svc?wsdl</wsimport-option-value>
+          <wsimport-option-value>http://10.181.89.248:55325/ec.edu.monster.controlador/MovimientoController.svc?wsdl</wsimport-option-value>
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>xnocompile</wsimport-option-name>

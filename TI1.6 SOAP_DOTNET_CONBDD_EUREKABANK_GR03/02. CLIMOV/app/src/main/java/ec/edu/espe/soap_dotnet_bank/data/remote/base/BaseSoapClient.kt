@@ -9,8 +9,9 @@ import java.util.concurrent.TimeUnit
 
 open class BaseSoapClient {
     
-    protected val baseUrl = "http://10.0.2.2:8080/ec.edu.monster.controlador/MovimientoController.svc"
-    
+//    protected val baseUrl = "http://10.0.2.2:8080/ec.edu.monster.controlador/MovimientoController.svc"
+
+    protected val baseUrl = "http://10.40.16.227:8080/ec.edu.monster.controlador/MovimientoController.svc"
     protected val client: OkHttpClient by lazy {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
